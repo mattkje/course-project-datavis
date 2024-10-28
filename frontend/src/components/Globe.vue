@@ -86,6 +86,21 @@ export default {
         previousPolygon = target;
       });
 
+      polygonSeries.mapPolygons.template.setAll({
+        fill: am5.color(0x1e1e1e), // Dark background color
+        stroke: am5.color(0x03dac6), // Secondary color for borders
+        strokeWidth: 1,
+      });
+      polygonSeries.mapPolygons.template.states.create("hover", {
+        fill: am5.color(0x09AD9E) // Primary color on hover
+      });
+      polygonSeries.mapPolygons.template.states.create("focused", {
+        fill: am5.color(0x09AD9E) // Primary color on hover
+      });
+      polygonSeries.mapPolygons.template.states.create("active", {
+        fill: am5.color(0x03dac6) // Accent color for active state
+      });
+
       function selectCountry(id) {
         var dataItem = polygonSeries.getDataItemById(id);
         var target = dataItem.get("mapPolygon");
@@ -117,8 +132,12 @@ export default {
 
 <style>
 #chartdiv {
-  width: 100%;
-  height: 500px;
+  width: 100vw;
+  height: 100vh;
   max-width: 100%;
+  max-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>

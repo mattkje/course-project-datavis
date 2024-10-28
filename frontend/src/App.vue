@@ -1,7 +1,7 @@
 <script setup>
-import ßHelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+
 import Globe from "@/components/Globe.vue";
+<<<<<<< Updated upstream
 import SearchBar from "@/components/SearchBar.vue";
 </script>
 
@@ -10,33 +10,22 @@ import SearchBar from "@/components/SearchBar.vue";
    <SearchBar />
 
   </main>
+=======
+import ToolBar from "@/components/ToolBar.vue";
+import CountryInfoBox from "@/components/CountryInfoBox.vue";
+</script>
+
+<template>
+<ToolBar />
+    <Globe />
+  <CountryInfoBox />
+>>>>>>> Stashed changes
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+html, body, #app {
+  height: 100%;
+  margin: 0;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
 </style>
