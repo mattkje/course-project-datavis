@@ -1,15 +1,18 @@
 <template>
-  <div class="info-box">
-    <h2>{{ countryName }}</h2>
-    <hr>
-    <p>Population: {{ population }}</p>
-    <p>Area: {{ area }} km²</p>
-    <p>Capital: {{ capital }}</p>
+
+    <div class="info-box">
+      <h2>{{ countryName }}</h2>
+      <hr>
+      <p>Population: {{ population }}</p>
+      <p>Area: {{ area }} km²</p>
+      <p>Capital: {{ capital }}</p>
   </div>
+
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import SearchBar from "@/components/SearchBar.vue";
 
 const countryName = ref('Norway');
 const population = ref('5,630,341');
@@ -18,6 +21,8 @@ const capital = ref('Oslo');
 </script>
 
 <style scoped>
+
+
 .info-box {
   position: absolute;
   right: 0;

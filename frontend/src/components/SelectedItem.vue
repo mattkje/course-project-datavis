@@ -49,20 +49,23 @@ const availableYearsForSecondSelect = computed(() => {
 .selected-item {
   display: inline-flex;
   align-items: center;
-  padding: 5px 15px;
+  padding: 5px 10px;
   background-color: #03DAC6;
   color: white;
   border-radius: 15px;
-  gap: 5px;
+  gap: 10px;
+  height: 36px;
+  width: max-content;
 }
 
 button {
   font-weight: bold;
-  margin-left: 5px;
+  font-size: 14px;
   background: none;
   border: none;
   cursor: pointer;
   color: #ffffff;
+  padding: 0;
 }
 
 select {
@@ -85,6 +88,8 @@ select option {
   background: white;
   color: black;
 }
+
+
 
 
 </style>

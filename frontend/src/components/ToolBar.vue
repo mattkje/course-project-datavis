@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Label } from 'radix-vue';
+import SearchBar from "@/components/SearchBar.vue";
 </script>
 
 <template>
@@ -8,9 +9,6 @@ import { Label } from 'radix-vue';
     <div class="title-box">
       <img src="../assets/logo.svg" alt="Logo" class="logo" />
       <h1 class="title">Globe World Stats</h1>
-    </div>
-    <div class="search-box">
-      <input class="Input" type="text" placeholder="Search for a country" />
     </div>
   </div>
 </template>
@@ -20,7 +18,7 @@ import { Label } from 'radix-vue';
   display: flex;
   align-items: center;
   background-color: var(--color-background-soft);
-  justify-content: left;
+  justify-content: space-between;
   padding: 1rem;
   color: #ffffff; /* White text color */
   position: fixed;
