@@ -1,13 +1,16 @@
 <script setup>
 import { ref } from 'vue';
-
+import { Label } from 'radix-vue';
 </script>
 
 <template>
   <div class="toolbar">
     <div class="title-box">
-      <img src="../assets/logo.svg" alt="Logo" class="logo"  />
+      <img src="../assets/logo.svg" alt="Logo" class="logo" />
       <h1 class="title">Globe World Stats</h1>
+    </div>
+    <div class="search-box">
+      <input class="Input" type="text" placeholder="Search for a country" />
     </div>
   </div>
 </template>
@@ -58,4 +61,36 @@ import { ref } from 'vue';
   opacity: 1;
   transform: translateX(0);
 }
+
+.search-box {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.LabelRoot {
+  margin-right: 0.5rem;
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  transform: translateX(100px);
+  color: var(--color-text);
+}
+
+.Input {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  font-family: Inter, sans-serif;
+  font-size: 1rem;
+  color: var(--color-text);
+  background-color: var(--color-background-mute);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.Input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.5);
+  outline: none;
+}
+
 </style>
