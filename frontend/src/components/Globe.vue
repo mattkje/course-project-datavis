@@ -45,10 +45,9 @@ export default {
     const countryInfoBox = ref(null); // Create a ref for the CountryInfoBox component
 
     onMounted(() => {
-      function selectCountryInfo(id) {
-        console.log(id);
+      function selectCountryInfo(name) {
         if (countryInfoBox.value) {
-          countryInfoBox.value.updateCountryInfo(id, "10 million", "500,000", "Dummy Capital");
+          countryInfoBox.value.updateCountryInfo(name, "10 million", "500,000", "Dummy Capital");
         }
       }
 
@@ -122,7 +121,7 @@ export default {
             previousPolygon.set("active", false);
           }
           if (target.get("active")) {
-            selectCountry(target.dataItem.get("id"));
+            selectCountry(target.dataItem.get("id"), target.dataItem.dataContext.name);
           }
           previousPolygon = target;
         });
@@ -142,7 +141,7 @@ export default {
           fill: am5.color(0x03dac6)
         });
 
-        function selectCountry(id) {
+        function selectCountry(id,name) {
           var dataItem = polygonSeries.getDataItemById(id);
           var target = dataItem.get("mapPolygon");
           if (target) {
@@ -162,7 +161,7 @@ export default {
               });
             }
           }
-          selectCountryInfo(id);
+          selectCountryInfo(name);
         }
 
         // Make stuff animate on load

@@ -6,6 +6,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/vue-fontawesome": "^3.0.8",
+    "flask": "^0.2.10",
     "radix-vue": "^1.9.8",
     "vue3-select": "^0.1.2"
   }
