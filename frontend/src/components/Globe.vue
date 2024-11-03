@@ -8,6 +8,31 @@ import * as am5map from "@amcharts/amcharts5/map";
 import am5geodata_worldLow from "@amcharts/amcharts5-geodata/worldLow";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
+let chart;
+
+export function selectCountryByLongLat(longitude, latitude) {
+  if (chart) {
+    if(longitude > 180 || longitude < -180 || latitude > 90 || latitude < -90) {
+      longitude = -101.25;
+      latitude = 38.52;
+    }
+    chart.animate({
+      key: "rotationX",
+      to: -longitude,
+      duration: 1500,
+      easing: am5.ease.inOut(am5.ease.cubic),
+    });
+    chart.animate({
+      key: "rotationY",
+      to: -latitude,
+      duration: 1500,
+      easing: am5.ease.inOut(am5.ease.cubic),
+    });
+  } else {
+    console.error("Chart is not initialized");
+  }
+}
+
 export default {
   name: "Globe",
   mounted() {
@@ -19,7 +44,7 @@ export default {
       root.setThemes([am5themes_Animated.new(root)]);
 
       // Create the map chart
-      var chart = root.container.children.push(
+      chart = root.container.children.push(
         am5map.MapChart.new(root, {
           panX: "rotateX",
           panY: "rotateY",
