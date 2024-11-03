@@ -1,28 +1,43 @@
-<template>
-
-    <div class="info-box">
-      <h2>{{ countryName }}</h2>
-      <hr>
-      <p>Population: {{ population }}</p>
-      <p>Area: {{ area }} km²</p>
-      <p>Capital: {{ capital }}</p>
-  </div>
-
-</template>
-
 <script setup>
-import { ref } from 'vue';
-import SearchBar from "@/components/SearchBar.vue";
+import {ref} from 'vue';
 
-const countryName = ref('Norway');
-const population = ref('5,630,341');
-const area = ref('385,207');
-const capital = ref('Oslo');
+const countryName = ref('');
+const population = ref('');
+const area = ref('');
+const capital = ref('');
+const isVisible = ref(false);
+
+function updateCountryInfo(name, pop, areaSize, cap) {
+  countryName.value = name;
+  population.value = pop;
+  area.value = areaSize;
+  capital.value = cap;
+  isVisible.value = true;
+  console.log("updated");
+}
+
+function hideCountryInfo() {
+  isVisible.value = false;
+}
+
+// Expose functions so they can be accessed outside the component
+defineExpose({
+  updateCountryInfo,
+  hideCountryInfo
+});
 </script>
 
+<template>
+  <div v-if="isVisible" class="info-box">
+    <h2>{{ countryName }}</h2>
+    <hr>
+    <p>Population: {{ population }}</p>
+    <p>Area: {{ area }} km²</p>
+    <p>Capital: {{ capital }}</p>
+  </div>
+</template>
+
 <style scoped>
-
-
 .info-box {
   position: absolute;
   right: 0;
