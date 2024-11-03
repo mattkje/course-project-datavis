@@ -37,6 +37,21 @@ def country_year_range(country, start_year, end_year):
     df_html = df.to_html()
     return render_template('show_csv_data.html', data_var=df_html)
 
+@app.route("/country_code/<country_code>")
+def country_code(country_code):
+    df = pd.read_csv("datasets/globalwarmingdata.csv")
+    df = df[df["iso_code"] == country_code]
+    df_html = df.to_html()
+    return render_template('show_csv_data.html', data_var=df_html)
+
+@app.route("/country_code_latest/<country_code>")
+def country_code_latest(country_code):
+    df = pd.read_csv("datasets/globalwarmingdata.csv")
+    df = df[df["iso_code"] == country_code]
+    df = df[df["year"] == df["year"].max()]
+    df_html = df.to_html()
+    return render_template('show_csv_data.html', data_var=df_html)
+
 notCountries = [
 'Africa',
 'Africa (GCP)',
