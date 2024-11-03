@@ -4,9 +4,11 @@ import Globe from "@/components/Globe.vue";
 import ToolBar from "@/components/ToolBar.vue";
 import CountryInfoBox from "@/components/CountryInfoBox.vue";
 import SearchBar from "@/components/SearchBar.vue";
+import StartScreen from "@/components/StartScreen.vue";
 </script>
 
 <template>
+  <start-screen />
     <ToolBar />
   <Globe />
   <CountryInfoBox />

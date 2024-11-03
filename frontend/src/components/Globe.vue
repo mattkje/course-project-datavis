@@ -1,5 +1,6 @@
 <template>
   <div id="chartdiv"></div>
+  <CountryInfoBox ref="countryInfoBox" /> <!-- Reference to CountryInfoBox -->
 </template>
 
 <script>
@@ -7,125 +8,169 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5map from "@amcharts/amcharts5/map";
 import am5geodata_worldLow from "@amcharts/amcharts5-geodata/worldLow";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import { ref, onMounted } from 'vue';
+import CountryInfoBox from './CountryInfoBox.vue'; // Import the CountryInfoBox component
+
+let chart;
+
+export function selectCountryByLongLat(longitude, latitude) {
+  if (chart) {
+    if(longitude > 180 || longitude < -180 || latitude > 90 || latitude < -90) {
+      longitude = -101.25;
+      latitude = 38.52;
+    }
+    chart.animate({
+      key: "rotationX",
+      to: -longitude,
+      duration: 1500,
+      easing: am5.ease.inOut(am5.ease.cubic),
+    });
+    chart.animate({
+      key: "rotationY",
+      to: -latitude,
+      duration: 1500,
+      easing: am5.ease.inOut(am5.ease.cubic),
+    });
+  } else {
+    console.error("Chart is not initialized");
+  }
+}
 
 export default {
   name: "Globe",
-  mounted() {
-    am5.ready(() => {
-      // Create root element
-      var root = am5.Root.new("chartdiv");
+  components: {
+    CountryInfoBox
+  },
+  setup() {
+    const countryInfoBox = ref(null); // Create a ref for the CountryInfoBox component
 
-      // Set themes
-      root.setThemes([am5themes_Animated.new(root)]);
-
-      // Create the map chart
-      var chart = root.container.children.push(
-        am5map.MapChart.new(root, {
-          panX: "rotateX",
-          panY: "rotateY",
-          projection: am5map.geoOrthographic(),
-          paddingBottom: 20,
-          paddingTop: 20,
-          paddingLeft: 20,
-          paddingRight: 20,
-        })
-      );
-
-      // Create main polygon series for countries
-      var polygonSeries = chart.series.push(
-        am5map.MapPolygonSeries.new(root, {
-          geoJSON: am5geodata_worldLow,
-        })
-      );
-
-      polygonSeries.mapPolygons.template.setAll({
-        tooltipText: "{name}",
-        toggleKey: "active",
-        interactive: true,
-      });
-
-      polygonSeries.mapPolygons.template.states.create("hover", {
-        fill: root.interfaceColors.get("primaryButtonHover"),
-      });
-
-      polygonSeries.mapPolygons.template.states.create("active", {
-        fill: root.interfaceColors.get("primaryButtonHover"),
-      });
-
-      // Create series for background fill
-      var backgroundSeries = chart.series.push(
-        am5map.MapPolygonSeries.new(root, {})
-      );
-      backgroundSeries.mapPolygons.template.setAll({
-        fill: root.interfaceColors.get("alternativeBackground"),
-        fillOpacity: 0.1,
-        strokeOpacity: 0,
-      });
-      backgroundSeries.data.push({
-        geometry: am5map.getGeoRectangle(90, 180, -90, -180),
-      });
-
-      var graticuleSeries = chart.series.unshift(
-        am5map.GraticuleSeries.new(root, {
-          step: 10,
-        })
-      );
-
-      graticuleSeries.mapLines.template.set("strokeOpacity", 0.1);
-
-      // Set up events
-      var previousPolygon;
-
-      polygonSeries.mapPolygons.template.on("active", function (active, target) {
-        if (previousPolygon && previousPolygon != target) {
-          previousPolygon.set("active", false);
-        }
-        if (target.get("active")) {
-          selectCountry(target.dataItem.get("id"));
-        }
-        previousPolygon = target;
-      });
-
-      polygonSeries.mapPolygons.template.setAll({
-        fill: am5.color(0x1e1e1e), // Dark background color
-        stroke: am5.color(0x03dac6), // Secondary color for borders
-        strokeWidth: 1,
-      });
-      polygonSeries.mapPolygons.template.states.create("hover", {
-        fill: am5.color(0x09AD9E) // Primary color on hover
-      });
-      polygonSeries.mapPolygons.template.states.create("focused", {
-        fill: am5.color(0x09AD9E) // Primary color on hover
-      });
-      polygonSeries.mapPolygons.template.states.create("active", {
-        fill: am5.color(0x03dac6) // Accent color for active state
-      });
-
-      function selectCountry(id) {
-        var dataItem = polygonSeries.getDataItemById(id);
-        var target = dataItem.get("mapPolygon");
-        if (target) {
-          var centroid = target.geoCentroid();
-          if (centroid) {
-            chart.animate({
-              key: "rotationX",
-              to: -centroid.longitude,
-              duration: 1500,
-              easing: am5.ease.inOut(am5.ease.cubic),
-            });
-            chart.animate({
-              key: "rotationY",
-              to: -centroid.latitude,
-              duration: 1500,
-              easing: am5.ease.inOut(am5.ease.cubic),
-            });
-          }
+    onMounted(() => {
+      function selectCountryInfo(id) {
+        console.log(id);
+        if (countryInfoBox.value) {
+          countryInfoBox.value.updateCountryInfo(id, "10 million", "500,000", "Dummy Capital");
         }
       }
 
-      // Make stuff animate on load
-      chart.appear(1000, 100);
+      am5.ready(() => {
+        // Create root element
+        var root = am5.Root.new("chartdiv");
+
+        // Set themes
+        root.setThemes([am5themes_Animated.new(root)]);
+
+        // Create the map chart
+        chart = root.container.children.push(
+            am5map.MapChart.new(root, {
+              panX: "rotateX",
+              panY: "rotateY",
+              projection: am5map.geoOrthographic(),
+              paddingBottom: 20,
+              paddingTop: 20,
+              paddingLeft: 20,
+              paddingRight: 20,
+            })
+        );
+
+        // Create main polygon series for countries
+        var polygonSeries = chart.series.push(
+            am5map.MapPolygonSeries.new(root, {
+              geoJSON: am5geodata_worldLow,
+            })
+        );
+
+        polygonSeries.mapPolygons.template.setAll({
+          tooltipText: "{name}",
+          toggleKey: "active",
+          interactive: true,
+        });
+
+        polygonSeries.mapPolygons.template.states.create("hover", {
+          fill: root.interfaceColors.get("primaryButtonHover"),
+        });
+
+        polygonSeries.mapPolygons.template.states.create("active", {
+          fill: root.interfaceColors.get("primaryButtonHover"),
+        });
+
+        // Create series for background fill
+        var backgroundSeries = chart.series.push(
+            am5map.MapPolygonSeries.new(root, {})
+        );
+        backgroundSeries.mapPolygons.template.setAll({
+          fill: root.interfaceColors.get("alternativeBackground"),
+          fillOpacity: 0.1,
+          strokeOpacity: 0,
+        });
+        backgroundSeries.data.push({
+          geometry: am5map.getGeoRectangle(90, 180, -90, -180),
+        });
+
+        var graticuleSeries = chart.series.unshift(
+            am5map.GraticuleSeries.new(root, {
+              step: 10,
+            })
+        );
+
+        graticuleSeries.mapLines.template.set("strokeOpacity", 0.1);
+
+        // Set up events
+        var previousPolygon;
+
+        polygonSeries.mapPolygons.template.on("active", function (active, target) {
+          if (previousPolygon && previousPolygon != target) {
+            previousPolygon.set("active", false);
+          }
+          if (target.get("active")) {
+            selectCountry(target.dataItem.get("id"));
+          }
+          previousPolygon = target;
+        });
+
+        polygonSeries.mapPolygons.template.setAll({
+          fill: am5.color(0x1e1e1e),
+          stroke: am5.color(0x03dac6),
+          strokeWidth: 1,
+        });
+        polygonSeries.mapPolygons.template.states.create("hover", {
+          fill: am5.color(0x09AD9E)
+        });
+        polygonSeries.mapPolygons.template.states.create("focused", {
+          fill: am5.color(0x09AD9E)
+        });
+        polygonSeries.mapPolygons.template.states.create("active", {
+          fill: am5.color(0x03dac6)
+        });
+
+        function selectCountry(id) {
+          var dataItem = polygonSeries.getDataItemById(id);
+          var target = dataItem.get("mapPolygon");
+          if (target) {
+            var centroid = target.geoCentroid();
+            if (centroid) {
+              chart.animate({
+                key: "rotationX",
+                to: -centroid.longitude,
+                duration: 1500,
+                easing: am5.ease.inOut(am5.ease.cubic),
+              });
+              chart.animate({
+                key: "rotationY",
+                to: -centroid.latitude,
+                duration: 1500,
+                easing: am5.ease.inOut(am5.ease.cubic),
+              });
+            }
+          }
+          selectCountryInfo(id);
+        }
+
+        // Make stuff animate on load
+        chart.appear(1000, 100);
+      });
     });
+
+    return { countryInfoBox };
   },
 };
 </script>
