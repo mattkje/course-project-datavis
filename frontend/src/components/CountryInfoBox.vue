@@ -45,7 +45,7 @@ defineExpose({
         <p>Area: {{ area }} km²</p>
         <p>Capital: {{ capital }}</p>
       </template>
-      <statistics_overview v-else />
+      <statistics_overview v-else :country="countryName"/>
     </div>
   </div>
 </template>

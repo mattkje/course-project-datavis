@@ -1,5 +1,3 @@
-from heapq import merge
-
 from flask import Flask, jsonify
 import pandas as pd
 
@@ -8,6 +6,7 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     df = pd.read_csv("datasets/globalwarmingdata.csv")
+    df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(df.to_dict(orient="records"))
 
 @app.route("/country/<country>")
@@ -16,6 +15,7 @@ def country(country):
     df2 = pd.read_csv("datasets/world-data-2023.csv")
     merged_df = pd.merge(df1, df2, on="country")
     result_df = merged_df[merged_df["country"] == country]
+    result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
 
 @app.route("/year/<year>")
@@ -24,6 +24,7 @@ def year(year):
     df2 = pd.read_csv("datasets/world-data-2023.csv")
     merged_df = pd.merge(df1, df2, on="country")
     result_df = merged_df[merged_df["year"] == int(year)]
+    result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
 
 @app.route("/country_year/<country>/<year>")
@@ -32,6 +33,7 @@ def country_year(country, year):
     df2 = pd.read_csv("datasets/world-data-2023.csv")
     merged_df = pd.merge(df1, df2, on="country")
     result_df = merged_df[(merged_df["country"] == country) & (merged_df["year"] == int(year))]
+    result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
 
 @app.route("/country_year_range/<country>/<start_year>/<end_year>")
@@ -40,6 +42,7 @@ def country_year_range(country, start_year, end_year):
     df2 = pd.read_csv("datasets/world-data-2023.csv")
     merged_df = pd.merge(df1, df2, on="country")
     result_df = merged_df[(merged_df["country"] == country) & (merged_df["year"] >= int(start_year)) & (merged_df["year"] <= int(end_year))]
+    result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
 
 @app.route("/country_code/<country_code>")
@@ -48,6 +51,7 @@ def country_code(country_code):
     df2 = pd.read_csv("datasets/world-data-2023.csv")
     merged_df = pd.merge(df1, df2, on="country")
     result_df = merged_df[merged_df["iso_code"] == country_code]
+    result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
 
 @app.route("/country_code_latest/<country_code>")
@@ -57,4 +61,5 @@ def country_code_latest(country_code):
     merged_df = pd.merge(df1, df2, on="country")
     result_df = merged_df[merged_df["iso_code"] == country_code]
     result_df = result_df[result_df["year"] == result_df["year"].max()]
+    result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))

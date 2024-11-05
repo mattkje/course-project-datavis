@@ -8,5 +8,8 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="index" level="application" />
+    <orderEntry type="library" name="xy" level="application" />
+    <orderEntry type="library" name="Animated" level="application" />
   </component>
 </module>
