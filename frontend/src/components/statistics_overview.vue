@@ -12,20 +12,18 @@ export default {
     }
   },
   mounted() {
-    // Create root element for the chart
     let root = am5.Root.new(this.$refs.chartdiv);
 
     const myTheme = am5.Theme.new(root);
 
-    // Custom theme rules
-    myTheme.rule("AxisLabel", ["minor"]).setAll({ dy: 1 });
-    myTheme.rule("Grid", ["x"]).setAll({ strokeOpacity: 0.05 });
-    myTheme.rule("Grid", ["x", "minor"]).setAll({ strokeOpacity: 0.05 });
+    // Custom theme rules to change text color
+    myTheme.rule("AxisLabel").setAll({ fill: am5.color(0xFFFFFF) });
+    myTheme.rule("Tooltip").setAll({ labelText: { fill: am5.color(0xFFFFFF) } });
+    myTheme.rule("LegendLabel").setAll({ labelText: { fill: am5.color(0xFFFFFF) } });
+    myTheme.rule("LegendValueLabel").setAll({ labelText: { fill: am5.color(0xFFFFFF) } });
 
-    // Set themes
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
-    // Create chart
     const chart = root.container.children.push(am5xy.XYChart.new(root, {
       panX: true,
       panY: true,
@@ -35,14 +33,11 @@ export default {
       pinchZoomX: true
     }));
 
-    // Fetch data based on countryName prop
     this.fetchData(this.countryName).then(data => {
-      // Parse the year field as a date
       data.forEach(item => {
         item.year = new Date(item.year, 0, 1).getTime();
       });
 
-      // Create axes
       const xAxis = chart.xAxes.push(am5xy.DateAxis.new(root, {
         maxDeviation: 0.2,
         baseInterval: { timeUnit: "year", count: 1 },
@@ -54,7 +49,6 @@ export default {
         renderer: am5xy.AxisRendererY.new(root, {})
       }));
 
-      // Add series for each data field
       const fields = Object.keys(data[0]).filter(key => key !== "year");
 
       fields.forEach(field => {
@@ -72,20 +66,15 @@ export default {
         }));
 
         series.data.setAll(data);
-
-        // Make stuff animate on load
         series.appear();
       });
 
-      // Add cursor
       const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "none" }));
       cursor.lineY.set("visible", false);
 
-      // Add scrollbars
       chart.set("scrollbarX", am5.Scrollbar.new(root, { orientation: "horizontal" }));
       chart.set("scrollbarY", am5.Scrollbar.new(root, { orientation: "vertical" }));
 
-      // Add legend
       const legend = chart.rightAxesContainer.children.push(am5.Legend.new(root, {
         width: 200,
         paddingLeft: 15,
@@ -110,7 +99,6 @@ export default {
       legend.itemContainers.template.events.on("pointerout", function(e) {
         const itemContainer = e.target;
         const series = itemContainer.dataItem.dataContext;
-
         chart.series.each(function(chartSeries) {
           chartSeries.strokes.template.setAll({
             strokeOpacity: 1,
@@ -120,16 +108,20 @@ export default {
         });
       });
 
+      legend.labels.template.setAll({
+        fill: am5.color("#ffffff")
+      });
+      legend.valueLabels.template.setAll({
+        fill: am5.color("#ffffff")
+      });
+
       legend.itemContainers.template.set("width", am5.p100);
       legend.valueLabels.template.setAll({
         width: am5.p100,
         textAlign: "right"
       });
 
-      // Set legend data after all events
       legend.data.setAll(chart.series.values);
-
-      // Animate the chart on load
       chart.appear(1000, 100);
     });
   },

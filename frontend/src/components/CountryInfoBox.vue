@@ -45,7 +45,7 @@ defineExpose({
         <p>Area: {{ area }} km²</p>
         <p>Capital: {{ capital }}</p>
       </template>
-      <statistics_overview v-else :countryName="countryName"/>
+      <statistics_overview class="stats" v-else :countryName="countryName"/>
     </div>
   </div>
 </template>
@@ -60,10 +60,14 @@ defineExpose({
   padding: 20px;
   margin: 1.5rem;
   background: rgba(30, 30, 30, 0.5);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
   border-radius: 1.5rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.5s ease;
+}
+
+.stats {
+  margin-top: 4rem;
 }
 
 .info-box.expanded {
