@@ -136,7 +136,6 @@ export default {
   },
   methods: {
     async fetchData(url) {
-      console.log("Fetching data from:", url);
       const temp = url.split(',')[1];
       const response = await fetch(`${api}${temp}`);
       if (response.ok) {

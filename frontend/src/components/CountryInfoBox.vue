@@ -15,7 +15,7 @@
             <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
             <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
             <option :value="`line:kg per dollar of GDP,coal_co2`">Per Capita</option>
-            <option :value="`bar:million tons,co2_growth_prct/${countryName}`">Growth %</option>
+            <option :value="`bar:%,co2_growth_prct/${countryName}`">Growth %</option>
           </select>
         </div>
       </div>

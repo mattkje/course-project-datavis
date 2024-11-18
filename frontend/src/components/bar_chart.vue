@@ -56,17 +56,19 @@ export default {
         renderer: am5xy.AxisRendererY.new(root, {})
       }));
 
-      const measure = this.url.split('/')[0];
-      console.log(measure);
+      const measure = this.url.split(',')[0];
+      const temp = this.url.split(',')[1];
+      const value = temp.split('/')[0];
+      console.log(value);
 
       // Add series for "co2_growth_prct"
       const series = chart.series.push(am5xy.ColumnSeries.new(root, {
-        name: prettyNames[measure],
+        name: prettyNames[value],
         xAxis: xAxis,
         yAxis: yAxis,
-        valueYField: measure,
+        valueYField: value,
         valueXField: "date",
-        tooltip: am5.Tooltip.new(root, { labelText: `{${measure}} %` })
+        tooltip: am5.Tooltip.new(root, { labelText: `{${value}} ${measure}` })
       }));
 
       // Style series
@@ -100,7 +102,10 @@ export default {
 
   methods: {
     async fetchData(url) {
-      const response = await fetch(`${api}${url}`);
+      const temp = url.split(',')[1];
+      console.log("temp");
+      console.log(temp);
+      const response = await fetch(`${api}${temp}`);
       if (response.ok) {
         return await response.json();
       } else {
