@@ -38,10 +38,10 @@ export default {
     const myTheme = am5.Theme.new(root);
 
     // Custom theme rules to change text color
-    myTheme.rule("AxisLabel").setAll({ fill: am5.color(0xFFFFFF) });
+    myTheme.rule("AxisLabel").setAll({ fill: am5.color(0x000000) });
     myTheme.rule("Tooltip").setAll({ labelText: { fill: am5.color(0xFFFFFF) } });
-    myTheme.rule("LegendLabel").setAll({ labelText: { fill: am5.color(0xFFFFFF) } });
-    myTheme.rule("LegendValueLabel").setAll({ labelText: { fill: am5.color(0xFFFFFF) } });
+    myTheme.rule("LegendLabel").setAll({ labelText: { fill: am5.color(0x000000) } });
+    myTheme.rule("LegendValueLabel").setAll({ labelText: { fill: am5.color(0x000000) } });
 
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
