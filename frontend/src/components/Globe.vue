@@ -60,17 +60,20 @@ export default {
         root.setThemes([am5themes_Animated.new(root)]);
 
         // Create the map chart
-        chart = root.container.children.push(
-            am5map.MapChart.new(root, {
-              panX: "rotateX",
-              panY: "rotateY",
-              projection: am5map.geoOrthographic(),
-              paddingBottom: 20,
-              paddingTop: 20,
-              paddingLeft: 20,
-              paddingRight: 20,
-            })
-        );
+chart = root.container.children.push(
+  am5map.MapChart.new(root, {
+    panX: "rotateX",
+    panY: "rotateY",
+    projection: am5map.geoOrthographic(),
+    centerX: am5.percent(-12.5),
+    centerY: am5.percent(-12.5),
+    paddingBottom: 20,
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    scale: 0.8
+  })
+);
 
         // Create main polygon series for countries
         var polygonSeries = chart.series.push(
@@ -178,11 +181,11 @@ export default {
 <style>
 #chartdiv {
   width: 100vw;
-  height: calc(100vh - 300px);
+  height: calc(100vh - 70px);
   max-width: 100%;
   max-height: 100%;
   position: absolute;
-  top: 200px;
+  top: 70px;
   left: 0;
 }
 </style>
