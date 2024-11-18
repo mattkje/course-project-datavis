@@ -11,7 +11,7 @@
             <option :value="`line:co2/${countryName}`">Total Stats</option>
             <option :value="`line:gdp/${countryName}`">Per GDP</option>
             <option :value="`line:coal_co2`">Per Capita</option>
-            <option :value="`bar:co2-growth-%/${countryName}`">Growth %</option>
+            <option :value="`bar:co2_growth_prct/${countryName}`">Growth %</option>
           </select>
         </div>
       </div>
@@ -134,7 +134,7 @@ h2 {
 }
 
 .stats {
-  margin-top: 8rem;
+  margin-top: 4rem;
 }
 
 .info-box.expanded {

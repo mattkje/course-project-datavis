@@ -41,7 +41,7 @@ export default {
     let root = am5.Root.new(this.$refs.chartdiv);
 
     const myTheme = am5.Theme.new(root);
-    myTheme.rule("AxisLabel", ["minor"]).setAll({dy: 1});
+    myTheme.rule("AxisLabel", ["minor"]).setAll({ dy: 1 });
 
     root.setThemes([am5themes_Animated.new(root), myTheme, am5themes_Responsive.new(root)]);
 
@@ -53,7 +53,8 @@ export default {
       paddingLeft: 0
     }));
 
-    const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {behavior: "zoomX"}));
+    ;
+    const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "zoomX" }));
     cursor.lineY.set("visible", false);
 
     this.fetchData(this.url).then(data => {
@@ -61,38 +62,42 @@ export default {
         item.date = new Date(parseInt(item.year), 0, 1).getTime();
       });
 
-
+      // Create X-axis
       const xAxis = chart.xAxes.push(am5xy.DateAxis.new(root, {
         maxDeviation: 0,
-        baseInterval: {timeUnit: "year", count: 1},
-        renderer: am5xy.AxisRendererX.new(root, {minorGridEnabled: true, minorLabelsEnabled: true}),
+        baseInterval: { timeUnit: "year", count: 1 },
+        renderer: am5xy.AxisRendererX.new(root, { minorGridEnabled: true, minorLabelsEnabled: true }),
         tooltip: am5.Tooltip.new(root, {})
       }));
 
+      // Create Y-axis
       const yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
         renderer: am5xy.AxisRendererY.new(root, {})
       }));
 
-      const fields = Object.keys(data[0]).filter(key => key !== "year");
+      const measure = this.url.split('/')[0];
+      console.log(measure);
 
-      fields.forEach(field => {
-        const series = chart.series.push(am5xy.ColumnSeries.new(root, {
-          name: prettyNames[field],
-          xAxis: xAxis,
-          yAxis: yAxis,
-          valueYField: "co2_growth_prct",
-          valueXField: "date",
-          tooltip: am5.Tooltip.new(root, {labelText: `{${field}}  %`})
-        }));
+      // Add series for "co2_growth_prct"
+      const series = chart.series.push(am5xy.ColumnSeries.new(root, {
+        name: prettyNames[measure],
+        xAxis: xAxis,
+        yAxis: yAxis,
+        valueYField: measure,
+        valueXField: "date",
+        tooltip: am5.Tooltip.new(root, { labelText: `{co2_growth_prct} %` })
+      }));
 
-        series.columns.template.setAll({strokeOpacity: 0});
-        series.data.setAll(data);
-      });
+      // Style series
+      series.columns.template.setAll({ strokeOpacity: 0 });
+      series.data.setAll(data);
 
-      chart.set("scrollbarX", am5.Scrollbar.new(root, {orientation: "horizontal"}));
+      // Add horizontal scrollbar
+      chart.set("scrollbarX", am5.Scrollbar.new(root, { orientation: "horizontal" }));
       chart.appear(1000, 100);
     });
   },
+
   methods: {
     async fetchData(url) {
       const response = await fetch(`${api}${url}`);
