@@ -107,7 +107,15 @@ defineExpose({
   width: 25%;
   height: calc(100% - 70px);
   padding: 20px;
-  background: white;
+  background: linear-gradient(
+      135deg,
+      var(--color-background) 15%,
+      var(--color-background) 15%,
+      var(--color-background) 15%,
+      var(--color-background) 85%,
+      var(--vt-c-secondary) 85%,
+      var(--vt-c-secondary) 100%
+  );
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.5s ease;
 }

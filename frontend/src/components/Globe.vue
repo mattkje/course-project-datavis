@@ -178,11 +178,11 @@ export default {
 <style>
 #chartdiv {
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 300px);
   max-width: 100%;
   max-height: 100%;
   position: absolute;
-  top: 0;
+  top: 200px;
   left: 0;
 }
 </style>
