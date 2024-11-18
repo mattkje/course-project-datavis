@@ -7,7 +7,7 @@ CORS(app)  # Enable CORS for all routes
 
 def filter_world_data():
     df = pd.read_csv("datasets/world-data-2023.csv")
-    filtered_columns = df[["country", "Abbreviation", "Land Area(Km2)", "Capital/Major City", "Largest city"]]
+    filtered_columns = df[["country", "Abbreviation", "Land Area(Km2)", "Capital/Major City", "Largest city", "Population"]]
     return filtered_columns
 
 def init_global_data():
@@ -25,6 +25,14 @@ def country(country):
     result_df = init_global_data()
     result_df = result_df[result_df["country"].isin(country_list)]
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
+    return jsonify(result_df.to_dict(orient="records"))
+
+@app.route("/country_data/<country>")
+def country_data(country):
+    country_list = country.split(",")
+    result_df = filter_world_data()
+    result_df = result_df[result_df["country"].isin(country_list)]
+    result_df.fillna("N/A", inplace=True)
     return jsonify(result_df.to_dict(orient="records"))
 
 @app.route("/year/<year>")

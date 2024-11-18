@@ -47,7 +47,18 @@ export default {
     onMounted(() => {
       function selectCountryInfo(name,id) {
         if (countryInfoBox.value) {
-          countryInfoBox.value.updateCountryInfo(name, "10 million", "500,000", "Dummy Capital",id);
+          fetch('http://127.0.0.1:5000/country_data/' + name)
+            .then(response => response.json())
+            .then(data => {
+              const countryData = data[0];
+              countryInfoBox.value.updateCountryInfo(name, countryData["Population"], countryData["Land Area(Km2)"],
+                  countryData["Capital/Major City"],id);
+            })
+            .catch(error => {
+              console.error('There was an error!', error);
+              countryInfoBox.value.updateCountryInfo(name, "10 million", "500,000", "Dummy Capital",id);
+            });
+          //countryInfoBox.value.updateCountryInfo(name, "10 million", "500,000", "Dummy Capital",id);
         }
       }
 
