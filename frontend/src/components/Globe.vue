@@ -56,9 +56,8 @@ export default {
             })
             .catch(error => {
               console.error('There was an error!', error);
-              countryInfoBox.value.updateCountryInfo(name, "10 million", "500,000", "Dummy Capital",id);
+              countryInfoBox.value.updateCountryInfo(name, "10 million", "500,000", "Dummy Capital", id);
             });
-          //countryInfoBox.value.updateCountryInfo(name, "10 million", "500,000", "Dummy Capital",id);
         }
       }
 
