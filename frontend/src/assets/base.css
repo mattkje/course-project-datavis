@@ -1,12 +1,12 @@
 /* color palette for dark modern theme */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
 :root {
-  --vt-c-dark-bg: #121212;
-  --vt-c-dark-bg-soft: #1e1e1e;
+  --vt-c-dark-bg: #ffffff;
+  --vt-c-dark-bg-soft: #ffffff;
   --vt-c-dark-bg-mute: #2c2c2c;
 
-  --vt-c-dark-text: #e0e0e0;
-  --vt-c-dark-text-soft: #b0b0b0;
+  --vt-c-dark-text: #1f1f1f;
+  --vt-c-dark-text-soft: #525252;
   --vt-c-dark-text-mute: #808080;
 
   --vt-c-primary: #bb86fc;

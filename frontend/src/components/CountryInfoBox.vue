@@ -59,11 +59,14 @@ defineExpose({
   height: calc(100% - 70px - 3rem);
   padding: 20px;
   margin: 1.5rem;
-  background: rgba(30, 30, 30, 0.5);
-  backdrop-filter: blur(20px);
+  background: white;
   border-radius: 1.5rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.5s ease;
+}
+
+h2 {
+  color: #232323;
 }
 
 .stats {
@@ -126,7 +129,7 @@ defineExpose({
 
 h2 {
   margin-top: 0;
-  color: #f2f2f2;
+  color: #424242;
   font-family: Inter, sans-serif;
   font-weight: 900;
   font-size: 2rem;
@@ -136,6 +139,6 @@ p {
   font-family: Inter, sans-serif;
   font-weight: bold;
   margin: 5px 0;
-  color: #f2f2f2;
+  color: #525252;
 }
 </style>

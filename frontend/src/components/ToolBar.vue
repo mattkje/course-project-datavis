@@ -20,7 +20,7 @@ import SearchBar from "@/components/SearchBar.vue";
   background-color: var(--color-background-soft);
   justify-content: space-between;
   padding: 1rem;
-  color: #ffffff; /* White text color */
+  color: #000; /* White text color */
   position: fixed;
   top: 0;
   left: 0;
@@ -48,16 +48,10 @@ import SearchBar from "@/components/SearchBar.vue";
 
 .title {
   font-family: Inter, sans-serif;
+  color: #2c2c2c;
   font-weight: 900;
   font-size: 1.5rem;
-  opacity: 0;
-  transform: translateX(-50px);
   transition: all 0.7s ease-in-out;
-}
-
-.title-box:hover .title {
-  opacity: 1;
-  transform: translateX(0);
 }
 
 .search-box {

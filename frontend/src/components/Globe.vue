@@ -127,8 +127,8 @@ export default {
         });
 
         polygonSeries.mapPolygons.template.setAll({
-          fill: am5.color(0x1e1e1e),
-          stroke: am5.color(0x03dac6),
+          fill: am5.color(0x0ffffff),
+          stroke: am5.color(0x0999999),
           strokeWidth: 1,
         });
         polygonSeries.mapPolygons.template.states.create("hover", {

@@ -32,10 +32,21 @@ const hideStartScreen = async () => {
   </div>
 </template>
 
-<style scoped>
+<style>
 h1 {
   font-size: 4rem;
+  font-weight: 900;
+  background: linear-gradient(to bottom, rgb(12, 12, 12), rgb(21, 79, 87));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 0px;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-top: 0px;
+  color: #5b5b5b;
 }
 
 .start-screen {
@@ -44,7 +55,7 @@ h1 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(3, 218, 198, 0.2);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0.87));
   display: flex;
   justify-content: center;
   align-items: center;
