@@ -7,25 +7,7 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy.js";
 import {Theme as am5themes_Responsive} from "@amcharts/amcharts5";
-
-const prettyNames = {
-  "co2": "CO\u2082",
-  "co2_including_luc": "CO\u2082 w/Land Use Change",
-  "coal_co2": "Coal",
-  "consumption_co2": "Consumption",
-  "cement_co2": "Cement",
-  "flaring_co2": "Flaring",
-  "gas_co2": "Gas",
-  "land_use_change_co2": "Land Use Change",
-  "oil_co2": "Oil",
-  "other_industry_co2": "Other Industry",
-  "temperature_change_from_co2": "Temperature Change from CO\u2082",
-  "trade_co2": "Trade",
-  "co2_including_luc_per_gdp": "CO\u2082 w/Land Use Change per GDP",
-  "co2_per_gdp": "CO\u2082 per GDP",
-  "consumption_co2_per_gdp": "Consumption CO\u2082 per GDP",
-  "energy_per_gdp": "Energy per GDP"
-};
+import { prettyNames } from "@/components/dictionaries/prettyNames.js";
 
 const api = "http://127.0.0.1:5000/";
 
@@ -53,7 +35,6 @@ export default {
       paddingLeft: 0
     }));
 
-    ;
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "zoomX" }));
     cursor.lineY.set("visible", false);
 
@@ -85,7 +66,7 @@ export default {
         yAxis: yAxis,
         valueYField: measure,
         valueXField: "date",
-        tooltip: am5.Tooltip.new(root, { labelText: `{co2_growth_prct} %` })
+        tooltip: am5.Tooltip.new(root, { labelText: `{${measure}} %` })
       }));
 
       // Style series
@@ -94,6 +75,25 @@ export default {
 
       // Add horizontal scrollbar
       chart.set("scrollbarX", am5.Scrollbar.new(root, { orientation: "horizontal" }));
+
+      // Add legend
+      const legend = chart.rightAxesContainer.children.push(am5.Legend.new(root, {
+        width: 200,
+        paddingLeft: 15,
+        height: am5.percent(100)
+      }));
+      
+      legend.labels.template.setAll({
+        fill: am5.color("#000000")
+      });
+
+      legend.itemContainers.template.set("width", am5.p100);
+      legend.valueLabels.template.setAll({
+        width: am5.p100,
+        textAlign: "right"
+      });
+
+      legend.data.setAll(chart.series.values);
       chart.appear(1000, 100);
     });
   },
