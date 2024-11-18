@@ -24,10 +24,6 @@ const prettyNames = {
 
 const api = "http://127.0.0.1:5000/";
 
-// TODO: Add a unit translation for each type
-// TODO: Add all the prettyNames
-// TODO: Makes this take in inputs instead of a set datatype
-
 export default {
   name: "AmChartComponent",
   props: {
@@ -75,7 +71,7 @@ export default {
         renderer: am5xy.AxisRendererY.new(root, {})
       }));
 
-      const fields = Object.keys(data[0]).filter(key => key !== "year");
+      const fields = Object.keys(data[0]).filter(key => key !== "year" && key !== "country");
 
       fields.forEach(field => {
         const series = chart.series.push(am5xy.LineSeries.new(root, {
@@ -92,14 +88,6 @@ export default {
         }));
 
         series.data.setAll(data);
-
-        // This is how we can hide all series except for the one we want to show
-        // TODO: MAKE THIS INTO A FUNCTION BASED THING
-        // if (field !== "co2_including_luc") {
-        //   series.hide();
-        // } else {
-        //   series.appear();
-        // }
       });
 
       const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "none" }));
@@ -112,7 +100,6 @@ export default {
 
       chart.set("scrollbarX", scrollbarX);
       chart.bottomAxesContainer.children.push(scrollbarX);
-
 
       const legend = chart.rightAxesContainer.children.push(am5.Legend.new(root, {
         width: 400,
@@ -156,14 +143,11 @@ export default {
         textAlign: "right"
       });
 
-
-
       legend.itemContainers.template.set("width", am5.p100);
       legend.valueLabels.template.setAll({
         width: am5.p100,
         textAlign: "right"
       });
-
 
       legend.data.setAll(chart.series.values);
       chart.appear(1000, 100);

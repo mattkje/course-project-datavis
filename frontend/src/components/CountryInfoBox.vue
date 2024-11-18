@@ -52,14 +52,14 @@ const selectedMeasureUrl = computed(() => {
   return measureUrl;
 });
 
-function updateCountryInfo(name, pop, areaSize, cap) {
+function updateCountryInfo(name, pop, areaSize, cap, id) {
   countryName.value = name;
   population.value = pop;
   area.value = areaSize;
   capital.value = cap;
   isVisible.value = true;
   selectedMeasure.value = `line:co2/${name}`;
-  console.log("updated");
+  console.log("Country info updated:", name, pop, areaSize, cap, id);
 }
 
 function hideCountryInfo() {

@@ -45,10 +45,9 @@ export default {
     const countryInfoBox = ref(null); // Create a ref for the CountryInfoBox component
 
     onMounted(() => {
-      function selectCountryInfo(name) {
+      function selectCountryInfo(name,id) {
         if (countryInfoBox.value) {
-
-          countryInfoBox.value.updateCountryInfo(name, "10 million", "500,000", "Dummy Capital");
+          countryInfoBox.value.updateCountryInfo(name, "10 million", "500,000", "Dummy Capital",id);
         }
       }
 
@@ -159,7 +158,7 @@ chart = root.container.children.push(
               });
             }
           }
-          selectCountryInfo(name);
+          selectCountryInfo(name,id);
         }
 
         // Make stuff animate on load
