@@ -160,7 +160,7 @@ def country_co2(country):
     result_df = merged_df[merged_df["country"] == country]
 
     # List of terms to exclude from CO2-related fields
-    exclude_terms = ["per_capita", "per_gdp", "per_unit_energy", "share", "cumulative", "growth"]
+    exclude_terms = ["per_capita", "per_gdp", "per_unit_energy", "share", "cumulative", "growth","temperature"]
 
     # Select CO2 columns, excluding specific variants, plus 'year'
     co2_columns = [

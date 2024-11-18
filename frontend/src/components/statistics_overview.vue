@@ -3,6 +3,25 @@
 </template>
 
 <script>
+const prettyNames = {
+  "co2": "CO2",
+  "co2_including_luc": "CO2 Including LUCF",
+  "coal_co2": "Coal CO2",
+  "consumption_co2": "Consumption CO2",
+  "flaring_co2": "Flaring CO2",
+  "gas_co2": "Gas CO2",
+  "land_use_change_co2": "Land Use Change CO2",
+  "oil_co2": "Oil CO2",
+  "other_industry_co2": "Other Industry CO2",
+  "temperature_change_from_co2": "Temperature Change from CO2",
+  "trade_co2": "Trade CO2"
+};
+
+// TODO: Add a unit translation for each type
+// TODO: Add all the prettyNames
+// TODO: Makes this take in inputs instead of a set datatype
+
+
 export default {
   name: "AmChartComponent",
   props: {
@@ -53,20 +72,28 @@ export default {
 
       fields.forEach(field => {
         const series = chart.series.push(am5xy.LineSeries.new(root, {
-          name: field,
+          name: prettyNames[field],
           xAxis: xAxis,
           yAxis: yAxis,
           valueYField: field,
           valueXField: "year",
-          legendValueText: `{${field}}`,
+          legendValueText: `{${field}} million tons`,
           tooltip: am5.Tooltip.new(root, {
             pointerOrientation: "horizontal",
-            labelText: `{${field}}`
+            labelText: `{${field}} million tons`,
           })
         }));
 
-        series.data.setAll(data);
-        series.appear();
+          series.data.setAll(data);
+
+
+        // This is how we can hide all series except for the one we want to show
+        // TODO: MAKE THIS INTO A FUNCTION BASED THING
+        if (field !== "co2") {
+            series.hide();
+          } else {
+          series.appear();
+          }
       });
 
       const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "none" }));
@@ -76,7 +103,7 @@ export default {
       chart.set("scrollbarY", am5.Scrollbar.new(root, { orientation: "vertical" }));
 
       const legend = chart.rightAxesContainer.children.push(am5.Legend.new(root, {
-        width: 200,
+        width: 400,
         paddingLeft: 15,
         height: am5.percent(100)
       }));
@@ -112,7 +139,9 @@ export default {
         fill: am5.color("#ffffff")
       });
       legend.valueLabels.template.setAll({
-        fill: am5.color("#ffffff")
+        fill: am5.color("#ffffff"),
+        width: am5.p200,
+        textAlign: "right"
       });
 
       legend.itemContainers.template.set("width", am5.p100);
@@ -123,6 +152,8 @@ export default {
 
       legend.data.setAll(chart.series.values);
       chart.appear(1000, 100);
+
+      
     });
   },
   methods: {
