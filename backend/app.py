@@ -85,7 +85,7 @@ def co2_growth_abs(country):
     result_dict = dict(zip(result_df["year"], result_df["co2_growth_abs"]))
     return jsonify(result_dict)
 
-@app.route("/co2_growth_prct/<country>")
+@app.route("/co2-growth-%/<country>")
 def co2_growth_percentage(country):
     country_list = country.split(",")
     df = pd.read_csv("datasets/globalwarmingdata.csv")
