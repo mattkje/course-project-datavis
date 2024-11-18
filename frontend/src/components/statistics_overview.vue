@@ -55,7 +55,6 @@ export default {
     }));
 
     this.fetchData(this.url).then(data => {
-      console.log(data);
       data.forEach(item => {
         item.year = new Date(item.year, 0, 1).getTime();
       });

@@ -2,7 +2,10 @@
   <div v-if="isVisible" :class="['info-box', { expanded: isExpanded }]">
     <div :class="['handle', { expanded: isExpanded }]" @click="toggleExpand"></div>
     <div :class="['content', { expanded: isExpanded }]">
-      <h2>{{ countryName }}</h2>
+      <div class="header">
+        <img :src="flagId" alt="flag" class="flag"/>
+        <h2>{{ countryName }}</h2>
+      </div>
       <div v-if="isExpanded" class="top-bar">
         <search-bar/>
         <div class="dropdown-container">
@@ -41,6 +44,7 @@ const capital = ref('');
 const isVisible = ref(false);
 const isExpanded = ref(false);
 const selectedMeasure = ref(`line:co2/${countryName.value}`);
+const flagId = ref('');
 
 const selectedChartComponent = computed(() => {
   const [chartType] = selectedMeasure.value.split(':');
@@ -59,6 +63,7 @@ function updateCountryInfo(name, pop, areaSize, cap, id) {
   capital.value = cap;
   isVisible.value = true;
   selectedMeasure.value = `line:co2/${name}`;
+  flagId.value = `public/countryflags/${id}.svg`;
   console.log("Country info updated:", name, pop, areaSize, cap, id);
 }
 
@@ -69,10 +74,6 @@ function hideCountryInfo() {
 function toggleExpand() {
   isExpanded.value = !isExpanded.value;
 }
-
-watch(selectedMeasure, (newValue) => {
-  console.log("Measure changed to:", newValue);
-});
 
 defineExpose({
   updateCountryInfo,
@@ -241,5 +242,16 @@ p {
   font-weight: bold;
   margin: 5px 0;
   color: #525252;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.flag {
+  width: 60px;
+  max-height: 100%;
+  margin-right: 10px;
 }
 </style>

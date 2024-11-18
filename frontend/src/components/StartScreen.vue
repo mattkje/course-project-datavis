@@ -11,7 +11,6 @@ const hideStartScreen = async () => {
   try {
     if (coords.value) {
       const { latitude, longitude } = coords.value;
-      console.log('Geolocation:', latitude, longitude);
       selectCountryByLongLat(longitude, latitude);
     } else {
       console.error('Geolocation not available');
