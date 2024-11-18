@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { Label } from 'radix-vue';
 
 import '@fortawesome/fontawesome-free/css/all.css';
+import About from "@/components/About.vue";
 </script>
 
 <template>
@@ -11,7 +12,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
       <img src="../assets/logo.svg" alt="Logo" class="logo" />
       <h1 class="title">Globe World Stats</h1>
     </div>
-    <i class="fas fa-info-circle about-icon"></i>
+    <About />
   </div>
 </template>
 
