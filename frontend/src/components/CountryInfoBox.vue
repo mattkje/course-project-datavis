@@ -1,6 +1,37 @@
+<template>
+  <div v-if="isVisible" :class="['info-box', { expanded: isExpanded }]">
+    <div :class="['handle', { expanded: isExpanded }]" @click="toggleExpand"></div>
+    <div :class="['content', { expanded: isExpanded }]">
+      <h2>{{ countryName }}</h2>
+      <div v-if="isExpanded" class="top-bar">
+        <search-bar/>
+        <div class="dropdown-container">
+          <span>Measure by:</span>
+          <select class="dropdown" v-model="selectedMeasure">
+            <option :value="`line:co2/${countryName}`">Total Stats</option>
+            <option :value="`line:gdp/${countryName}`">Per GDP</option>
+            <option :value="`line:coal_co2`">Per Capita</option>
+            <option :value="`bar:co2-growth-%/${countryName}`">Growth %</option>
+          </select>
+        </div>
+      </div>
+      <template v-if="!isExpanded">
+        <hr>
+        <p>Population: {{ population }}</p>
+        <p>Area: {{ area }} km²</p>
+        <p>Capital: {{ capital }}</p>
+      </template>
+      <div class="chart" v-else>
+        <component :is="selectedChartComponent" class="stats" :url="selectedMeasureUrl" :key="selectedMeasure"/>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup>
-import { ref, watch } from 'vue';
-import Statistics_overview from "@/components/statistics_overview.vue";
+import { ref, watch, computed } from 'vue';
+import StatisticsOverview from "@/components/statistics_overview.vue";
+import BarChartComponent from "@/components/bar_chart.vue";
 import SearchBar from "@/components/SearchBar.vue";
 
 const countryName = ref('');
@@ -9,7 +40,17 @@ const area = ref('');
 const capital = ref('');
 const isVisible = ref(false);
 const isExpanded = ref(false);
-let selectedMeasure = ref(`co2/${countryName.value}`);
+const selectedMeasure = ref(`line:co2/${countryName.value}`);
+
+const selectedChartComponent = computed(() => {
+  const [chartType] = selectedMeasure.value.split(':');
+  return chartType === 'bar' ? BarChartComponent : StatisticsOverview;
+});
+
+const selectedMeasureUrl = computed(() => {
+  const [, measureUrl] = selectedMeasure.value.split(':');
+  return measureUrl;
+});
 
 function updateCountryInfo(name, pop, areaSize, cap) {
   countryName.value = name;
@@ -17,7 +58,7 @@ function updateCountryInfo(name, pop, areaSize, cap) {
   area.value = areaSize;
   capital.value = cap;
   isVisible.value = true;
-  selectedMeasure.value = `co2/${name}`;
+  selectedMeasure.value = `line:co2/${name}`;
   console.log("updated");
 }
 
@@ -40,38 +81,7 @@ defineExpose({
 });
 </script>
 
-<template>
-  <div v-if="isVisible" :class="['info-box', { expanded: isExpanded }]">
-    <div :class="['handle', { expanded: isExpanded }]" @click="toggleExpand"></div>
-    <div :class="['content', { expanded: isExpanded }]">
-      <h2>{{ countryName }}</h2>
-      <div v-if="isExpanded" class="top-bar">
-        <search-bar/>
-        <div class="dropdown-container">
-          <span>Measure by:</span>
-          <select class="dropdown" v-model="selectedMeasure">
-            <option :value="`co2/${countryName}`">Total Stats</option>
-            <option :value="`gdp/${countryName}`">Per GDP</option>
-            <option value="coal_co2">Per Capita</option>
-            <option value="consumption_co2">Growth %</option>
-          </select>
-        </div>
-      </div>
-      <template v-if="!isExpanded">
-        <hr>
-        <p>Population: {{ population }}</p>
-        <p>Area: {{ area }} km²</p>
-        <p>Capital: {{ capital }}</p>
-      </template>
-      <div class="chart" v-else>
-        <statistics_overview class="stats" :url="selectedMeasure" :key="selectedMeasure"/>
-      </div>
-    </div>
-  </div>
-</template>
-
 <style scoped>
-
 .chart {
   width: 100%;
   height: 100%;
@@ -99,7 +109,6 @@ defineExpose({
   margin-left: 10px;
 }
 
-/* Existing styles */
 .info-box {
   position: absolute;
   right: 0;

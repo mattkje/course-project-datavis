@@ -92,7 +92,7 @@ def co2_growth_percentage(country):
     result_df = df[df["country"].isin(country_list)]
     result_df = result_df["year"].astype(str)
     result_df = result_df[["year", "co2_growth_prct", "country"]]
-    result_df.fillna("N/A", inplace=True)
+    result_df.fillna(0, inplace=True)
     return jsonify(result_df.to_dict(orient="records"))
 
 @app.route("/share-global/<country>", defaults={'start_year': 1829, 'end_year': 2022})
