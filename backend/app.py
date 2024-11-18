@@ -84,8 +84,7 @@ def co2_growth_percentage(country):
     result_df = df[df["country"] == country]
     result_df = result_df[["year", "co2_growth_prct"]]
     result_df.fillna("N/A", inplace=True)
-    result_dict = dict(zip(result_df["year"], result_df["co2_growth_prct"]))
-    return jsonify(result_dict)
+    return jsonify(result_df.to_dict(orient="records"))
 
 @app.route("/co2-per-capita/<country>")
 def co2_per_capita(country):
@@ -120,14 +119,36 @@ def ghg_per_capita(country):
     }
     return jsonify(result_dict)
 
-@app.route("/co2-per-gdp/<country>")
-def co2_per_gdp(country):
-    df = pd.read_csv("datasets/globalwarmingdata.csv")
-    result_df = df[df["country"] == country]
-    result_df = result_df[["year", "co2_per_gdp"]]
-    result_df.fillna("N/A", inplace=True)
-    result_dict = dict(zip(result_df["year"], result_df["co2_per_gdp"]))
-    return jsonify(result_dict)
+@app.route("/gdp/<country>")
+def country_gdp(country):
+    # Load datasets
+    df1 = pd.read_csv("datasets/globalwarmingdata.csv")
+    df2 = filter_world_data()
+
+    # Merge datasets on 'country'
+    merged_df = pd.merge(df1, df2, on="country")
+
+    # Filter rows by country
+    result_df = merged_df[merged_df["country"] == country]
+
+    # Select columns that include "gdp", plus 'year'
+    gdp_columns = [
+        col for col in result_df.columns
+        if "_gdp" in col
+    ]
+
+    # Ensure 'year' is included
+    if 'year' in result_df.columns:
+        gdp_columns.append('year')
+
+    # Filter the DataFrame to only include selected GDP columns and 'year'
+    gdp_data_df = result_df[gdp_columns].copy()
+
+    # Replace NaN values with 0
+    gdp_data_df.fillna(0, inplace=True)
+
+    # Convert the filtered DataFrame to JSON format
+    return jsonify(gdp_data_df.to_dict(orient="records"))
 
 @app.route("/energy-per-gdp/<country>")
 def energy_per_gdp(country):

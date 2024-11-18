@@ -40,20 +40,18 @@ defineExpose({
 });
 </script>
 
-
-
 <template>
   <div v-if="isVisible" :class="['info-box', { expanded: isExpanded }]">
     <div :class="['handle', { expanded: isExpanded }]" @click="toggleExpand"></div>
     <div :class="['content', { expanded: isExpanded }]">
       <h2>{{ countryName }}</h2>
       <div v-if="isExpanded" class="top-bar">
-        <search-bar class="search-bar" />
+        <search-bar/>
         <div class="dropdown-container">
           <span>Measure by:</span>
           <select class="dropdown" v-model="selectedMeasure">
             <option :value="`co2/${countryName}`">Total Stats</option>
-            <option :value="`co2-growth-%/${countryName}`">Per GDP</option>
+            <option :value="`gdp/${countryName}`">Per GDP</option>
             <option value="coal_co2">Per Capita</option>
             <option value="consumption_co2">Growth %</option>
           </select>
@@ -66,7 +64,7 @@ defineExpose({
         <p>Capital: {{ capital }}</p>
       </template>
       <div class="chart" v-else>
-        <statistics_overview class="stats" :url="selectedMeasure"/>
+        <statistics_overview class="stats" :url="selectedMeasure" :key="selectedMeasure"/>
       </div>
     </div>
   </div>

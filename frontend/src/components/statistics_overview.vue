@@ -15,7 +15,11 @@ const prettyNames = {
   "oil_co2": "Oil",
   "other_industry_co2": "Other Industry",
   "temperature_change_from_co2": "Temperature Change from CO\u2082",
-  "trade_co2": "Trade"
+  "trade_co2": "Trade",
+  "co2_including_luc_per_gdp": "CO\u2082 w/Land Use Change per GDP",
+  "co2_per_gdp": "CO\u2082 per GDP",
+  "consumption_co2_per_gdp": "Consumption CO\u2082 per GDP",
+  "energy_per_gdp": "Energy per GDP"
 };
 
 const api = "http://127.0.0.1:5000/";
@@ -55,6 +59,7 @@ export default {
     }));
 
     this.fetchData(this.url).then(data => {
+      console.log(data);
       data.forEach(item => {
         item.year = new Date(item.year, 0, 1).getTime();
       });
@@ -90,11 +95,11 @@ export default {
 
         // This is how we can hide all series except for the one we want to show
         // TODO: MAKE THIS INTO A FUNCTION BASED THING
-        if (field !== "co2_including_luc") {
-          series.hide();
-        } else {
-          series.appear();
-        }
+        // if (field !== "co2_including_luc") {
+        //   series.hide();
+        // } else {
+        //   series.appear();
+        // }
       });
 
       const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "none" }));
