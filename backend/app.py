@@ -65,41 +65,48 @@ def country_code_latest(country_code):
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
 
-@app.route("/energy-per-capita/<country>")
-def energy_per_capita(country):
+@app.route("/energy-per-capita/<country>", defaults={'start_year': 1829, 'end_year': 2022})
+@app.route("/energy-per-capita/<country>/<int:start_year>/<int:end_year>")
+def energy_per_capita(country, start_year, end_year):
     country_list = country.split(",")
     df = pd.read_csv("datasets/globalwarmingdata.csv")
     result_df = df[df["country"].isin(country_list)]
+    result_df = result_df[(result_df["year"] >= start_year) & (result_df["year"] <= end_year)]
     result_df = result_df[["year", "energy_per_capita", "country"]]
     result_df.fillna("N/A", inplace=True)
     result_dict = dict(zip(result_df["year"], result_df["energy_per_capita"]))
     return jsonify(result_dict)
 
-@app.route("/co2-growth-abs/<country>")
-def co2_growth_abs(country):
+@app.route("/co2-growth-abs/<country>", defaults={'start_year': 1829, 'end_year': 2022})
+@app.route("/co2-growth-abs/<country>/<int:start_year>/<int:end_year>")
+def co2_growth_abs(country, start_year, end_year):
     country_list = country.split(",")
     df = pd.read_csv("datasets/globalwarmingdata.csv")
     result_df = df[df["country"].isin(country_list)]
+    result_df = result_df[(result_df["year"] >= start_year) & (result_df["year"] <= end_year)]
     result_df = result_df[["year", "co2_growth_abs", "country"]]
     result_df.fillna("N/A", inplace=True)
     result_dict = dict(zip(result_df["year"], result_df["co2_growth_abs"]))
     return jsonify(result_dict)
 
-@app.route("/co2-growth-%/<country>")
-def co2_growth_percentage(country):
+@app.route("/co2-growth-%/<country>", defaults={'start_year': 1829, 'end_year': 2022})
+@app.route("/co2-growth-%/<country>/<int:start_year>/<int:end_year>")
+def co2_growth_percentage(country, start_year, end_year):
     country_list = country.split(",")
     df = pd.read_csv("datasets/globalwarmingdata.csv")
     result_df = df[df["country"].isin(country_list)]
+    result_df = result_df[(result_df["year"] >= start_year) & (result_df["year"] <= end_year)]
     result_df = result_df[["year", "co2_growth_prct", "country"]]
     result_df.fillna(0, inplace=True)
     return jsonify(result_df.to_dict(orient="records"))
 
-@app.route("/share-global/<country>", defaults={'start_year': 1829, 'end_year': 2022})
+@app.route("/co2-per-capita/<country>", defaults={'start_year': 1829, 'end_year': 2022})
 @app.route("/co2-per-capita/<country>/<int:start_year>/<int:end_year>")
 def co2_per_capita(country, start_year, end_year):
     country_list = country.split(",")
     df = pd.read_csv("datasets/globalwarmingdata.csv")
     result_df = df[df["country"].isin(country_list)]
+    result_df = result_df[(result_df["year"] >= start_year) & (result_df["year"] <= end_year)]
     result_df = result_df[["year", "co2_per_capita", "country"]]
     result_df.fillna("N/A", inplace=True)
     result_dict = dict(zip(result_df["year"], result_df["co2_per_capita"]))
