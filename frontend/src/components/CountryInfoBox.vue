@@ -36,7 +36,7 @@ defineExpose({
 
 <template>
   <div v-if="isVisible" :class="['info-box', { expanded: isExpanded }]">
-    <div class="handle" @click="toggleExpand"></div>
+    <div :class="['handle', { expanded: isExpanded }]" @click="toggleExpand"></div>
     <div :class="['content', { expanded: isExpanded }]">
       <h2>{{ countryName }}</h2>
       <template v-if="!isExpanded">
@@ -55,12 +55,10 @@ defineExpose({
   position: absolute;
   right: 0;
   top: 70px;
-  width: 25vw;
-  height: calc(100% - 70px - 3rem);
+  width: 25%;
+  height: calc(100% - 70px);
   padding: 20px;
-  margin: 1.5rem;
   background: white;
-  border-radius: 1.5rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.5s ease;
 }
@@ -75,10 +73,9 @@ h2 {
 
 .info-box.expanded {
   width: 97vw;
-  height: calc(100% - 70px - 3rem);
-  top: 90px;
+  height: calc(100% - 70px);
   right: 0;
-  border-radius: 0;
+  top: 70px;
   padding: 20px;
   margin: 0;
 }
@@ -94,6 +91,43 @@ h2 {
   border-left: 15px solid #03dac6;
   cursor: pointer;
   transform: rotate(180deg);
+  animation: pulse 2s infinite;
+}
+
+.handle::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  background: rgba(3, 218, 198, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ripple 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: rotate(180deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(180deg) scale(1);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
 }
 
 .handle:hover {

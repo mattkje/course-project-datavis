@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { Label } from 'radix-vue';
-import SearchBar from "@/components/SearchBar.vue";
+
+import '@fortawesome/fontawesome-free/css/all.css';
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import SearchBar from "@/components/SearchBar.vue";
       <img src="../assets/logo.svg" alt="Logo" class="logo" />
       <h1 class="title">Globe World Stats</h1>
     </div>
+    <i class="fas fa-info-circle about-icon"></i>
   </div>
 </template>
 
