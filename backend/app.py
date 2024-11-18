@@ -113,8 +113,8 @@ def co2_per_capita(country, start_year, end_year):
     result_dict = dict(zip(result_df["year"], result_df["co2_per_capita"]))
     return jsonify(result_dict)
 
-@app.route("/per-capita/<country>", defaults={'start_year': 1829, 'end_year': 2022})
-@app.route("/per-capita/<country>/<int:start_year>/<int:end_year>")
+@app.route("/per_capita/<country>", defaults={'start_year': 1829, 'end_year': 2022})
+@app.route("/per_capita/<country>/<int:start_year>/<int:end_year>")
 def per_capita(country, start_year, end_year):
     country_list = country.split(",")
     merged_df = init_global_data()
@@ -123,6 +123,7 @@ def per_capita(country, start_year, end_year):
     per_capita_columns = [
         col for col in result_df.columns
         if "per_capita" in col
+           and "energy" not in col
     ]
 
     per_capita_columns.append('year')

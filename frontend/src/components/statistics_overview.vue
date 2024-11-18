@@ -37,6 +37,7 @@ export default {
     }));
 
     this.fetchData(this.url).then(data => {
+      console.log(data);
       data.forEach(item => {
         item.year = new Date(item.year, 0, 1).getTime();
       });
@@ -64,7 +65,7 @@ export default {
           legendValueText: `{${field}} ${measurement}`,
           tooltip: am5.Tooltip.new(root, {
             pointerOrientation: "horizontal",
-            labelText: `{${field}} ${measurement}`,
+            labelText: `${prettyNames[field]}: {${field}} ${measurement}`,
           })
         }));
 

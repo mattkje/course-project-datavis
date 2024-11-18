@@ -16,6 +16,20 @@ export const prettyNames = {
     "co2_per_gdp": "CO\u2082 per GDP",
     "consumption_co2_per_gdp": "Consumption CO\u2082 per GDP",
     "energy_per_gdp": "Energy per GDP",
-    "co2_growth_prct": "CO\u2082 Growth Rate"
-
+    "co2_growth_prct": "CO\u2082 Growth Rate",
+    "cement_co2_per_capita": "Cement CO\u2082",
+    "co2_including_luc_per_capita": "CO\u2082 w/Land Use Change",
+    "co2_per_capita": "CO\u2082",
+    "coal_co2_per_capita": "Coal CO\u2082",
+    "consumption_co2_per_capita": "Consumption CO\u2082",
+    "energy_per_capita": "Energy",
+    "flaring_co2_per_capita": "Flaring CO\u2082",
+    "gas_co2_per_capita": "Gas CO\u2082",
+    "ghg_excluding_lucf_per_capita": "GHG excluding LUC",
+    "ghg_per_capita": "GHG",
+    "land_use_change_co2_per_capita": "Land Use Change CO\u2082",
+    "methane_per_capita": "Methane",
+    "nitrous_oxide_per_capita": "Nitrous Oxide",
+    "oil_co2_per_capita": "Oil CO\u2082",
+    "other_co2_per_capita": "Other CO\u2082",
 };

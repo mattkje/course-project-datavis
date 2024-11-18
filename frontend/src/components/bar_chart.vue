@@ -61,14 +61,15 @@ export default {
       const value = temp.split('/')[0];
       console.log(value);
 
-      // Add series for "co2_growth_prct"
       const series = chart.series.push(am5xy.ColumnSeries.new(root, {
         name: prettyNames[value],
         xAxis: xAxis,
         yAxis: yAxis,
         valueYField: value,
         valueXField: "date",
-        tooltip: am5.Tooltip.new(root, { labelText: `{${value}} ${measure}` })
+        tooltip: am5.Tooltip.new(root, {
+          labelText: `${prettyNames[value]}: {${value}} ${measure}`,
+        })
       }));
 
       // Style series

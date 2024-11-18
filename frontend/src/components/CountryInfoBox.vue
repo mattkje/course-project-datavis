@@ -14,7 +14,7 @@
           <select class="dropdown" v-model="selectedMeasure">
             <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
             <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
-            <option :value="`line:kg per dollar of GDP,coal_co2`">Per Capita</option>
+            <option :value="`line:Per/Capita,per_capita/${countryName}`">Per Capita</option>
             <option :value="`bar:%,co2_growth_prct/${countryName}`">Growth %</option>
           </select>
         </div>
@@ -29,11 +29,12 @@
         <component :is="selectedChartComponent" class="stats" :url="selectedMeasureUrl" :key="selectedMeasure"/>
       </div>
     </div>
+
   </div>
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
+import {ref, watch, computed} from 'vue';
 import StatisticsOverview from "@/components/statistics_overview.vue";
 import BarChartComponent from "@/components/bar_chart.vue";
 import SearchBar from "@/components/SearchBar.vue";
@@ -148,7 +149,7 @@ h2 {
 }
 
 .stats {
-  margin-top: 5rem;
+  margin-top: 6rem;
 }
 
 .info-box.expanded {
@@ -218,12 +219,15 @@ h2 {
   display: flex;
   flex-direction: column;
   transition: all 0.5s ease;
+
 }
 
 .content.expanded {
-  width: 65vw;
+  width: 66vw;
   align-items: flex-start;
-  padding-left: 20px;
+  padding: 20px;
+  height: 85%;
+  border-radius: 10px;
 }
 
 .content:not(.expanded) {
