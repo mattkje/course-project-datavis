@@ -146,8 +146,8 @@ export default {
 
 <style scoped>
 #chartdiv {
-  width: 100%;
+  width: 70%;
   height: 500px;
-  max-width: 100%;
+  max-width: 70%;
 }
 </style>
