@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import Statistics_overview from "@/components/statistics_overview.vue";
 import SearchBar from "@/components/SearchBar.vue";
 
@@ -9,6 +9,7 @@ const area = ref('');
 const capital = ref('');
 const isVisible = ref(false);
 const isExpanded = ref(false);
+let selectedMeasure = ref(`co2/${countryName.value}`);
 
 function updateCountryInfo(name, pop, areaSize, cap) {
   countryName.value = name;
@@ -16,6 +17,7 @@ function updateCountryInfo(name, pop, areaSize, cap) {
   area.value = areaSize;
   capital.value = cap;
   isVisible.value = true;
+  selectedMeasure.value = `co2/${name}`;
   console.log("updated");
 }
 
@@ -27,12 +29,17 @@ function toggleExpand() {
   isExpanded.value = !isExpanded.value;
 }
 
+watch(selectedMeasure, (newValue) => {
+  console.log("Measure changed to:", newValue);
+});
+
 defineExpose({
   updateCountryInfo,
   hideCountryInfo,
   toggleExpand
 });
 </script>
+
 
 
 <template>
@@ -44,19 +51,11 @@ defineExpose({
         <search-bar class="search-bar" />
         <div class="dropdown-container">
           <span>Measure by:</span>
-          <select class="dropdown">
-            <option value="co2">CO2</option>
-            <option value="co2_including_luc">CO2 w/Land Use Change</option>
-            <option value="coal_co2">Coal</option>
-            <option value="consumption_co2">Consumption</option>
-            <option value="cement_co2">Cement</option>
-            <option value="flaring_co2">Flaring</option>
-            <option value="gas_co2">Gas</option>
-            <option value="land_use_change_co2">Land Use Change</option>
-            <option value="oil_co2">Oil</option>
-            <option value="other_industry_co2">Other Industry</option>
-            <option value="temperature_change_from_co2">Temperature Change from CO2</option>
-            <option value="trade_co2">Trade</option>
+          <select class="dropdown" v-model="selectedMeasure">
+            <option :value="`co2/${countryName}`">Total Stats</option>
+            <option :value="`co2-growth-%/${countryName}`">Per GDP</option>
+            <option value="coal_co2">Per Capita</option>
+            <option value="consumption_co2">Growth %</option>
           </select>
         </div>
       </div>
@@ -67,7 +66,7 @@ defineExpose({
         <p>Capital: {{ capital }}</p>
       </template>
       <div class="chart" v-else>
-        <statistics_overview class="stats"  :url="`co2/${countryName}`"/>
+        <statistics_overview class="stats" :url="selectedMeasure"/>
       </div>
     </div>
   </div>

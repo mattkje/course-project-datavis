@@ -8,6 +8,15 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
+  server: {
+    fs: {
+      allow: [
+        // Allow serving files from the project root and node_modules
+        './',
+        '../node_modules'
+      ]
+    }
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
