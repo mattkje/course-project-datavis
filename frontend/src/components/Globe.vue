@@ -109,13 +109,7 @@ chart = root.container.children.push(
           geometry: am5map.getGeoRectangle(90, 180, -90, -180),
         });
 
-        var graticuleSeries = chart.series.unshift(
-            am5map.GraticuleSeries.new(root, {
-              step: 10,
-            })
-        );
 
-        graticuleSeries.mapLines.template.set("strokeOpacity", 0.1);
 
         // Set up events
         var previousPolygon;
