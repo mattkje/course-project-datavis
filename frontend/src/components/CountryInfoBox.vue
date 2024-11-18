@@ -11,10 +11,10 @@
         <div class="dropdown-container">
           <span>Measure by:</span>
           <select class="dropdown" v-model="selectedMeasure">
-            <option :value="`line:co2/${countryName}`">Total Stats</option>
-            <option :value="`line:gdp/${countryName}`">Per GDP</option>
-            <option :value="`line:coal_co2`">Per Capita</option>
-            <option :value="`bar:co2_growth_prct/${countryName}`">Growth %</option>
+            <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
+            <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
+            <option :value="`line:kg per dollar of GDP,coal_co2`">Per Capita</option>
+            <option :value="`bar:million tons,co2_growth_prct/${countryName}`">Growth %</option>
           </select>
         </div>
       </div>
@@ -43,7 +43,7 @@ const area = ref('');
 const capital = ref('');
 const isVisible = ref(false);
 const isExpanded = ref(false);
-const selectedMeasure = ref(`line:co2/${countryName.value}`);
+const selectedMeasure = ref(`line:million tons,co2/${countryName.value}`);
 const flagId = ref('');
 
 const selectedChartComponent = computed(() => {
@@ -62,7 +62,7 @@ function updateCountryInfo(name, pop, areaSize, cap, id) {
   area.value = areaSize;
   capital.value = cap;
   isVisible.value = true;
-  selectedMeasure.value = `line:co2/${name}`;
+  selectedMeasure.value = `line:million tons,co2/${name}`;
   flagId.value = `public/countryflags/${id}.svg`;
   console.log("Country info updated:", name, pop, areaSize, cap, id);
 }

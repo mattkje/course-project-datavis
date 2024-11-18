@@ -82,7 +82,7 @@ export default {
         paddingLeft: 15,
         height: am5.percent(100)
       }));
-      
+
       legend.labels.template.setAll({
         fill: am5.color("#000000")
       });

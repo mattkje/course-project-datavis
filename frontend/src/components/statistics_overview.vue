@@ -12,7 +12,7 @@ export default {
     url: {
       type: String,
       required: true
-    }
+    },
   },
   mounted() {
     let root = am5.Root.new(this.$refs.chartdiv);
@@ -53,7 +53,7 @@ export default {
       }));
 
       const fields = Object.keys(data[0]).filter(key => key !== "year" && key !== "country");
-
+      const measurement = this.url.split(',')[0];
       fields.forEach(field => {
         const series = chart.series.push(am5xy.LineSeries.new(root, {
           name: prettyNames[field],
@@ -61,10 +61,10 @@ export default {
           yAxis: yAxis,
           valueYField: field,
           valueXField: "year",
-          legendValueText: `{${field}} million tons`,
+          legendValueText: `{${field}} ${measurement}`,
           tooltip: am5.Tooltip.new(root, {
             pointerOrientation: "horizontal",
-            labelText: `{${field}} million tons`,
+            labelText: `{${field}} ${measurement}`,
           })
         }));
 
@@ -136,7 +136,9 @@ export default {
   },
   methods: {
     async fetchData(url) {
-      const response = await fetch(`${api}${url}`);
+      console.log("Fetching data from:", url);
+      const temp = url.split(',')[1];
+      const response = await fetch(`${api}${temp}`);
       if (response.ok) {
         return await response.json();
       } else {
