@@ -8,7 +8,7 @@
       </div>
       <p v-if="isExpanded">Displaying greenhouse gas data for {{ countryName }}</p>
       <div v-if="isExpanded" class="top-bar">
-        <search-bar/>
+        <search-bar @update:selectedItems="handleSelectedItems"/>
         <div class="dropdown-container">
           <span>Measure by:</span>
           <select class="dropdown" v-model="selectedMeasure">
@@ -39,6 +39,8 @@ import StatisticsOverview from "@/components/statistics_overview.vue";
 import BarChartComponent from "@/components/bar_chart.vue";
 import SearchBar from "@/components/SearchBar.vue";
 
+const selectedItems = ref([]);
+
 const countryName = ref('');
 const population = ref('');
 const area = ref('');
@@ -47,6 +49,11 @@ const isVisible = ref(false);
 const isExpanded = ref(false);
 const selectedMeasure = ref(`line:million tons,co2/${countryName.value}`);
 const flagId = ref('');
+
+const handleSelectedItems = (items) => {
+  selectedItems.value = items;
+  console.log('Selected items:', selectedItems.value);
+};
 
 const selectedChartComponent = computed(() => {
   const [chartType] = selectedMeasure.value.split(':');

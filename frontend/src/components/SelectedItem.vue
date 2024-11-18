@@ -22,16 +22,17 @@ const availableYearsForSecondSelect = computed(() => {
 
 <template>
   <div class="selected-item">
-    <template v-if="item === 'Year'">
-      <span>From:</span>
+    <template v-if="item === 'Year - Range' || item === 'Year'">
+      <span v-if="item === 'Year - Range'">From:</span>
+      <span v-else>Year:</span>
       <select v-model="selectedYear1">
         <option disabled value="">Select Year</option>
         <option v-for="year in years" :key="year" :value="year">
           {{ year }}
         </option>
       </select>
-      <span>To:</span>
-      <select v-model="selectedYear2" :disabled="!selectedYear1">
+      <span v-if="item === 'Year - Range'">To:</span>
+      <select v-model="selectedYear2" :disabled="!selectedYear1" v-if="item === 'Year - Range'">
         <option disabled value="">Select Year</option>
         <option v-for="year in availableYearsForSecondSelect" :key="year" :value="year">
           {{ year }}
