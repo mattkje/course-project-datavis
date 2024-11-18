@@ -6,6 +6,7 @@
         <img :src="flagId" alt="flag" class="flag"/>
         <h2>{{ countryName }}</h2>
       </div>
+      <p v-if="isExpanded">Displaying greenhouse gas data for {{ countryName }}</p>
       <div v-if="isExpanded" class="top-bar">
         <search-bar/>
         <div class="dropdown-container">
@@ -104,10 +105,22 @@ defineExpose({
   display: flex;
   align-items: center;
   margin-left: auto;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  color: black;
 }
 
 .dropdown {
   margin-left: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dropdown:focus {
+  border-color: #03dac6;
+  box-shadow: 0 0 5px rgba(3, 218, 198, 0.5);
 }
 
 .info-box {
@@ -135,7 +148,7 @@ h2 {
 }
 
 .stats {
-  margin-top: 4rem;
+  margin-top: 5rem;
 }
 
 .info-box.expanded {
