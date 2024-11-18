@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import Statistics_overview from "@/components/statistics_overview.vue";
+import SearchBar from "@/components/SearchBar.vue";
 
 const countryName = ref('');
 const population = ref('');
@@ -26,7 +27,6 @@ function toggleExpand() {
   isExpanded.value = !isExpanded.value;
 }
 
-// Expose functions so they can be accessed outside the component
 defineExpose({
   updateCountryInfo,
   hideCountryInfo,
@@ -34,23 +34,75 @@ defineExpose({
 });
 </script>
 
+
 <template>
   <div v-if="isVisible" :class="['info-box', { expanded: isExpanded }]">
     <div :class="['handle', { expanded: isExpanded }]" @click="toggleExpand"></div>
     <div :class="['content', { expanded: isExpanded }]">
       <h2>{{ countryName }}</h2>
+      <div v-if="isExpanded" class="top-bar">
+        <search-bar class="search-bar" />
+        <div class="dropdown-container">
+          <span>Measure by:</span>
+          <select class="dropdown">
+            <option value="co2">CO2</option>
+            <option value="co2_including_luc">CO2 w/Land Use Change</option>
+            <option value="coal_co2">Coal</option>
+            <option value="consumption_co2">Consumption</option>
+            <option value="cement_co2">Cement</option>
+            <option value="flaring_co2">Flaring</option>
+            <option value="gas_co2">Gas</option>
+            <option value="land_use_change_co2">Land Use Change</option>
+            <option value="oil_co2">Oil</option>
+            <option value="other_industry_co2">Other Industry</option>
+            <option value="temperature_change_from_co2">Temperature Change from CO2</option>
+            <option value="trade_co2">Trade</option>
+          </select>
+        </div>
+      </div>
       <template v-if="!isExpanded">
         <hr>
         <p>Population: {{ population }}</p>
         <p>Area: {{ area }} km²</p>
         <p>Capital: {{ capital }}</p>
       </template>
-      <statistics_overview class="stats" v-else :countryName="countryName"/>
+      <div class="chart" v-else>
+        <statistics_overview class="stats"  :url="`co2/${countryName}`"/>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+
+.chart {
+  width: 100%;
+  height: 100%;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 14rem;
+}
+
+.search-bar {
+  flex: 1;
+}
+
+.dropdown-container {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.dropdown {
+  margin-left: 10px;
+}
+
+/* Existing styles */
 .info-box {
   position: absolute;
   right: 0;
@@ -68,7 +120,7 @@ h2 {
 }
 
 .stats {
-  margin-top: 4rem;
+  margin-top: 8rem;
 }
 
 .info-box.expanded {
@@ -141,6 +193,7 @@ h2 {
 }
 
 .content.expanded {
+  width: 65vw;
   align-items: flex-start;
   padding-left: 20px;
 }

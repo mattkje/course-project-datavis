@@ -47,6 +47,7 @@ export default {
     onMounted(() => {
       function selectCountryInfo(name) {
         if (countryInfoBox.value) {
+
           countryInfoBox.value.updateCountryInfo(name, "10 million", "500,000", "Dummy Capital");
         }
       }

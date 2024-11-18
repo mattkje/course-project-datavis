@@ -1,23 +1,23 @@
 <template>
-  <div class="search-bar">
-
-    <div class="search-input-wrapper">
-      <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="search-icon" />
-      <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Search..."
-      />
+    <div class="search-bar">
+      <div class="search-input-wrapper">
+        <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="search-icon"/>
+        <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Search for a Country or a Category..."
+        />
+      </div>
+      <ul v-if="filteredSuggestions.length" class="suggestions">
+        <li
+            v-for="suggestion in filteredSuggestions"
+            :key="suggestion"
+            @click="selectSuggestion(suggestion)"
+        >
+          {{ suggestion }}
+        </li>
+      </ul>
     </div>
-    <ul v-if="filteredSuggestions.length" class="suggestions">
-      <li
-          v-for="suggestion in filteredSuggestions"
-          :key="suggestion"
-          @click="selectSuggestion(suggestion)"
-      >
-        {{ suggestion }}
-      </li>
-    </ul>
     <div class="selected-items">
       <SelectedItem
           v-for="item in selectedItems"
@@ -26,12 +26,10 @@
           :onRemove="removeItem"
       />
     </div>
-
-  </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import {ref, computed} from 'vue';
 import SelectedItem from './SelectedItem.vue';
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
@@ -67,21 +65,19 @@ const suggestions = ref([
 .search-bar {
   position: relative;
   display: flex;
-  height: 40px;
-  align-items: flex-end;
+  flex-direction: row;
+  width: 20vw;
 }
 
 .search-input-wrapper {
   display: flex;
   align-items: center;
-  width: 100%;
-  min-width: 100px;
   padding: 8px;
   box-sizing: border-box;
   border: 1px solid black;
   border-radius: 15px;
   background: white;
-  height: 90%;
+  width: 20vw;
 }
 
 .search-icon {
@@ -97,13 +93,22 @@ input {
 
 .suggestions {
   position: absolute;
-  width: 100%;
+  top: 100%;
+  left: 0;
+  width: 20vw;
   list-style: none;
   margin: 0;
   padding: 0;
   max-height: 150px;
   overflow-y: auto;
-  color: white;
+  background: white;
+  border-radius: 0 0 15px 15px; /* Match border radius */
+  z-index: 1;
+}
+
+.suggestions li {
+  cursor: pointer;
+  color: black;
 }
 
 .suggestions li {
@@ -112,7 +117,8 @@ input {
 }
 
 .suggestions li:hover {
-  color: #03DAC6;
+  background-color: #03DAC6;
+  color: white;
 }
 
 .suggestions::-webkit-scrollbar {
@@ -130,7 +136,7 @@ input {
 }
 
 .selected-items {
-  margin-top: 10px;
+  margin-left: 5px;
   display: flex;
   flex-wrap: nowrap;
   gap: 5px;

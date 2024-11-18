@@ -4,28 +4,30 @@
 
 <script>
 const prettyNames = {
-  "co2": "CO2",
-  "co2_including_luc": "CO2 Including LUCF",
-  "coal_co2": "Coal CO2",
-  "consumption_co2": "Consumption CO2",
-  "flaring_co2": "Flaring CO2",
-  "gas_co2": "Gas CO2",
-  "land_use_change_co2": "Land Use Change CO2",
-  "oil_co2": "Oil CO2",
-  "other_industry_co2": "Other Industry CO2",
-  "temperature_change_from_co2": "Temperature Change from CO2",
-  "trade_co2": "Trade CO2"
+  "co2": "CO\u2082",
+  "co2_including_luc": "CO\u2082 w/Land Use Change",
+  "coal_co2": "Coal",
+  "consumption_co2": "Consumption",
+  "cement_co2": "Cement",
+  "flaring_co2": "Flaring",
+  "gas_co2": "Gas",
+  "land_use_change_co2": "Land Use Change",
+  "oil_co2": "Oil",
+  "other_industry_co2": "Other Industry",
+  "temperature_change_from_co2": "Temperature Change from CO\u2082",
+  "trade_co2": "Trade"
 };
+
+const api = "http://127.0.0.1:5000/";
 
 // TODO: Add a unit translation for each type
 // TODO: Add all the prettyNames
 // TODO: Makes this take in inputs instead of a set datatype
 
-
 export default {
   name: "AmChartComponent",
   props: {
-    countryName: {
+    url: {
       type: String,
       required: true
     }
@@ -52,7 +54,7 @@ export default {
       pinchZoomX: true
     }));
 
-    this.fetchData(this.countryName).then(data => {
+    this.fetchData(this.url).then(data => {
       data.forEach(item => {
         item.year = new Date(item.year, 0, 1).getTime();
       });
@@ -84,23 +86,28 @@ export default {
           })
         }));
 
-          series.data.setAll(data);
-
+        series.data.setAll(data);
 
         // This is how we can hide all series except for the one we want to show
         // TODO: MAKE THIS INTO A FUNCTION BASED THING
-        if (field !== "co2") {
-            series.hide();
-          } else {
+        if (field !== "co2_including_luc") {
+          series.hide();
+        } else {
           series.appear();
-          }
+        }
       });
 
       const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "none" }));
       cursor.lineY.set("visible", false);
 
-      chart.set("scrollbarX", am5.Scrollbar.new(root, { orientation: "horizontal" }));
+      var scrollbarX = am5.Scrollbar.new(root, {
+        orientation: "horizontal"
+      });
       chart.set("scrollbarY", am5.Scrollbar.new(root, { orientation: "vertical" }));
+
+      chart.set("scrollbarX", scrollbarX);
+      chart.bottomAxesContainer.children.push(scrollbarX);
+
 
       const legend = chart.rightAxesContainer.children.push(am5.Legend.new(root, {
         width: 400,
@@ -136,13 +143,15 @@ export default {
       });
 
       legend.labels.template.setAll({
-        fill: am5.color("#ffffff")
+        fill: am5.color("#000000")
       });
       legend.valueLabels.template.setAll({
-        fill: am5.color("#ffffff"),
+        fill: am5.color("#000000"),
         width: am5.p200,
         textAlign: "right"
       });
+
+
 
       legend.itemContainers.template.set("width", am5.p100);
       legend.valueLabels.template.setAll({
@@ -150,15 +159,14 @@ export default {
         textAlign: "right"
       });
 
+
       legend.data.setAll(chart.series.values);
       chart.appear(1000, 100);
-
-      
     });
   },
   methods: {
-    async fetchData(countryName) {
-      const response = await fetch(`http://127.0.0.1:5000/co2/${countryName}`);
+    async fetchData(url) {
+      const response = await fetch(`${api}${url}`);
       if (response.ok) {
         return await response.json();
       } else {

@@ -59,12 +59,14 @@ const availableYearsForSecondSelect = computed(() => {
 }
 
 button {
+  align-self: center;
   font-weight: bold;
   font-size: 14px;
   background: none;
   border: none;
   cursor: pointer;
   color: #ffffff;
+  margin: 0;
   padding: 0;
 }
 
