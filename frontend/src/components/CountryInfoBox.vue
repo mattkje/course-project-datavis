@@ -25,6 +25,7 @@
           <component :is="selectedChartComponent" :url="selectedMeasureUrl" :key="selectedMeasure"/>
         </div>
         <country-key-information></country-key-information>
+        <dual-pie-chart-component :url="countryName"></dual-pie-chart-component>
       </div>
       <template v-if="!isExpanded">
         <div class="header">
@@ -42,10 +43,11 @@
 
 <script setup>
 import {ref, watch, computed} from 'vue';
-import StatisticsOverview from "@/components/statistics_overview.vue";
-import BarChartComponent from "@/components/bar_chart.vue";
+import StatisticsOverview from "@/components/visualization tools/statistics_overview.vue";
+import BarChartComponent from "@/components/visualization tools/bar_chart.vue";
 import SearchBar from "@/components/SearchBar.vue";
 import CountryKeyInformation from "@/components/CountryKeyInformation.vue";
+import DualPieChartComponent from "@/components/visualization tools/DualPieChart.vue";
 
 const selectedItems = ref([]);
 

@@ -174,7 +174,7 @@ export default {
 .measurement-label {
   position: absolute;
   bottom: 10%;
-  left: 66%;
+  right: 180px;
   color: #000000;
   padding: 5px;
   border-radius: 3px;
@@ -185,4 +185,6 @@ export default {
 .bold {
   font-weight: bold;
 }
+
+
 </style>

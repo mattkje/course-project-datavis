@@ -18,8 +18,8 @@ const rankings = ref([
 <style scoped>
 .key-info-box {
   padding: 20px;
-  margin-top: 10%;
-  margin-bottom: 5%;
+  margin-top: 100px;
+  height: 500px;
   width: 30%;
   border: 1px solid #ccc;
   border-radius: 5px;

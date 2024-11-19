@@ -1,5 +1,7 @@
 <template>
-  <div id="chartdiv" ref="chartdiv"></div>
+  <div id="chartdiv" ref="chartdiv">
+    <div class="measurement-label">Measured in <span class="bold">{{ measurement }}</span></div>
+  </div>
 </template>
 
 <script>
@@ -18,6 +20,11 @@ export default {
       type: String,
       required: true
     }
+  },
+  data() {
+    return {
+      measurement: this.url.split(',')[0]
+    };
   },
   mounted() {
     let root = am5.Root.new(this.$refs.chartdiv);
@@ -125,8 +132,24 @@ export default {
 
 <style scoped>
 #chartdiv {
+  margin-top: 6rem;
   width: 70%;
   height: 500px;
   max-width: 70%;
+}
+
+.measurement-label {
+  position: absolute;
+  bottom: 10%;
+  right: 100px;
+  color: #000000;
+  padding: 5px;
+  border-radius: 3px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+}
+
+.bold {
+  font-weight: bold;
 }
 </style>
