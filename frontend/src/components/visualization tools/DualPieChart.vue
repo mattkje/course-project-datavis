@@ -32,9 +32,10 @@ export default {
     root.container.set("layout", root.verticalLayout);
 
     this.fetchData(this.url).then(data => {
+      console.log(data);
       const transformData = (series) => {
         return Object.keys(series)
-            .filter(key => !['co2', 'co2_including_luc', 'country', 'year'].includes(key))
+            .filter(key => !['co2', 'co2_including_luc', 'country', 'year', 'land_use_change_co2'].includes(key))
             .map(key => ({
               category: key,
               value: series[key]
@@ -203,8 +204,7 @@ export default {
     });
   },
   methods: {
-    async fetchData(url, start_year = 1900, end_year = 2022) {
-      console.log(`${api}co2/${url}/${start_year}/${end_year}`);
+    async fetchData(url, start_year = 2000, end_year = 2021) {
       const response = await fetch(`${api}co2/${url}/${start_year}/${end_year}`);
       if (response.ok) {
         const data = await response.json();
