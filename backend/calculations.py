@@ -26,3 +26,13 @@ def predict_arima(country, prediction_data):
         for i in range(5)
     ]
     return predictions
+
+def calculate_democracy_rank(country):
+    df = pd.read_csv("datasets/democracy-index-eiu.csv")
+    filter_df = df[df["year"] == 2023]
+    filter_df = filter_df.sort_values(by="DemocracyScore", ascending=False).reset_index(drop=True)
+
+    if country not in filter_df["country"].values:
+        raise ValueError(f"No data found for {country} in 2023.")
+    country_rank = filter_df[filter_df["country"] == country].index[0] + 1
+    return country_rank

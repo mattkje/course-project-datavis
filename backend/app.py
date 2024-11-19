@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import pandas as pd
 
-from predictions import predict_arima
+from calculations import predict_arima, calculate_democracy_rank
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -276,3 +276,22 @@ def country_co2(country, start_year, end_year):
 @app.route("/predict/<country>/<prediction_data>")
 def predict(country, prediction_data):
     return predict_arima(country, prediction_data)
+
+@app.route("/additional-data/<country>")
+def additional_data(country):
+    df1 = pd.read_csv("datasets/democracy-index-eiu.csv")
+    df1 = df1[df1["year"] == 2023]
+    df2 = pd.read_csv("datasets/happiest-countries-in-the-world-2024.csv")
+    df2["country"] = df2["country"].str.replace('"', '')
+    merged_df = pd.merge(df1, df2, on="country")
+    result_df = merged_df[merged_df["country"] == country]
+    result_df = result_df[["country", "HappinessRank2023", "HappinessScore2023", "DemocracyScore"]]
+    result_df.fillna("N/A", inplace=True)
+
+    try:
+        democracy_rank = calculate_democracy_rank(country)
+        result_df["DemocracyRank"] = democracy_rank
+    except ValueError as e:
+        result_df["DemocracyRank"] = str(e)
+
+    return jsonify(result_df.to_dict(orient="records"))

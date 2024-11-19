@@ -1,4 +1,4 @@
-Entity,Code,Year,Democracy score
+country,Code,year,DemocracyScore
 Afghanistan,AFG,2006,3.06
 Afghanistan,AFG,2008,3.02
 Afghanistan,AFG,2010,2.48
