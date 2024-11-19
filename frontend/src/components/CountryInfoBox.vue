@@ -2,22 +2,29 @@
   <div v-if="isVisible" :class="['info-box', { expanded: isExpanded }]">
     <div :class="['handle', { expanded: isExpanded }]" @click="toggleExpand"></div>
     <div :class="['content', { expanded: isExpanded }]">
-      <div class="header">
-        <img :src="flagId" alt="flag" class="flag"/>
-        <h2>{{ countryName }}</h2>
-      </div>
-      <p v-if="isExpanded">Displaying greenhouse gas data for {{ countryName }}</p>
-      <div v-if="isExpanded" class="top-bar">
-        <search-bar @update:selectedItems="handleSelectedItems"/>
-        <div class="dropdown-container">
-          <span>Measure by:</span>
-          <select class="dropdown" v-model="selectedMeasure">
-            <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
-            <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
-            <option :value="`line:Per/Capita,per_capita/${countryName}`">Per Capita</option>
-            <option :value="`bar:%,co2_growth_prct/${countryName}`">Growth %</option>
-          </select>
+
+      <div v-if="isExpanded" class="expandedContainer">
+        <div class="panel-1">
+          <div class="header">
+            <img :src="flagId" alt="flag" class="flag"/>
+            <h2>{{ countryName }}</h2>
+          </div>
+          <p>Displaying greenhouse gas data for {{ countryName }}</p>
+          <div class="top-bar">
+            <search-bar @update:selectedItems="handleSelectedItems"/>
+            <div class="dropdown-container">
+              <span>Measure by:</span>
+              <select class="dropdown" v-model="selectedMeasure">
+                <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
+                <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
+                <option :value="`line:Per/Capita,per_capita/${countryName}`">Per Capita</option>
+                <option :value="`bar:%,co2_growth_prct/${countryName}`">Growth %</option>
+              </select>
+            </div>
+          </div>
+          <component :is="selectedChartComponent" :url="selectedMeasureUrl" :key="selectedMeasure"/>
         </div>
+        <country-key-information></country-key-information>
       </div>
       <template v-if="!isExpanded">
         <hr>
@@ -25,11 +32,7 @@
         <p>Area: {{ area }} km²</p>
         <p>Capital: {{ capital }}</p>
       </template>
-      <div class="chart" v-else>
-        <component :is="selectedChartComponent" class="stats" :url="selectedMeasureUrl" :key="selectedMeasure"/>
-      </div>
     </div>
-
   </div>
 </template>
 
@@ -38,6 +41,7 @@ import {ref, watch, computed} from 'vue';
 import StatisticsOverview from "@/components/statistics_overview.vue";
 import BarChartComponent from "@/components/bar_chart.vue";
 import SearchBar from "@/components/SearchBar.vue";
+import CountryKeyInformation from "@/components/CountryKeyInformation.vue";
 
 const selectedItems = ref([]);
 
@@ -102,7 +106,6 @@ defineExpose({
   justify-content: start;
   align-items: center;
   width: 100%;
-  margin-bottom: 14rem;
 }
 
 .search-bar {
@@ -156,11 +159,13 @@ h2 {
 }
 
 .stats {
-  margin-top: 6rem;
+  margin-top: 10rem;
 }
 
 .info-box.expanded {
-  width: 97vw;
+  display: flex;
+  justify-content: space-between;
+  width: 97%;
   height: calc(100% - 70px);
   right: 0;
   top: 70px;
@@ -230,11 +235,9 @@ h2 {
 }
 
 .content.expanded {
-  width: 66vw;
-  align-items: flex-start;
+  width: 100%;
   padding: 20px;
-  height: 85%;
-  border-radius: 10px;
+  height: 100%;
 }
 
 .content:not(.expanded) {
@@ -277,5 +280,21 @@ p {
   width: 60px;
   max-height: 100%;
   margin-right: 10px;
+}
+
+.expandedContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 4%;
+  width: 100%;
+  height: 100%;
+}
+
+.panel-1 {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
 }
 </style>

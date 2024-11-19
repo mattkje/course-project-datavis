@@ -1,5 +1,6 @@
 <template>
   <div id="chartdiv" ref="chartdiv"></div>
+  <div class="measurement-label">Measured in {{ measurement }}</div>
 </template>
 
 <script>
@@ -156,8 +157,10 @@ export default {
 
 <style scoped>
 #chartdiv {
+  margin-top: 6rem;
   width: 70%;
   height: 500px;
   max-width: 70%;
 }
+
 </style>
