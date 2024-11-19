@@ -1,10 +1,13 @@
 <template>
-  <div id="chartdiv" ref="chartdiv"></div>
-  <div class="measurement-label">Measured in {{ measurement }}</div>
+  <div id="chartdiv" ref="chartdiv">
+    <div class="measurement-label">Measured in {{ measurement }}</div>
+  </div>
 </template>
 
 <script>
 import { prettyNames } from "@/components/dictionaries/prettyNames.js";
+import * as am5 from "@amcharts/amcharts5";
+import * as am5xy from "@amcharts/amcharts5/xy.js";
 const api = "http://127.0.0.1:5000/";
 
 export default {
@@ -14,6 +17,11 @@ export default {
       type: String,
       required: true
     },
+  },
+  data() {
+    return {
+      measurement: this.url.split(',')[0]
+    };
   },
   mounted() {
     let root = am5.Root.new(this.$refs.chartdiv);
@@ -62,7 +70,7 @@ export default {
           yAxis: yAxis,
           valueYField: field,
           valueXField: "year",
-          legendValueText: `{${field}} ${measurement}`,
+          legendValueText: `{${field}}`,
           tooltip: am5.Tooltip.new(root, {
             pointerOrientation: "horizontal",
             labelText: `${prettyNames[field]}: {${field}} ${measurement}`,
@@ -84,7 +92,7 @@ export default {
       chart.bottomAxesContainer.children.push(scrollbarX);
 
       const legend = chart.rightAxesContainer.children.push(am5.Legend.new(root, {
-        width: 400,
+        width: 300,
         paddingLeft: 15,
         height: am5.percent(100)
       }));
@@ -163,4 +171,15 @@ export default {
   max-width: 70%;
 }
 
+.measurement-label {
+  position: absolute;
+  bottom: 10%;
+  right: 7%;
+  color: #000000;
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 3px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+}
 </style>
