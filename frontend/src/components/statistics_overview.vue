@@ -1,6 +1,6 @@
 <template>
   <div id="chartdiv" ref="chartdiv">
-    <div class="measurement-label">Measured in {{ measurement }}</div>
+<div class="measurement-label">Measured in <span class="bold">{{ measurement }}</span></div>
   </div>
 </template>
 
@@ -174,12 +174,15 @@ export default {
 .measurement-label {
   position: absolute;
   bottom: 10%;
-  right: 7%;
+  left: 66%;
   color: #000000;
-  font-weight: bold;
   padding: 5px;
   border-radius: 3px;
   font-family: Arial, sans-serif;
   font-size: 12px;
+}
+
+.bold {
+  font-weight: bold;
 }
 </style>
