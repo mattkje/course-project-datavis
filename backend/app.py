@@ -2,6 +2,8 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import pandas as pd
 
+from predictions import predict_arima
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -270,3 +272,7 @@ def country_co2(country, start_year, end_year):
 
     # Convert the filtered DataFrame to JSON format
     return jsonify(co2_data_df.to_dict(orient="records"))
+
+@app.route("/predict/<country>/<prediction_data>")
+def predict(country, prediction_data):
+    return predict_arima(country, prediction_data)
