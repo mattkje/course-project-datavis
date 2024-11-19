@@ -3,14 +3,14 @@ import { ref } from 'vue';
 
 const rankings = ref([
   { country: 'Country A', number: 1, category: 'GDP' },
-  { country: 'Country B', number: 2, category: 'Population' },
+  { country: 'Country A', number: 2, category: 'Population' },
 ]);
 </script>
 
 <template>
   <div class="key-info-box">
     <p v-for="(ranking, index) in rankings" :key="index">
-      {{ ranking.country }} is ranked <span class="highlight">#{{ ranking.number }}</span> for {{ ranking.category }}
+      {{ ranking.country }} is ranked <span class="highlight">#{{ ranking.number }}</span> in {{ ranking.category }}
     </p>
   </div>
 </template>
@@ -26,6 +26,9 @@ const rankings = ref([
   background-color: #f9f9f9;
   font-family: Arial, sans-serif;
   color: #000000;
+  align-items: start;
+  display: flex;
+  flex-direction: column;
 }
 
 p {

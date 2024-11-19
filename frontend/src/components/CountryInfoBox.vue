@@ -27,6 +27,10 @@
         <country-key-information></country-key-information>
       </div>
       <template v-if="!isExpanded">
+        <div class="header">
+          <img :src="flagId" alt="flag" class="flag"/>
+          <h2>{{ countryName }}</h2>
+        </div>
         <hr>
         <p>Population: {{ population }}</p>
         <p>Area: {{ area }} km²</p>
