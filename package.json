@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@amcharts/amcharts4-geodata": "^4.1.30",
     "@amcharts/amcharts5": "^5.10.7",
     "@amcharts/amcharts5-fonts": "^5.0.1",
     "@amcharts/amcharts5-geodata": "^5.1.4",

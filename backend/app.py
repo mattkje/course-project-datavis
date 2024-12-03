@@ -29,6 +29,13 @@ def country(country):
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
 
+
+@app.route("/countries")
+def countries():
+    result_df = filter_world_data()
+    countries_list = result_df["country"].unique().tolist()
+    return jsonify(countries_list)
+
 @app.route("/country_data/<country>")
 def country_data(country):
     country_list = country.split(",")
@@ -276,6 +283,45 @@ def country_co2(country, start_year, end_year):
 @app.route("/predict/<country>/<prediction_data>")
 def predict(country, prediction_data):
     return predict_arima(country, prediction_data)
+
+import csv
+
+def load_country_to_continent():
+    country_to_continent = {}
+    with open('datasets/countryToContinent.csv', mode='r') as infile:
+        reader = csv.reader(infile)
+        next(reader)  # Skip the header row
+        for rows in reader:
+            country_to_continent[rows[0]] = rows[1]
+    return country_to_continent
+
+@app.route("/gdp_co2")
+def gdp_co2():
+    merged_df = init_global_data()
+
+    # Select the necessary columns
+    result_df = merged_df[["year", "country", "gdp", "co2"]].copy()
+    result_df.loc[:, :] = result_df.fillna(0)  # Replace NaN values with 0
+
+    # Load country to continent mapping
+    country_to_continent = load_country_to_continent()
+
+    # Format the data as required
+    data = {}
+    for year in result_df["year"].unique():
+        year_data = result_df[result_df["year"] == year]
+        data[int(year)] = [
+            {
+                "x": row["co2"],
+                "y": row["gdp"],
+                "name": row["country"],
+                "continent": country_to_continent.get(row["country"], "Unknown")
+            }
+            for _, row in year_data.iterrows()
+        ]
+
+    return jsonify(data)
+
 
 @app.route("/additional-data/<country>")
 def additional_data(country):

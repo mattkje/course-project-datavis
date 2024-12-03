@@ -26,6 +26,7 @@
         </div>
         <country-key-information></country-key-information>
         <dual-pie-chart-component :url="countryName"></dual-pie-chart-component>
+        <motion-chart-component :url="countryName"></motion-chart-component>
       </div>
       <template v-if="!isExpanded">
         <div class="header">
@@ -48,6 +49,7 @@ import BarChartComponent from "@/components/visualization tools/bar_chart.vue";
 import SearchBar from "@/components/SearchBar.vue";
 import CountryKeyInformation from "@/components/CountryKeyInformation.vue";
 import DualPieChartComponent from "@/components/visualization tools/DualPieChart.vue";
+import MotionChartComponent from "@/components/visualization tools/MotionChart.vue";
 
 const selectedItems = ref([]);
 
