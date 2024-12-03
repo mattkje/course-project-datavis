@@ -8,9 +8,8 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="index" level="application" />
-    <orderEntry type="library" name="xy" level="application" />
-    <orderEntry type="library" name="Animated" level="application" />
+    <orderEntry type="library" name="map" level="application" />
+    <orderEntry type="library" name="continentsLow" level="application" />
   </component>
   <component name="SonarLintModuleSettings">
     <option name="uniqueId" value="6d33c341-78db-4394-beb4-852215073d37" />

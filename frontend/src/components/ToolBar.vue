@@ -4,6 +4,11 @@ import { Label } from 'radix-vue';
 
 import '@fortawesome/fontawesome-free/css/all.css';
 import About from "@/components/About.vue";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 </script>
 
 <template>
@@ -14,6 +19,9 @@ import About from "@/components/About.vue";
     </div>
     <About />
   </div>
+  <button class="back-to-top" @click="scrollToTop">
+    <font-awesome-icon :icon="['fas', 'arrow-up']" />
+  </button>
 </template>
 
 <style scoped>
@@ -88,4 +96,25 @@ import About from "@/components/About.vue";
   outline: none;
 }
 
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #1E555F;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 15px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.back-to-top:hover {
+  background-color: #144a4f;
+}
 </style>

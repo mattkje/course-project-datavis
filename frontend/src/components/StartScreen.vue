@@ -31,7 +31,7 @@ const hideStartScreen = async () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 h1 {
   font-size: 4rem;
   font-weight: 900;

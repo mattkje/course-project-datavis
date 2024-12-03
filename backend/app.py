@@ -318,6 +318,7 @@ def gdp_co2():
                 "continent": country_to_continent.get(row["country"], "Unknown")
             }
             for _, row in year_data.iterrows()
+
         ]
 
     return jsonify(data)
