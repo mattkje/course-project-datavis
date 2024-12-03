@@ -3,6 +3,8 @@ import ContinentMap from './visualization tools/ContinentMap.vue';
 import ToolBar from "@/components/ToolBar.vue";
 import {ref} from "vue";
 import PinMap from "@/components/visualization tools/pinMap.vue";
+import ChartComponent from "@/components/visualization tools/ContinentCountryBarChart.vue";
+import ContinentChartComponent from "@/components/visualization tools/ContinentCountryBarChart.vue";
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
@@ -34,7 +36,13 @@ const MapContainerWith = ref('100%');
       </div>
       <ContinentMap />
     </div>
+    <div class="bar-container">
+      <div class="innerTextContainer">
+        <p>I pooped today</p>
+    </div>
+      <ContinentChartComponent />
   </div>
+</div>
 </template>
 
 <style scoped>
@@ -137,5 +145,27 @@ p {
   left: 10px;
   padding: 10px;
   z-index: 1;
+}
+
+.bar-container {
+  display: flex;
+  justify-content: center;
+  background-color: #1E555F;
+  position: relative; /* Add this line */
+  gap: 20px;
+  padding-right: 50px;
+  padding-top: 50px;
+}
+
+.bar-container::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  border-top: 2px dotted #FFA737;
+  border-bottom: 2px dotted #FFA737;
+  pointer-events: none;
 }
 </style>

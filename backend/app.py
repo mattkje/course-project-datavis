@@ -102,11 +102,12 @@ def co2_growth_abs(country):
     result_dict = dict(zip(result_df["year"], result_df["co2_growth_abs"]))
     return jsonify(result_dict)
 
-@app.route("/co2_growth_prct/<country>")
-def co2_growth_percentage(country):
+@app.route("/co2_growth_prct/<country>/<int:start_year>/<int:end_year>")
+def co2_growth_percentage(country, start_year, end_year):
     country_list = country.split(",")
     df = pd.read_csv("datasets/globalwarmingdata.csv")
     result_df = df[df["country"].isin(country_list)]
+    result_df = result_df[(result_df["year"] >= start_year) & (result_df["year"] <= end_year)]
     result_df = result_df[["year", "co2_growth_prct", "country"]]
     result_df.fillna(0, inplace=True)
     return jsonify(result_df.to_dict(orient="records"))
@@ -284,13 +285,13 @@ def country_co2(country, start_year, end_year):
 def predict(country, prediction_data):
 
     if prediction_data == "co2":
-        previous_country_data = country_co2(country, 1829, 2022).get_json()
+        previous_country_data = country_co2(country, 2000, 2022).get_json()
     elif prediction_data == "gdp":
-        previous_country_data = country_gdp(country, 1829, 2022).get_json()
+        previous_country_data = country_gdp(country, 2000, 2022).get_json()
     elif prediction_data == "per_capita":
-        previous_country_data = per_capita(country, 1829, 2022).get_json()
+        previous_country_data = per_capita(country, 2000, 2022).get_json()
     elif prediction_data == "co2_growth_prct":
-        previous_country_data = co2_growth_percentage(country).get_json()
+        previous_country_data = co2_growth_percentage(country, 2000, 2022).get_json()
     else:
         return jsonify({"error": f"Prediction data '{prediction_data}' is not supported."})
 
@@ -313,6 +314,22 @@ def load_country_to_continent():
         for rows in reader:
             country_to_continent[rows[0]] = rows[1]
     return country_to_continent
+
+@app.route("/continent_data/<continent>/<data>")
+def continent_data(continent, data):
+    country_to_continent = load_country_to_continent()
+    countries_in_continent = [country for country, cont in country_to_continent.items() if cont == continent]
+    merged_df = init_global_data()
+    merged_df = merged_df[merged_df["year"] == 2022]
+    result_df = pd.DataFrame()
+    for country in countries_in_continent:
+        country_data = merged_df[merged_df["country"] == country][["year", data, "country"]]
+        result_df = pd.concat([result_df, country_data], ignore_index=True)
+
+    result_df.dropna(inplace=True)
+
+    return jsonify(result_df.to_dict(orient="records"))
+
 
 @app.route("/gdp_co2")
 def gdp_co2():
