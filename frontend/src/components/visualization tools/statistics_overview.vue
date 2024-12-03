@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      measurement: this.url.split(',')[0],
+      measurement : this.url.split(',')[0],
     };
   },
   mounted() {

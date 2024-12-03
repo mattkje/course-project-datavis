@@ -23,18 +23,21 @@ const MapContainerWith = ref('100%');
 
     <div class="map-container">
       <div class="mapHeader">
-        <h2>Explore the greenhouse gas emissions data by country</h2>
+        <h2>Percentage Co2 Emissions Per Continent</h2>
       </div>
-      <pin-map />
+      <pin-map  url="million tons,cumulative_co2"/>
       <div class="innerTextContainer">
       </div>
     </div>
 
     <div class="map-container">
+      <div class="mapHeader">
+        <h2>Explore the greenhouse gas emissions data by country</h2>
+      </div>
+      <ContinentMap />
       <div class="innerTextContainer">
         <p>Explore the greenhouse gas emissions data by continent</p>
       </div>
-      <ContinentMap />
     </div>
     <div class="bar-container">
       <div class="innerTextContainer">
@@ -68,7 +71,7 @@ h1 {
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 900;
   color: white;
   margin: 0;

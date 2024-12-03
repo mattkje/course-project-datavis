@@ -1,6 +1,5 @@
 import pandas as pd
-from anaconda_project.internal.conda_api import result
-from statsmodels.tsa.arima.model import ARIMA
+from statsmodels.tsa.arima_model import ARIMA
 
 
 def predict_arima(country, prediction_data):
