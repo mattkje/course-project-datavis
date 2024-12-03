@@ -280,9 +280,28 @@ def country_co2(country, start_year, end_year):
     # Convert the filtered DataFrame to JSON format
     return jsonify(co2_data_df.to_dict(orient="records"))
 
-@app.route("/predict/<country>/<prediction_data>")
+@app.route("/<prediction_data>/<country>/predict")
 def predict(country, prediction_data):
-    return predict_arima(country, prediction_data)
+
+    if prediction_data == "co2":
+        previous_country_data = country_co2(country, 1829, 2022).get_json()
+    elif prediction_data == "gdp":
+        previous_country_data = country_gdp(country, 1829, 2022).get_json()
+    elif prediction_data == "per_capita":
+        previous_country_data = per_capita(country, 1829, 2022).get_json()
+    elif prediction_data == "co2_growth_prct":
+        previous_country_data = co2_growth_percentage(country).get_json()
+    else:
+        return jsonify({"error": f"Prediction data '{prediction_data}' is not supported."})
+
+    predictions = predict_arima(country, prediction_data)
+
+    if isinstance(previous_country_data, dict):
+        previous_country_data = [previous_country_data]
+
+    combined_data = previous_country_data + predictions
+
+    return jsonify(combined_data)
 
 import csv
 

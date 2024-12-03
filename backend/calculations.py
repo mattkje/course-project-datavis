@@ -1,30 +1,66 @@
 import pandas as pd
+from anaconda_project.internal.conda_api import result
 from statsmodels.tsa.arima.model import ARIMA
 
 
 def predict_arima(country, prediction_data):
     df = pd.read_csv("datasets/globalwarmingdata.csv")
     country_df = df[df["country"] == country]
-    filter_df = country_df[["year", prediction_data]].dropna()
+    filter_df = country_df.dropna(subset=["year"])
 
-    filter_df["year"] = pd.to_datetime(filter_df["year"], format='%Y')
-    filter_df.set_index("year", inplace=True)
+    if prediction_data == "co2":
+        exclude_terms = ["per_capita", "per_gdp", "per_unit_energy", "share", "cumulative", "growth","temperature"]
+        co2_columns = [
+            col for col in filter_df.columns
+            if "co2" in col and not any(term in col for term in exclude_terms)
+        ]
+        co2_columns.append('year')
+        result_df = filter_df[co2_columns].copy()
 
-    if filter_df.empty or len(filter_df) < 3:
+    elif prediction_data == "gdp":
+        gdp_columns = [
+            col for col in filter_df.columns
+            if "_gdp" in col
+        ]
+        gdp_columns.append('year')
+        result_df = filter_df[gdp_columns].copy()
+
+    elif prediction_data == "per_capita":
+        per_capita_columns = [
+            col for col in filter_df.columns
+            if "per_capita" in col
+               and "energy" not in col
+        ]
+        per_capita_columns.append('year')
+        result_df = filter_df[per_capita_columns].copy()
+
+    elif prediction_data == "co2_growth_prct":
+        result_df = filter_df[["year", "co2_growth_prct"]].copy()
+
+    else:
+        result_df = pd.DataFrame()
+
+    if result_df.empty or len(result_df) < 3:
         raise ValueError(f"Not enough data to make predictions for {prediction_data} in {country}.")
 
-    model = ARIMA(filter_df[prediction_data], order=(1, 1, 1))
-    model_fit = model.fit()
-    forecast = model_fit.forecast(steps=5)
-    forecast_values = forecast.values
-    last_year = filter_df.index.max().year
-    predictions = [
-        {
-            "year": last_year + i + 1,
-            prediction_data: float(forecast_values[i])
-        }
-        for i in range(5)
-    ]
+    result_df["year"] = pd.to_datetime(filter_df["year"], format='%Y')
+    result_df.set_index("year", inplace=True)
+
+    predictions = []
+    last_year = result_df.index.max().year
+
+    for column in result_df.columns:
+        if column == 'year':
+            continue
+        model = ARIMA(result_df[column], order=(1, 1, 1))
+        model_fit = model.fit()
+        forecast = model_fit.forecast(steps=5)
+        forecast_values = forecast.values
+        for i in range(5):
+            if len(predictions) <= i:
+                predictions.append({"year": last_year + i + 1, "country": country})
+            predictions[i][column] = float(forecast_values[i])
+
     return predictions
 
 def calculate_democracy_rank(country):

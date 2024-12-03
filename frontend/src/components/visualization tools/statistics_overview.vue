@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      measurement: this.url.split(',')[0]
+      measurement: this.url.split(',')[0],
     };
   },
   mounted() {
@@ -78,6 +78,21 @@ export default {
         }));
 
         series.data.setAll(data);
+
+        //THIS CODE DOESN'T WORK FOR SOME REASON X_X
+        series.strokes.template.adapters.add("strokeDasharray", (dashArray, target) => {
+          if (!target.dataItem) {
+            // Handle cases where dataItem is undefined
+            return dashArray;  // Return default or fallback dashArray value
+          }
+
+          const valueX = target.dataItem.get("valueX");
+          if (valueX) {
+            const year = new Date(valueX).getFullYear();
+            return (year >= 2023 && year <= 2027) ? [6, 4] : null;
+          }
+          return null;  // Return null if valueX is not defined
+        });
       });
 
       const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "none" }));
