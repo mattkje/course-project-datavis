@@ -322,9 +322,9 @@ def continent_data(continent, data):
     merged_df = init_global_data()
     merged_df = merged_df[merged_df["year"] == 2022]
     result_df = pd.DataFrame()
-    for country in countries_in_continent:
-        country_data = merged_df[merged_df["country"] == country][["year", data, "country"]]
-        result_df = pd.concat([result_df, country_data], ignore_index=True)
+    for country_in_continent in countries_in_continent:
+        country_data_from_continent = merged_df[merged_df["country"] == country_in_continent][["year", data, "country"]]
+        result_df = pd.concat([result_df, country_data_from_continent], ignore_index=True)
 
     result_df.dropna(inplace=True)
 

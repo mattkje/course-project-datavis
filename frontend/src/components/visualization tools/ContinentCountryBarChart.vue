@@ -54,38 +54,63 @@ export default {
         { country: "Canada", visits: 234, icon: "https://www.amcharts.com/wp-content/uploads/flags/canada.svg", columnSettings: { fill: colors.next() } }
       ];
 
+      var xRenderer = am5xy.AxisRendererX.new(root_continent_chart, {
+        minGridDistance: 30,
+        minorGridEnabled: true
+      })
+
+      var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root_continent_chart, {
+        categoryField: "country",
+        renderer: xRenderer
+      }));
+
       // Create axes
-      let xAxis = chart.xAxes.push(
-          am5xy.CategoryAxis.new(root_continent_chart, {
-            categoryField: "country",
-            renderer: am5xy.AxisRendererX.new(root_continent_chart, { minGridDistance: 30}),
-          })
-      );
+      xRenderer.grid.template.setAll({
+        location: 1
+      })
+
+      xRenderer.labels.template.setAll({
+        paddingTop: 20
+      });
+
       xAxis.data.setAll(data);
 
-      let yAxis = chart.yAxes.push(
-          am5xy.ValueAxis.new(root_continent_chart, {
-            renderer: am5xy.AxisRendererY.new(root_continent_chart, { strokeOpacity: 0.1 })
-          })
-      );
+      var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root_continent_chart, {
+        renderer: am5xy.AxisRendererY.new(root_continent_chart, {
+          strokeOpacity: 0.1
+        })
+      }));
 
-      // Add series
-      let series = chart.series.push(
-          am5xy.ColumnSeries.new(root_continent_chart, {
-            xAxis: xAxis,
-            yAxis: yAxis,
-            valueYField: "visits",
-            categoryXField: "country"
-          })
-      );
+
+// Add series
+// https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+      var series = chart.series.push(am5xy.ColumnSeries.new(root_continent_chart, {
+        xAxis: xAxis,
+        yAxis: yAxis,
+        valueYField: "visits",
+        categoryXField: "country"
+      }));
 
       series.columns.template.setAll({
         tooltipText: "{categoryX}: {valueY}",
+        tooltipY: 0,
         strokeOpacity: 0,
         templateField: "columnSettings"
       });
 
       series.data.setAll(data);
+
+      series.bullets.push(function (root_continent_chart, series, dataItem) {
+        return am5xy.Bullet.new(root_continent_chart, {
+          sprite: am5.Picture.new(root_continent_chart, {
+            width: 24,
+            height: 24,
+            centerX: am5.p50,
+            centerY: am5.p100, // Position the icon at the bottom center of the column
+            src: dataItem.dataContext.icon
+          })
+        });
+      });
 
       // Animate on load
       series.appear();
