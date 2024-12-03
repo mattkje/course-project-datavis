@@ -39,14 +39,14 @@ export default {
       // Data
       let colors = chart.get("colors");
       let data = [
-        { country: "US", visits: 725, icon: "https://www.amcharts.com/wp-content/uploads/flags/united-states.svg", columnSettings: { fill: colors.next() } },
-        { country: "UK", visits: 625, icon: "https://www.amcharts.com/wp-content/uploads/flags/united-kingdom.svg", columnSettings: { fill: colors.next() } },
-        { country: "China", visits: 602, icon: "https://www.amcharts.com/wp-content/uploads/flags/china.svg", columnSettings: { fill: colors.next() } },
-        { country: "Japan", visits: 569, icon: "https://www.amcharts.com/wp-content/uploads/flags/japan.svg", columnSettings: { fill: colors.next() } },
-        { country: "Germany", visits: 506, icon: "https://www.amcharts.com/wp-content/uploads/flags/germany.svg", columnSettings: { fill: colors.next() } },
-        { country: "France", visits: 495, icon: "https://www.amcharts.com/wp-content/uploads/flags/france.svg", columnSettings: { fill: colors.next() } },
-        { country: "India", visits: 488, icon: "https://www.amcharts.com/wp-content/uploads/flags/india.svg", columnSettings: { fill: colors.next() } },
-        { country: "Spain", visits: 443, icon: "https://www.amcharts.com/wp-content/uploads/flags/spain.svg", columnSettings: { fill: colors.next() } },
+        { country: "US", visits: 725, icon: `public/countryflags/us.svg`, columnSettings: { fill: colors.next() } },
+        { country: "UK", visits: 625, icon: "public/countryflags/gb.svg", columnSettings: { fill: colors.next() } },
+        { country: "China", visits: 602, icon: "public/countryflags/cn.svg", columnSettings: { fill: colors.next() } },
+        { country: "Japan", visits: 569, icon: "public/countryflags/jp.svg", columnSettings: { fill: colors.next() } },
+        { country: "Germany", visits: 506, icon: "public/countryflags/de.svg", columnSettings: { fill: colors.next() } },
+        { country: "France", visits: 495, icon: "public/countryflags/fr.svg", columnSettings: { fill: colors.next() } },
+        { country: "India", visits: 488, icon: "public/countryflags/in.svg", columnSettings: { fill: colors.next() } },
+        { country: "Spain", visits: 443, icon: "public/countryflags/es.svg", columnSettings: { fill: colors.next() } },
         { country: "Italy", visits: 430, icon: "https://www.amcharts.com/wp-content/uploads/flags/italy.svg", columnSettings: { fill: colors.next() } },
         { country: "Netherlands", visits: 291, icon: "https://www.amcharts.com/wp-content/uploads/flags/netherlands.svg", columnSettings: { fill: colors.next() } },
         { country: "Russia", visits: 286, icon: "https://www.amcharts.com/wp-content/uploads/flags/russia.svg", columnSettings: { fill: colors.next() } },
@@ -61,7 +61,19 @@ export default {
 
       var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root_continent_chart, {
         categoryField: "country",
-        renderer: xRenderer
+        renderer: xRenderer,
+        bullet: function (root, axis, dataItem) {
+          return am5xy.AxisBullet.new(root_continent_chart, {
+            location: 0.5,
+            sprite: am5.Picture.new(root_continent_chart, {
+              width: 32,
+              height: 24,
+              centerY: am5.p50,
+              centerX: am5.p50,
+              src: dataItem.dataContext.icon
+            })
+          });
+        }
       }));
 
       // Create axes
@@ -81,9 +93,6 @@ export default {
         })
       }));
 
-
-// Add series
-// https://www.amcharts.com/docs/v5/charts/xy-chart/series/
       var series = chart.series.push(am5xy.ColumnSeries.new(root_continent_chart, {
         xAxis: xAxis,
         yAxis: yAxis,
@@ -99,18 +108,6 @@ export default {
       });
 
       series.data.setAll(data);
-
-      series.bullets.push(function (root_continent_chart, series, dataItem) {
-        return am5xy.Bullet.new(root_continent_chart, {
-          sprite: am5.Picture.new(root_continent_chart, {
-            width: 24,
-            height: 24,
-            centerX: am5.p50,
-            centerY: am5.p100, // Position the icon at the bottom center of the column
-            src: dataItem.dataContext.icon
-          })
-        });
-      });
 
       // Animate on load
       series.appear();

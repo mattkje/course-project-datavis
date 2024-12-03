@@ -15,7 +15,10 @@ def filter_world_data():
 def init_global_data():
     df1 = pd.read_csv("datasets/globalwarmingdata.csv")
     df2 = filter_world_data()
-    return pd.merge(df1, df2, on="country")
+    #df3 = pd.read_csv FIND DATASET WITH COUNTRY CODES WITH ONLY TWO LETTERS
+    merged_df = pd.merge(df1, df2, on="country")
+
+    return merged_df
 
 @app.route("/")
 def home():
