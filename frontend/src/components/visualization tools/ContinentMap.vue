@@ -14,7 +14,7 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 onMounted(() => {
   am5.ready(function () {
     // Create root and chart
-    let root1 = am5.Root.new("chartdiv1");
+    var root1 = am5.Root.new("chartdiv1");
 
     // Set themes
     root1.setThemes([
@@ -29,7 +29,7 @@ onMounted(() => {
     );
 
     // Create polygon series
-    let polygonSeries = chart.series.push(
+    var polygonSeries = chart.series.push(
         am5map.MapPolygonSeries.new(root1, {
           geoJSON: am5geodata_continentsLow,
           exclude: ["antarctica"]
@@ -46,7 +46,7 @@ onMounted(() => {
       fill: am5.color(0x677935)
     });
 
-    let colors = am5.ColorSet.new(root1, {
+    var colors = am5.ColorSet.new(root1, {
       colors: [
         am5.color(0xFFA737), // Europe
         am5.color(0x5BC0EB), // Asia
@@ -129,10 +129,11 @@ onMounted(() => {
 }
 
 #chartdivContainer {
-
   position: relative;
+  justify-content: center;
   width: 100%;
   height: 620px;
+  padding: 60px 0 60px 0;
 }
 
 </style>

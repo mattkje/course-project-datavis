@@ -5,7 +5,7 @@ import ToolBar from "@/components/ToolBar.vue";
 import CountryInfoBox from "@/components/CountryInfoBox.vue";
 import SearchBar from "@/components/SearchBar.vue";
 import StartScreen from "@/components/StartScreen.vue";
-import ContinentMap from "@/components/ContinentMap.vue";
+import ContinentMap from "@/components/visualization tools/ContinentMap.vue";
 import MainStoryPage from "@/components/MainStoryPage.vue";
 </script>
 

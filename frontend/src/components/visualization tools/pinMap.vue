@@ -1,5 +1,7 @@
 <template>
-  <div id="chartdiv"></div>
+  <div id="chartdivContainer_pinMap">
+    <div id="chartdiv_pinMap"></div>
+  </div>
 </template>
 
 <script setup>
@@ -10,42 +12,44 @@ import am5geodata_continentsLow from "@amcharts/amcharts5-geodata/continentsLow"
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
 onMounted(() => {
-  if (!document.getElementById("chartdiv")._am5root) {
+  if (!document.getElementById("chartdiv_pinMap")._am5root) {
     am5.ready(function() {
-      var root = am5.Root.new("chartdiv");
-      document.getElementById("chartdiv")._am5root = root;
+      var root_pinMap = am5.Root.new("chartdiv_pinMap");
+      document.getElementById("chartdiv_pinMap")._am5root = root_pinMap;
 
-      root.setThemes([
-        am5themes_Animated.new(root)
+      root_pinMap.setThemes([
+        am5themes_Animated.new(root_pinMap)
       ]);
 
-      var map = root.container.children.push(
-        am5map.MapChart.new(root, {
-          panX: "none",
-          projection: am5map.geoNaturalEarth1()
-        })
+      var map = root_pinMap.container.children.push(
+          am5map.MapChart.new(root_pinMap, {
+            panX: "none",
+            panY: "none",
+            projection: am5map.geoNaturalEarth1(),
+            maxZoomLevel: 1,
+          })
       );
-
+      
       var polygonSeries = map.series.push(
-        am5map.MapPolygonSeries.new(root, {
+        am5map.MapPolygonSeries.new(root_pinMap, {
           geoJSON: am5geodata_continentsLow,
           exclude: ["antarctica"],
-          fill: am5.color(0xbbbbbb)
+          fill: am5.color(0xFFFFFF),
         })
       );
 
       let pointSeries = map.series.push(
-        am5map.MapPointSeries.new(root, {})
+        am5map.MapPointSeries.new(root_pinMap, {})
       );
 
-      var colorSet = am5.ColorSet.new(root, { step: 2 });
+      var colorSet = am5.ColorSet.new(root_pinMap, { step: 2 });
 
       pointSeries.bullets.push(function(root, series, dataItem) {
         var value = dataItem.dataContext.value;
 
         var container = am5.Container.new(root, {});
         var color = colorSet.next();
-        var radius = 15 + value / 20 * 20;
+        var radius = 15 + value / 30 * 15;
         var circle = container.children.push(am5.Circle.new(root, {
           radius: radius,
           fill: color,
@@ -89,23 +93,23 @@ onMounted(() => {
       });
 
       var data = [{
-        "title": "United States",
+        "title": "North America",
         "latitude": 39.563353,
         "longitude": -99.316406,
         "width": 100,
         "height": 100,
         "value": 12
       }, {
-        "title": "European Union",
-        "latitude": 50.896104,
-        "longitude": 19.160156,
+        "title": "Europe",
+        "latitude": 38.896104,
+        "longitude": 15.160156,
         "width": 50,
-        "height": 50,
-        "value": 15
+        "height": 100,
+        "value": 50
       }, {
         "title": "Asia",
-        "latitude": 47.212106,
-        "longitude": 103.183594,
+        "latitude": 35.212106,
+        "longitude": 95.183594,
         "width": 80,
         "height": 80,
         "value": 8
@@ -116,7 +120,24 @@ onMounted(() => {
         "width": 50,
         "height": 50,
         "value": 5
-      }];
+      },
+      {
+        "title": "South America",
+        "latitude": -14.179186,
+        "longitude": -59.589844,
+        "width": 50,
+        "height": 50,
+        "value": 25
+      },
+      {
+        "title": "Oceania",
+        "latitude": -25.799891,
+        "longitude": 134.472656,
+        "width": 50,
+        "height": 50,
+        "value": 20
+      }
+      ];
 
       for (var i = 0; i < data.length; i++) {
         var d = data[i];
@@ -132,8 +153,17 @@ onMounted(() => {
 </script>
 
 <style scoped>
-#chartdiv {
+#chartdiv_pinMap {
   width: 100%;
   height: 500px;
 }
+
+#chartdivContainer_pinMap {
+  position: relative;
+  justify-content: center;
+  width: 100%;
+  height: 620px;
+  padding: 60px 0 60px 0;
+}
+
 </style>
