@@ -12,21 +12,30 @@
           <p>Displaying greenhouse gas data for {{ countryName }}</p>
           <div class="top-bar">
             <search-bar @update:selectedItems="handleSelectedItems"/>
-            <div class="dropdown-container">
-              <span>Measure by:</span>
-              <select class="dropdown" v-model="selectedMeasure">
-                <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
-                <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
-                <option :value="`line:Per/Capita,per_capita/${countryName}`">Per Capita</option>
-                <option :value="`bar:%,co2_growth_prct/${countryName}`">Growth %</option>
-              </select>
+            <div class="user-interactive-items">
+              <div class="future-checkbox">
+                <label for="futureCheckbox">Show future predictions:</label>
+                <input type="checkbox" id="futureCheckbox" v-model="isFuture">
+              </div>
+              <div class="dropdown-container">
+                <span>Measure by:</span>
+               <select class="dropdown" v-model="selectedMeasure">
+                  <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
+                 <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
+                 <option :value="`line:Per/Capita,per_capita/${countryName}`">Per Capita</option>
+                  <option :value="`bar:%,co2_growth_prct/${countryName}`">Growth %</option>
+                </select>
+              </div>
             </div>
           </div>
-          <component :is="selectedChartComponent" :url="selectedMeasureUrl" :key="selectedMeasure"/>
+          <component
+              v-if="selectedMeasureUrl"
+              :is="selectedChartComponent"
+              :url="selectedMeasureUrl"
+              :key="chartKey"/>
         </div>
         <country-key-information></country-key-information>
         <dual-pie-chart-component :url="countryName"></dual-pie-chart-component>
-        <motion-chart-component :url="countryName"></motion-chart-component>
       </div>
       <template v-if="!isExpanded">
         <div class="header">
@@ -49,9 +58,10 @@ import BarChartComponent from "@/components/visualization tools/bar_chart.vue";
 import SearchBar from "@/components/SearchBar.vue";
 import CountryKeyInformation from "@/components/CountryKeyInformation.vue";
 import DualPieChartComponent from "@/components/visualization tools/DualPieChart.vue";
-import MotionChartComponent from "@/components/visualization tools/MotionChart.vue";
+import {CheckboxIndicator} from "radix-vue";
 
 const selectedItems = ref([]);
+const isFuture = ref(false);
 
 const countryName = ref('');
 const population = ref('');
@@ -74,8 +84,10 @@ const selectedChartComponent = computed(() => {
 
 const selectedMeasureUrl = computed(() => {
   const [, measureUrl] = selectedMeasure.value.split(':');
-  return measureUrl;
+  return isFuture.value ? `${measureUrl}/predict` : measureUrl;
 });
+
+const chartKey = computed(() => `${selectedMeasure.value}-${isFuture.value}`);
 
 function updateCountryInfo(name, pop, areaSize, cap, id) {
   countryName.value = name;
@@ -111,13 +123,25 @@ defineExpose({
 
 .top-bar {
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
 }
 
 .search-bar {
   flex: 1;
+}
+
+.future-checkbox {
+  display: flex;
+  align-items: center;
+  color: black;
+}
+
+.user-interactive-items {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
 }
 
 .dropdown-container {
@@ -304,5 +328,10 @@ p {
   display: flex;
   flex-direction: column;
   align-items: start;
+}
+
+.future-checkbox {
+  margin-right: 5px;
+  gap: 5px;
 }
 </style>
