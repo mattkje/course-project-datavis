@@ -8,25 +8,66 @@ import ContinentChartComponent from "@/components/visualization tools/ContinentC
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
-const MapContainerWith = ref('100%');
 
+const buttons = [
+  {label: "Total", url: "Total Co2 emissions,cumulative_co2", selected: true},
+  {label: "Land Usage", url: "Total Co2 emissions including land use,cumulative_co2_including_luc", selected: false},
+  {label: "Coal", url: "Total Coal Emissions,cumulative_coal_co2", selected: false},
+  {label: "Oil", url: "Total Oil Emissions,cumulative_oil_co2", selected: false},
+  {label: "Flaring", url: "Total Flaring Emissions,cumulative_flaring_co2", selected: false},
+  {label: "Gas", url: "Total Gas Emissions,cumulative_gas_co2", selected: false},
+  {label: "Cement", url: "Total Cement Emissions,cumulative_cement_co2", selected: false}
+];
+
+const selectedUrl = ref(buttons[0].url);
+
+function updateUrl(url) {
+  selectedUrl.value = url;
+  buttons.forEach(button => button.selected = (button.url === url));
+}
 </script>
 
 <template>
-  <ToolBar />
+  <ToolBar/>
   <div class="main-container">
-  <h1 :style="{ width: TextWidth, maxWidth: TextMaxWidth }">Let's dive into the story of our greenhouse gas emissions</h1>
+    <h1 :style="{ width: TextWidth, maxWidth: TextMaxWidth }">Let's dive into the story of our greenhouse gas
+      emissions</h1>
     <div class="textcontainer" :style="{ width: TextWidth, maxWidth: TextMaxWidth }">
       <p>
-        The world is facing the ever-important challenge of climate change. How can we solve it? This question has become increasingly urgent as we witness the devastating impacts of global warming, from rising sea levels to extreme weather events. Addressing climate change requires a multifaceted approach, including reducing greenhouse gas emissions, transitioning to renewable energy sources, and implementing sustainable practices in agriculture and industry. Governments, businesses, and individuals all have a role to play in this global effort. By investing in clean technologies, promoting energy efficiency, and supporting policies that protect the environment, we can work together to mitigate the effects of climate change and build a more sustainable future for generations to come.      </p>
+        The world is facing the ever-important challenge of climate change. How can we solve it? This question has
+        become increasingly urgent as we witness the devastating impacts of global warming, from rising sea levels to
+        extreme weather events. Addressing climate change requires a multifaceted approach, including reducing
+        greenhouse gas emissions, transitioning to renewable energy sources, and implementing sustainable practices in
+        agriculture and industry. Governments, businesses, and individuals all have a role to play in this global
+        effort. By investing in clean technologies, promoting energy efficiency, and supporting policies that protect
+        the environment, we can work together to mitigate the effects of climate change and build a more sustainable
+        future for generations to come. </p>
     </div>
 
     <div class="map-container">
       <div class="mapHeader">
-        <h2>Percentage Co2 Emissions Per Continent</h2>
+        <h2>Co2 Emissions Per Continent as Percentage</h2>
       </div>
-      <pin-map  url="million tons,cumulative_co2"/>
+      <pin-map :url="selectedUrl"/>
+
       <div class="innerTextContainer">
+        <h3>Historic Superpowers Dominate Emissions</h3>
+        <p>The history of our emissions follow the empires of old.
+          <span style="font-weight: 900; color: #FFA737;">Europe</span>,
+          <span style="font-weight: 900; color: #BA7BA1;">North America</span> and
+          <span style="font-weight: 900; color: #5BC0EB;">Asia</span> lead the way for total CO<sub>2</sub>
+          emissions throughout history, while other continents have struggled to keep up. Although there has been a
+          shift in emissions contributions as of late, it is still important to take into account our history when
+          comparing today's numbers. Below you can select
+          categories to see which regions dominate which sectors of emissions. Try it!
+        </p>
+        <div class="button-group">
+          <div v-for="(button, index) in buttons" :key="index" class="button-container">
+            <input type="radio" :id="button.label" :value="button.url" v-model="selectedUrl"
+                   @change="updateUrl(button.url)">
+            <label :for="button.label">{{ button.label }}</label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -34,7 +75,7 @@ const MapContainerWith = ref('100%');
       <div class="mapHeader">
         <h2>Explore the greenhouse gas emissions data by country</h2>
       </div>
-      <ContinentMap />
+      <ContinentMap/>
       <div class="innerTextContainer">
         <p>Explore the greenhouse gas emissions data by continent</p>
       </div>
@@ -42,10 +83,10 @@ const MapContainerWith = ref('100%');
     <div class="bar-container">
       <div class="innerTextContainer">
         <p>I pooped today</p>
+      </div>
+      <ContinentChartComponent/>
     </div>
-      <ContinentChartComponent />
   </div>
-</div>
 </template>
 
 <style scoped>
@@ -77,9 +118,20 @@ h2 {
   margin: 0;
 }
 
+h3 {
+  justify-self: left;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #FFA737;
+  margin: 0;
+}
+
 p {
   text-align: left;
-  color: white
+  color: white;
+  font-weight: 100;
+  font-family: "Corbel Light", serif;
+  font-size: 20px;
 }
 
 .map-container {
@@ -135,10 +187,14 @@ p {
   font-size: 1.4rem;
   font-weight: 400;
   margin: 60px 0px 60px 20px;
-  border: 2px dotted #FFA737; /* Use the background color of .textcontainer */
-  max-width: 30%; /* Maximum width of 30% */
-  width: 100%; /* Shrink width-wise only if the container is smaller */
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  border: 2px dotted #FFA737;
+  max-width: 30%;
+  width: 100%;
+  box-sizing: border-box;
+  display: grid;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .mapHeader {
@@ -170,5 +226,65 @@ p {
   border-top: 2px dotted #FFA737;
   border-bottom: 2px dotted #FFA737;
   pointer-events: none;
+}
+
+.button-group {
+  justify-self: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+input[type="radio"] + label {
+  background-color: #4e56a4;
+  width: 140px;
+  height: 50px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input[type="radio"]:checked + label {
+  background-color: #3b4380;
+}
+
+input[type="radio"] + label:hover {
+  background-color: #3b4380;
+}
+
+@media screen and (max-width: 1400px) {
+  .map-container {
+    flex-direction: column-reverse;
+    padding: 0 100px;
+    gap: 0;
+  }
+
+  .innerTextContainer {
+    max-width: 100%;
+    width: 100%;
+    margin: 80px 0 0 0;
+    gap: 20px;
+  }
+
+  .mapHeader {
+    display: none;
+  }
 }
 </style>
