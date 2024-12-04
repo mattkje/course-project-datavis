@@ -5,6 +5,7 @@ import {ref} from "vue";
 import PinMap from "@/components/visualization tools/pinMap.vue";
 import ChartComponent from "@/components/visualization tools/ContinentCountryBarChart.vue";
 import ContinentChartComponent from "@/components/visualization tools/ContinentCountryBarChart.vue";
+import CountryComparisonChart from "@/components/visualization tools/CountryComparison.vue";
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
@@ -110,7 +111,9 @@ function updateBarUrl(url) {
       <ContinentChartComponent :continent="selectedContinent" :url="selectedBarUrl"/>
       <div class="innerTextContainer">
         <h3>Country Data</h3>
-        <p>This chart highlights data from the continent: <span style="font-weight: 900; color: #FFA737">{{ selectedContinent }}</span>. It displays the top 10 countries within a selected category, showcasing cumulative values accumulated over the years. Choose a category to explore detailed statistics!</p>
+        <p>This chart highlights data from the continent: <span style="font-weight: 900; color: #FFA737">{{ selectedContinent }}</span>.
+          It displays the top 10 countries within a selected category, showcasing cumulative values
+          accumulated over the years. Choose a category to explore detailed statistics!</p>
         <div class="button-group">
           <div v-for="(button, index) in barchartButtons" :key="index" class="button-container">
             <input type="radio" :id="button.label" :value="button.url" v-model="selectedBarUrl"
@@ -118,6 +121,15 @@ function updateBarUrl(url) {
             <label :for="button.label">{{ button.name }}</label>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="comparison-container">
+      <div class="mapHeader">
+        <h2>Explore the greenhouse gas emissions data by country</h2>
+      </div>
+      <CountryComparisonChart/>
+      <div class="innerTextContainer">
+        <p>Explore the greenhouse gas emissions data by country</p>
       </div>
     </div>
   </div>
@@ -262,6 +274,29 @@ p {
   pointer-events: none;
 }
 
+.comparison-container {
+  display: flex;
+  justify-content: center;
+  background-color: #1E555F;
+  position: relative; /* Add this line */
+  gap: 20px;
+  padding-left: 25px;
+  padding-top: 50px;
+  padding-bottom: 100px;
+}
+
+.comparison-container::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  border-top: 2px dotted #FFA737;
+  border-bottom: 2px dotted #FFA737;
+  pointer-events: none;
+}
+
 .button-group {
   justify-self: center;
   display: flex;
@@ -322,6 +357,12 @@ input[type="radio"] + label:hover {
   }
 
   .bar-container {
+    flex-direction: column-reverse;
+    padding: 0 100px;
+    gap: 0;
+  }
+
+  .comparison-container {
     flex-direction: column-reverse;
     padding: 0 100px;
     gap: 0;
