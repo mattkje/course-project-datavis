@@ -389,3 +389,18 @@ def additional_data(country):
         result_df["DemocracyRank"] = str(e)
 
     return jsonify(result_df.to_dict(orient="records"))
+
+@app.route("/translate/<country>")
+def translate_country(country):
+    country_list = country.split(",")
+    df1 = pd.read_csv("datasets/country-codes.csv")
+    result_df = pd.DataFrame()
+
+    for country_name in country_list:
+        country_data = df1[df1["official_name_en"].str.contains(country_name, case=False, na=False)][["ISO3166-1-Alpha-2"]]
+        country_data.rename(columns={"ISO3166-1-Alpha-2": "countryCode"}, inplace=True)
+        result_df = pd.concat([result_df, country_data], ignore_index=True)
+
+    result_df.fillna("N/A", inplace=True)
+
+    return jsonify(result_df.to_dict(orient="records"))

@@ -16,7 +16,15 @@ export default {
     this.createChart();
   },
   methods: {
-    createChart() {
+    async fetchData(url) {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/" + url)
+        return await response.json();
+      } catch (error) {
+        console.error('There was an error!', error);
+      }
+    },
+    async createChart() {
       // Create root element
       let root_continent_chart = am5.Root.new("continentchartdiv");
 
@@ -38,21 +46,20 @@ export default {
       root_continent_chart.interfaceColors.set("text", am5.color(0xffffff));
       // Data
       let colors = chart.get("colors");
-      let data = [
-        { country: "US", visits: 725, icon: `public/countryflags/us.svg`, columnSettings: { fill: colors.next() } },
-        { country: "UK", visits: 625, icon: "public/countryflags/gb.svg", columnSettings: { fill: colors.next() } },
-        { country: "China", visits: 602, icon: "public/countryflags/cn.svg", columnSettings: { fill: colors.next() } },
-        { country: "Japan", visits: 569, icon: "public/countryflags/jp.svg", columnSettings: { fill: colors.next() } },
-        { country: "Germany", visits: 506, icon: "public/countryflags/de.svg", columnSettings: { fill: colors.next() } },
-        { country: "France", visits: 495, icon: "public/countryflags/fr.svg", columnSettings: { fill: colors.next() } },
-        { country: "India", visits: 488, icon: "public/countryflags/in.svg", columnSettings: { fill: colors.next() } },
-        { country: "Spain", visits: 443, icon: "public/countryflags/es.svg", columnSettings: { fill: colors.next() } },
-        { country: "Italy", visits: 430, icon: "https://www.amcharts.com/wp-content/uploads/flags/italy.svg", columnSettings: { fill: colors.next() } },
-        { country: "Netherlands", visits: 291, icon: "https://www.amcharts.com/wp-content/uploads/flags/netherlands.svg", columnSettings: { fill: colors.next() } },
-        { country: "Russia", visits: 286, icon: "https://www.amcharts.com/wp-content/uploads/flags/russia.svg", columnSettings: { fill: colors.next() } },
-        { country: "South Korea", visits: 242, icon: "https://www.amcharts.com/wp-content/uploads/flags/south-korea.svg", columnSettings: { fill: colors.next() } },
-        { country: "Canada", visits: 234, icon: "https://www.amcharts.com/wp-content/uploads/flags/canada.svg", columnSettings: { fill: colors.next() } }
-      ];
+
+      let country_data = await this.fetchData("continent_data/AF/co2");
+      country_data.sort((a, b) => Object.values(b)[0] - Object.values(a)[0]);
+
+      let top_countries = country_data.slice(0, 10).map(item => item.country).join(',');
+
+      let translated_names = await this.fetchData(`translate/${top_countries}`);
+
+      let data = country_data.slice(0, 10).map((item, index) => ({
+        country: item.country,
+        visits: Object.values(item)[0],
+        icon: `public/countryflags/${translated_names[index].countryCode}.svg`,
+        columnSettings: { fill: colors.next() }
+      }));
 
       var xRenderer = am5xy.AxisRendererX.new(root_continent_chart, {
         minGridDistance: 30,
@@ -82,7 +89,10 @@ export default {
       })
 
       xRenderer.labels.template.setAll({
-        paddingTop: 20
+        paddingTop: 20,
+        maxWidth: 100,
+        wrap: true,
+        textAlign: "center"
       });
 
       xAxis.data.setAll(data);
