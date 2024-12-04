@@ -11,6 +11,8 @@ import * as am5map from "@amcharts/amcharts5/map";
 import am5geodata_continentsLow from "@amcharts/amcharts5-geodata/continentsLow";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
+const emit = defineEmits(['continent-clicked']);
+
 onMounted(() => {
   am5.ready(function () {
     // Create root and chart
@@ -44,6 +46,11 @@ onMounted(() => {
 
     polygonSeries.mapPolygons.template.states.create("hover", {
       fill: am5.color(0x677935)
+    });
+
+    polygonSeries.mapPolygons.template.events.on("click", function(ev) {
+      const data = ev.target.dataItem.dataContext;
+      emit('continent-clicked', data.name);
     });
 
     var colors = am5.ColorSet.new(root1, {

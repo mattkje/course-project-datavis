@@ -12,6 +12,20 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
 export default {
   name: "ContinentChartComponent",
+  props: {
+    continent: {
+      type: String,
+      required: true
+    },
+    url: {
+      type: String,
+      required: true,
+    }
+  },
+  watch: {
+    continent: 'createChart',
+    url: 'createChart'
+  },
   mounted() {
     this.createChart();
   },
@@ -25,6 +39,12 @@ export default {
       }
     },
     async createChart() {
+      if (!this.continent) return;
+
+      if (this.root) {
+        this.root.dispose();
+      }
+
       // Create root element
       let root_continent_chart = am5.Root.new("continentchartdiv");
 
@@ -47,22 +67,47 @@ export default {
       // Data
       let colors = chart.get("colors");
 
-      let country_data = await this.fetchData("continent_data/AF/co2");
-      country_data.sort((a, b) => Object.values(b)[0] - Object.values(a)[0]);
+      let url = this.url.split(',')[1];
+
+      let currentContinent;
+      switch (this.continent)
+      {
+        case "Asia":
+          currentContinent = "AS";
+          break;
+        case "Africa":
+          currentContinent = "AF";
+          break;
+        case "North America":
+          currentContinent = "NA";
+          break;
+        case "South America":
+          currentContinent = "SA";
+          break;
+        case "Oceania":
+          currentContinent = "OC";
+          break;
+        default:
+          currentContinent = "EU";
+      }
+      console.log(this.continent);
+
+      let country_data = await this.fetchData(`continent_data/${currentContinent}/${url}`);
+      country_data.sort((a, b) => Object.values(b)[1] - Object.values(a)[1]);
 
       let top_countries = country_data.slice(0, 10).map(item => item.country).join(',');
 
       let translated_names = await this.fetchData(`translate/${top_countries}`);
 
       let data = country_data.slice(0, 10).map((item, index) => ({
-        country: item.country,
-        visits: Object.values(item)[0],
+        country: item.country === "Trinidad and Tobago" ? "T&T" : item.country === "Papua New Guinea" ? "PN Guinea" : item.country === "Dominican Republic" ? "DR" : item.country === "Antigua and Barbuda" ? "A&B" : item.country === "United Arab Emirates" ? "UAE" : item.country,
+        visits: Object.values(item)[1],
         icon: `public/countryflags/${translated_names[index].countryCode}.svg`,
         columnSettings: { fill: colors.next() }
       }));
 
       var xRenderer = am5xy.AxisRendererX.new(root_continent_chart, {
-        minGridDistance: 30,
+        minGridDistance: 10,
         minorGridEnabled: true
       })
 
@@ -90,7 +135,7 @@ export default {
 
       xRenderer.labels.template.setAll({
         paddingTop: 20,
-        maxWidth: 100,
+        maxWidth: 50,
         wrap: true,
         textAlign: "center"
       });

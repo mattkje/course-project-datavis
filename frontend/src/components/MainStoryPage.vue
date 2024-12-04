@@ -8,6 +8,7 @@ import ContinentChartComponent from "@/components/visualization tools/ContinentC
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
+const selectedContinent = ref('Europe');
 
 const buttons = [
   {label: "Total", url: "Total Co2 emissions,cumulative_co2", selected: true},
@@ -19,11 +20,33 @@ const buttons = [
   {label: "Cement", url: "Total Cement Emissions,cumulative_cement_co2", selected: false}
 ];
 
+const barchartButtons = [
+  {label: "Total Bar", url: "Total Co2 emissions,cumulative_co2", selected: true, name:"Total"},
+  {label: "Land Usage Bar", url: "Total Co2 emissions including land use,cumulative_co2_including_luc", selected: false, name:"Land Usage"},
+  {label: "Coal Bar", url: "Total Coal Emissions,cumulative_coal_co2", selected: false, name:"Coal"},
+  {label: "Oil Bar", url: "Total Oil Emissions,cumulative_oil_co2", selected: false, name:"Oil"},
+  {label: "Flaring Bar", url: "Total Flaring Emissions,cumulative_flaring_co2", selected: false, name: "Flaring"},
+  {label: "Gas Bar", url: "Total Gas Emissions,cumulative_gas_co2", selected: false, name: "Gas"},
+  {label: "Cement Bar", url: "Total Cement Emissions,cumulative_cement_co2", selected: false, name: "Cement"}
+]
+
 const selectedUrl = ref(buttons[0].url);
+const selectedBarUrl = ref(buttons[0].url);
 
 function updateUrl(url) {
   selectedUrl.value = url;
   buttons.forEach(button => button.selected = (button.url === url));
+}
+
+function handleContinentClick(continent) {
+  selectedContinent.value = continent;
+  const targetElement = document.getElementById("bar-chart");
+  targetElement.scrollIntoView({behavior: "smooth"});
+}
+
+function updateBarUrl(url) {
+  selectedBarUrl.value = url;
+  barchartButtons.forEach(button => button.selected = (button.url === url));
 }
 </script>
 
@@ -75,16 +98,27 @@ function updateUrl(url) {
       <div class="mapHeader">
         <h2>Explore the greenhouse gas emissions data by country</h2>
       </div>
-      <ContinentMap/>
+      <ContinentMap @continent-clicked="handleContinentClick"/>
       <div class="innerTextContainer">
         <p>Explore the greenhouse gas emissions data by continent</p>
       </div>
     </div>
-    <div class="bar-container">
-      <div class="innerTextContainer">
-        <p>I pooped today</p>
+    <div class="bar-container" id="bar-chart">
+      <div class="mapHeader">
+        <h2>Cumulative data of {{ selectedBarUrl.split(",")[0] }} in {{ selectedContinent }}</h2>
       </div>
-      <ContinentChartComponent/>
+      <ContinentChartComponent :continent="selectedContinent" :url="selectedBarUrl"/>
+      <div class="innerTextContainer">
+        <h3>Country Data</h3>
+        <p>This chart highlights data from the continent: <span style="font-weight: 900; color: #FFA737">{{ selectedContinent }}</span>. It displays the top 10 countries within a selected category, showcasing cumulative values accumulated over the years. Choose a category to explore detailed statistics!</p>
+        <div class="button-group">
+          <div v-for="(button, index) in barchartButtons" :key="index" class="button-container">
+            <input type="radio" :id="button.label" :value="button.url" v-model="selectedBarUrl"
+                   @change="updateBarUrl(button.url)">
+            <label :for="button.label">{{ button.name }}</label>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -212,8 +246,8 @@ p {
   background-color: #1E555F;
   position: relative; /* Add this line */
   gap: 20px;
-  padding-right: 50px;
-  padding-top: 50px;
+  padding-left: 25px;
+  padding-top: 100px;
 }
 
 .bar-container::before {
@@ -285,6 +319,12 @@ input[type="radio"] + label:hover {
 
   .mapHeader {
     display: none;
+  }
+
+  .bar-container {
+    flex-direction: column-reverse;
+    padding: 0 100px;
+    gap: 0;
   }
 }
 </style>
