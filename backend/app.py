@@ -14,7 +14,7 @@ def filter_world_data():
 
 def init_global_data(country):
     df1 = pd.read_csv("datasets/globalwarmingdata.csv")
-    if any(c in ["Europe", "Asia", "Africa", "North America", "South America", "Oceania"] for c in country):
+    if any(c in ["World", "Europe", "Asia", "Africa", "North America", "South America", "Oceania"] for c in country):
         return df1
     else:
         df2 = filter_world_data()
