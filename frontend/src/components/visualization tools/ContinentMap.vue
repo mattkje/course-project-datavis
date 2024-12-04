@@ -1,6 +1,7 @@
 <template>
   <div id="chartdivContainer">
     <div id="chartdiv1"></div>
+    <div class="drag-text"><--- Drag me ---></div>
   </div>
 </template>
 
@@ -26,6 +27,8 @@ onMounted(() => {
     const chart = root1.container.children.push(
         am5map.MapChart.new(root1, {
           panX: "rotateX",
+          panY: "none",
+          maxZoomLevel: 1,
           projection: am5map.geoNaturalEarth1()
         })
     );
@@ -139,8 +142,20 @@ onMounted(() => {
   position: relative;
   justify-content: center;
   width: 100%;
-  height: 620px;
-  padding: 60px 0 60px 0;
+  height: 700px;
+  padding: 140px 0 60px 0;
 }
+
+.drag-text {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #c5c2c2;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
 
 </style>

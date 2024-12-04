@@ -28,6 +28,7 @@ Bulgaria,EU
 Burkina Faso,AF
 Burundi,AF
 Cabo Verde,AF
+Cape Verde,AF
 Cambodia,AS
 Cameroon,AF
 Canada,NA
@@ -39,15 +40,19 @@ Colombia,SA
 Comoros,AF
 Congo, Democratic Republic of the,AF
 Congo, Republic of the,AF
+Côte d'Ivoire,AF
 Costa Rica,NA
 Croatia,EU
 Cuba,NA
 Cyprus,AS
 Czech Republic,EU
+Czechia,EU
 Denmark,EU
 Djibouti,AF
+Democratic Republic of Congo,AF
 Dominica,NA
 Dominican Republic,NA
+East Timor,AS
 Ecuador,SA
 Egypt,AF
 El Salvador,NA
@@ -127,6 +132,7 @@ Nicaragua,NA
 Niger,AF
 Nigeria,AF
 North Macedonia,EU
+North Korea,AS
 Norway,EU
 Oman,AS
 Pakistan,AS
@@ -160,6 +166,7 @@ Solomon Islands,OC
 Somalia,AF
 South Africa,AF
 South Sudan,AF
+South Korea,AS
 Spain,EU
 Sri Lanka,AS
 Sudan,AF

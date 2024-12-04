@@ -6,6 +6,7 @@ import PinMap from "@/components/visualization tools/pinMap.vue";
 import ChartComponent from "@/components/visualization tools/ContinentCountryBarChart.vue";
 import ContinentChartComponent from "@/components/visualization tools/ContinentCountryBarChart.vue";
 import CountryComparisonChart from "@/components/visualization tools/CountryComparison.vue";
+import MotionChartComponent from "@/components/visualization tools/MotionChart.vue";
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
@@ -92,6 +93,16 @@ function updateBarUrl(url) {
             <label :for="button.label">{{ button.label }}</label>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="map-container">
+      <div class="mapHeader">
+        <h2>Co2 Emissions Per Continent as Percentage</h2>
+      </div>
+      <MotionChartComponent url="Total Co2 emissions,cumulative_co2"/>
+      <div class="innerTextContainer">
+        <p>Explore the greenhouse gas emissions data by continent</p>
       </div>
     </div>
 
@@ -298,6 +309,7 @@ p {
 }
 
 .button-group {
+  margin-top: 10px;
   justify-self: center;
   display: flex;
   flex-wrap: wrap;
@@ -315,7 +327,7 @@ input[type="radio"] {
 }
 
 input[type="radio"] + label {
-  background-color: #4e56a4;
+  background-color: #4e90a4;
   width: 140px;
   height: 50px;
   padding: 10px 20px;
@@ -328,14 +340,15 @@ input[type="radio"] + label {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 10px;
 }
 
 input[type="radio"]:checked + label {
-  background-color: #3b4380;
+  background-color: #366e7a;
 }
 
 input[type="radio"] + label:hover {
-  background-color: #3b4380;
+  background-color: #366e7a;
 }
 
 @media screen and (max-width: 1400px) {
@@ -366,6 +379,10 @@ input[type="radio"] + label:hover {
     flex-direction: column-reverse;
     padding: 0 100px;
     gap: 0;
+  }
+
+  .button-group {
+    margin-top: 0;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="chartdivContainer">
+  <div id="chartdivContainer_continentChart">
     <div id="continentchartdiv"></div>
   </div>
 </template>
@@ -185,7 +185,7 @@ export default {
   height: 500px;
 }
 
-#chartdivContainer {
+#chartdivContainer_continentChart {
   position: relative;
   width: 100%;
   height: 550px;

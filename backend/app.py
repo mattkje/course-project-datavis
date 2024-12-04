@@ -38,7 +38,7 @@ def country(country):
 
 @app.route("/countries")
 def countries():
-    result_df = filter_world_data()
+    result_df = init_global_data("data")
     countries_list = result_df["country"].unique().tolist()
     return jsonify(countries_list)
 
@@ -347,25 +347,31 @@ def gdp_co2():
     merged_df = init_global_data("data")
 
     # Select the necessary columns
-    result_df = merged_df[["year", "country", "gdp", "co2"]].copy()
+    result_df = merged_df[["year", "country", "co2_per_capita", "co2"]].copy()
     result_df.loc[:, :] = result_df.fillna(0)  # Replace NaN values with 0
 
     # Load country to continent mapping
     country_to_continent = load_country_to_continent()
 
+    # Get the list of all countries
+    all_countries = result_df["country"].unique()
+
+    # Create a complete list of years from 1750 to 2022
+    all_years = list(range(1750, 2023))
+
     # Format the data as required
     data = {}
-    for year in result_df["year"].unique():
+    for year in all_years:
         year_data = result_df[result_df["year"] == year]
-        data[int(year)] = [
+        year_dict = {row["country"]: row for _, row in year_data.iterrows()}
+        data[year] = [
             {
-                "x": row["co2"],
-                "y": row["gdp"],
-                "name": row["country"],
-                "continent": country_to_continent.get(row["country"], "Unknown")
+                "x": year_dict.get(country, {"co2": 0})["co2"],
+                "y": year_dict.get(country, {"co2_per_capita": 0})["co2_per_capita"],
+                "name": country,
+                "continent": country_to_continent.get(country, "Unknown")
             }
-            for _, row in year_data.iterrows()
-
+            for country in all_countries
         ]
 
     return jsonify(data)
