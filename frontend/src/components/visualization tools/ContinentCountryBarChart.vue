@@ -156,13 +156,15 @@ export default {
       }));
 
       series.columns.template.setAll({
-        tooltipText: "{categoryX}: {valueY}",
+        tooltipText: "{categoryX}: {valueY} Million Tonnes",
         tooltipY: 0,
         strokeOpacity: 0,
         templateField: "columnSettings"
       });
 
       series.data.setAll(data);
+
+
 
       // Animate on load
       series.appear();
