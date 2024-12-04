@@ -12,13 +12,16 @@ def filter_world_data():
     filtered_columns = df[["country", "Abbreviation", "Land Area(Km2)", "Capital/Major City", "Largest city", "Population"]]
     return filtered_columns
 
-def init_global_data():
+def init_global_data(country):
     df1 = pd.read_csv("datasets/globalwarmingdata.csv")
-    df2 = filter_world_data()
-    #df3 = pd.read_csv FIND DATASET WITH COUNTRY CODES WITH ONLY TWO LETTERS
-    merged_df = pd.merge(df1, df2, on="country")
+    if any(c in ["Europe", "Asia", "Africa", "North America", "South America", "Oceania"] for c in country):
+        return df1
+    else:
+        df2 = filter_world_data()
+        #df3 = pd.read_csv FIND DATASET WITH COUNTRY CODES WITH ONLY TWO LETTERS
+        merged_df = pd.merge(df1, df2, on="country")
 
-    return merged_df
+        return merged_df
 
 @app.route("/")
 def home():
@@ -27,7 +30,7 @@ def home():
 @app.route("/country/<country>")
 def country(country):
     country_list = country.split(",")
-    result_df = init_global_data()
+    result_df = init_global_data(country_list)
     result_df = result_df[result_df["country"].isin(country_list)]
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
@@ -49,7 +52,7 @@ def country_data(country):
 
 @app.route("/year/<year>")
 def year(year):
-    merged_df = init_global_data()
+    merged_df = init_global_data("data")
     result_df = merged_df[merged_df["year"] == int(year)]
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
@@ -57,7 +60,7 @@ def year(year):
 @app.route("/country_year/<country>/<year>")
 def country_year(country, year):
     country_list = country.split(",")
-    merged_df = init_global_data()
+    merged_df = init_global_data(country_list)
     result_df = merged_df[(merged_df["country"].isin(country_list)) & (merged_df["year"] == int(year))]
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
@@ -65,21 +68,21 @@ def country_year(country, year):
 @app.route("/country_year_range/<country>/<start_year>/<end_year>")
 def country_year_range(country, start_year, end_year):
     country_list = country.split(",")
-    merged_df = init_global_data()
+    merged_df = init_global_data(country_list)
     result_df = merged_df[(merged_df["country"].isin(country_list)) & (merged_df["year"] >= int(start_year)) & (merged_df["year"] <= int(end_year))]
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
 
 @app.route("/country_code/<country_code>")
 def country_code(country_code):
-    merged_df = init_global_data()
+    merged_df = init_global_data(country_code)
     result_df = merged_df[merged_df["iso_code"] == country_code]
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
 
 @app.route("/country_code_latest/<country_code>")
 def country_code_latest(country_code):
-    merged_df = init_global_data()
+    merged_df = init_global_data(country_code)
     result_df = merged_df[merged_df["iso_code"] == country_code]
     result_df = result_df[result_df["year"] == result_df["year"].max()]
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
@@ -131,7 +134,7 @@ def co2_per_capita(country, start_year, end_year):
 def continent_data(continent, data):
     country_to_continent = load_country_to_continent()
     countries_in_continent = [countryp for countryp, cont in country_to_continent.items() if cont == continent]
-    merged_df = init_global_data()
+    merged_df = init_global_data(continent)
     merged_df = merged_df[merged_df["year"] == 2022]
     result_df = pd.DataFrame()
     for country_in_continent in countries_in_continent:
@@ -146,7 +149,7 @@ def continent_data(continent, data):
 @app.route("/per_capita/<country>/<int:start_year>/<int:end_year>")
 def per_capita(country, start_year, end_year):
     country_list = country.split(",")
-    merged_df = init_global_data()
+    merged_df = init_global_data(country_list)
     result_df = merged_df[merged_df["country"].isin(country_list)]
     result_df = result_df[(result_df["year"] >= start_year) & (result_df["year"] <= end_year)]
     per_capita_columns = [
@@ -166,7 +169,7 @@ def per_capita(country, start_year, end_year):
 @app.route("/temperature/<country>/<int:start_year>/<int:end_year>")
 def temperature(country, start_year, end_year):
     country_list = country.split(",")
-    merged_df = init_global_data()
+    merged_df = init_global_data(country_list)
     result_df = merged_df[merged_df["country"].isin(country_list)]
     result_df = result_df[(result_df["year"] >= start_year) & (result_df["year"] <= end_year)]
     temperature_columns = [
@@ -186,7 +189,7 @@ def temperature(country, start_year, end_year):
 @app.route("/cumulative/<country>/<int:start_year>/<int:end_year>")
 def cumulative(country, start_year, end_year):
     country_list = country.split(",")
-    merged_df = init_global_data()
+    merged_df = init_global_data(country_list)
     result_df = merged_df[merged_df["country"].isin(country_list)]
     result_df = result_df[(result_df["year"] >= start_year) & (result_df["year"] <= end_year)]
     cumulative_columns = [
@@ -205,7 +208,7 @@ def cumulative(country, start_year, end_year):
 @app.route("/share-global/<country>/<int:start_year>/<int:end_year>")
 def share_global(country, start_year, end_year):
     country_list = country.split(",")
-    merged_df = init_global_data()
+    merged_df = init_global_data(country_list)
     result_df = merged_df[merged_df["country"].isin(country_list)]
     result_df = result_df[(result_df["year"] >= start_year) & (result_df["year"] <= end_year)]
     share_columns = [
@@ -246,7 +249,7 @@ def ghg_per_capita(country, start_year, end_year):
 def country_gdp(country, start_year, end_year):
     country_list = country.split(",")
     # Merge datasets on 'country'
-    merged_df = init_global_data()
+    merged_df = init_global_data(country_list)
 
     # Filter rows by country
     result_df = merged_df[merged_df["country"].isin(country_list)]
@@ -274,7 +277,7 @@ def country_gdp(country, start_year, end_year):
 @app.route("/co2/<country>/<int:start_year>/<int:end_year>")
 def country_co2(country, start_year, end_year):
     country_list = country.split(",")
-    merged_df = init_global_data()
+    merged_df = init_global_data(country_list)
 
     # Filter rows by country
     result_df = merged_df[merged_df["country"].isin(country_list)]
@@ -341,7 +344,7 @@ def load_country_to_continent():
 
 @app.route("/gdp_co2")
 def gdp_co2():
-    merged_df = init_global_data()
+    merged_df = init_global_data("data")
 
     # Select the necessary columns
     result_df = merged_df[["year", "country", "gdp", "co2"]].copy()
