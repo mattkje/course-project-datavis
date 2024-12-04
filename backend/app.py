@@ -403,7 +403,10 @@ def translate_country(country):
     result_df = pd.DataFrame()
 
     for country_name in country_list:
-        country_data = df1[df1["official_name_en"].str.contains(country_name, case=False, na=False)][["ISO3166-1-Alpha-2"]]
+        if country_name != "Oman" and country_name != "Sudan":
+            country_data = df1[df1["official_name_en"].str.contains(country_name, case=False, na=False)][["ISO3166-1-Alpha-2"]]
+        else:
+            country_data = df1[df1["official_name_en"] == country_name][["ISO3166-1-Alpha-2"]]
         country_data.rename(columns={"ISO3166-1-Alpha-2": "countryCode"}, inplace=True)
         result_df = pd.concat([result_df, country_data], ignore_index=True)
 

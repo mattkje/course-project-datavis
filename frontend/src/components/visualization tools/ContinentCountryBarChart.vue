@@ -98,9 +98,11 @@ export default {
       let top_countries = country_data.slice(0, 10).map(item => item.country).join(',');
 
       let translated_names = await this.fetchData(`translate/${top_countries}`);
+      console.log(translated_names);
+      console.log(top_countries);
 
       let data = country_data.slice(0, 10).map((item, index) => ({
-        country: item.country === "Trinidad and Tobago" ? "T&T" : item.country === "Papua New Guinea" ? "PN Guinea" : item.country === "Dominican Republic" ? "DR" : item.country === "Antigua and Barbuda" ? "A&B" : item.country === "United Arab Emirates" ? "UAE" : item.country,
+        country: item.country === "Trinidad and Tobago" ? "T&T" : item.country === "Papua New Guinea" ? "PN Guinea" : item.country === "Dominican Republic" ? "DR" : item.country === "Antigua and Barbuda" ? "A&B" : item.country === "United Arab Emirates" ? "UAE" : item.country === "Democratic Republic of Congo" ? "DRC" : item.country,
         visits: Object.values(item)[1],
         icon: `public/countryflags/${translated_names[index].countryCode}.svg`,
         columnSettings: { fill: colors.next() }
