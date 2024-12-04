@@ -42,7 +42,7 @@ function updateUrl(url) {
 
 function handleContinentClick(continent) {
   selectedContinent.value = continent;
-  const targetElement = document.getElementById("bar-chart");
+  const targetElement = document.getElementById("scroll-point");
   targetElement.scrollIntoView({behavior: "smooth"});
 }
 
@@ -115,6 +115,7 @@ function updateBarUrl(url) {
         <p>Explore the greenhouse gas emissions data by continent</p>
       </div>
     </div>
+    <br id="scroll-point">
     <div class="bar-container" id="bar-chart">
       <div class="mapHeader">
         <h2>Cumulative data of {{ selectedBarUrl.split(",")[0] }} in {{ selectedContinent }}</h2>
