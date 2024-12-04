@@ -134,7 +134,7 @@ function updateBarUrl(url) {
         </div>
       </div>
     </div>
-    <div class="comparison-container">
+    <div class="bar-container">
       <div class="mapHeader">
         <h2>Explore the greenhouse gas emissions data by country</h2>
       </div>
@@ -271,6 +271,7 @@ p {
   gap: 20px;
   padding-left: 25px;
   padding-top: 100px;
+  padding-right: 100px;
 }
 
 .bar-container::before {

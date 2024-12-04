@@ -1,5 +1,5 @@
 <template>
-  <div id="chartdivContainer">
+  <div id="chartdivContainer_countrComparison">
   <div id="chartdiv"></div>
   </div>
 </template>
@@ -159,9 +159,10 @@ export default {
   height: 500px;
 }
 
-#chartdivContainer {
+#chartdivContainer_countrComparison {
   position: relative;
   width: 100%;
-  height: 550px;
+  height: 600px;
+  margin: 0 0 40px 0;
 }
 </style>
