@@ -31,13 +31,13 @@ const scrollToTop = () => {
   background-color: var(--color-background-soft);
   justify-content: space-between;
   padding: 1rem;
-  color: #000; /* White text color */
+  color: #000;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 70px;
-  z-index: 1000; /* Ensure it stays on top */
+  z-index: 1000;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 

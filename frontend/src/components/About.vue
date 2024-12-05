@@ -12,7 +12,7 @@ const hoverState = ref(false)
         target="_blank"
         rel="noreferrer noopener"
     >
-      <i class="fas fa-info-circle"></i>
+      <font-awesome-icon icon="fa-solid fa-circle-info" style="color: #1E555F;" size="xl"/>
     </HoverCardTrigger>
     <HoverCardPortal>
       <HoverCardContent
