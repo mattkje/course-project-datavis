@@ -1,17 +1,32 @@
 <script setup>
+import '@vueform/slider/themes/default.css';
 import ContinentMap from './visualization tools/ContinentMap.vue';
 import ToolBar from "@/components/ToolBar.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import PinMap from "@/components/visualization tools/pinMap.vue";
-import ChartComponent from "@/components/visualization tools/ContinentCountryBarChart.vue";
 import ContinentChartComponent from "@/components/visualization tools/ContinentCountryBarChart.vue";
 import CountryComparisonChart from "@/components/visualization tools/CountryComparison.vue";
 import MotionChartComponent from "@/components/visualization tools/MotionChart.vue";
 import InformationalBox from "@/components/visualization tools/InformationalBox.vue";
+import Slider from "@vueform/slider";
+import {SliderRange, SliderRoot} from "radix-vue";
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
 const selectedContinent = ref('Europe');
+const comparisonCountries = ref(["Norway", "Sweden"]);
+const comparisonData = ref("co2");
+const comparisonStartYear = ref(2000);
+const comparisonEndYear = ref(2022);
+const sliderValue = ref([2000, 2022]);
+
+watch(sliderValue, (newValue) => {
+  comparisonStartYear.value = newValue[0];
+  comparisonEndYear.value = newValue[1];
+  console.log('Updated Years:', comparisonStartYear.value, comparisonEndYear.value);
+
+ sliderChange();
+}, { immediate: true });
 
 const buttons = [
   {label: "Total", url: "Total Co2 emissions,cumulative_co2", selected: true},
@@ -50,6 +65,11 @@ function handleContinentClick(continent) {
 function updateBarUrl(url) {
   selectedBarUrl.value = url;
   barchartButtons.forEach(button => button.selected = (button.url === url));
+}
+
+function sliderChange() {
+  [comparisonStartYear.value, comparisonEndYear.value] = sliderValue.value;
+  console.log("Slider value changed:", sliderValue.value);
 }
 </script>
 
@@ -142,8 +162,11 @@ function updateBarUrl(url) {
       <div class="mapHeader">
         <h2>Explore the greenhouse gas emissions data by country</h2>
       </div>
-      <CountryComparisonChart/>
+      <CountryComparisonChart :countries="comparisonCountries" :comparisonData="comparisonData" :start-year="comparisonStartYear" :end-year="comparisonEndYear"/>
       <div class="innerTextContainer">
+        <div>
+          <Slider v-model="sliderValue" :min="2000" :max="2022" :step="1" range/>
+        </div>
         <p>Explore the greenhouse gas emissions data by country</p>
       </div>
     </div>

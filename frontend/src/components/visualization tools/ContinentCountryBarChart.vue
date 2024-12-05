@@ -90,7 +90,6 @@ export default {
         default:
           currentContinent = "EU";
       }
-      console.log(this.continent);
 
       let country_data = await this.fetchData(`continent_data/${currentContinent}/${url}`);
       country_data.sort((a, b) => Object.values(b)[1] - Object.values(a)[1]);
@@ -98,8 +97,6 @@ export default {
       let top_countries = country_data.slice(0, 10).map(item => item.country).join(',');
 
       let translated_names = await this.fetchData(`translate/${top_countries}`);
-      console.log(translated_names);
-      console.log(top_countries);
 
       let data = country_data.slice(0, 10).map((item, index) => ({
         country: item.country === "Trinidad and Tobago" ? "T&T" : item.country === "Papua New Guinea" ? "PN Guinea" : item.country === "Dominican Republic" ? "DR" : item.country === "Antigua and Barbuda" ? "A&B" : item.country === "United Arab Emirates" ? "UAE" : item.country === "Democratic Republic of Congo" ? "DRC" : item.country,

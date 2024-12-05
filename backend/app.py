@@ -413,3 +413,15 @@ def translate_country(country):
     result_df.fillna("N/A", inplace=True)
 
     return jsonify(result_df.to_dict(orient="records"))
+
+@app.route("/comparison/<countries>/<comparisonData>")
+def comparison(countries, comparisonData):
+    country_list = countries.split(",")
+    merged_df = init_global_data(country_list)
+    result_df = merged_df[merged_df["country"].isin(country_list) & (merged_df["year"] >= 2000) & (merged_df["year"] <= 2022)]
+
+    pivot_df = result_df.pivot(index="year", columns="country", values=comparisonData).reset_index()
+
+    pivot_df.fillna("N/A", inplace=True)
+    result = pivot_df.to_dict(orient="records")
+    return jsonify(result)

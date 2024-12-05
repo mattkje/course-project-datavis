@@ -1,6 +1,6 @@
 <template>
   <div id="chartdivContainer_countrComparison">
-  <div id="chartdiv"></div>
+    <div id="comparisonchartdiv"></div>
   </div>
 </template>
 
@@ -12,13 +12,64 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
 export default {
   name: "CountryComparisonChart",
+  data() {
+    return {
+      chartData: [],
+      root: null,
+      chart: null,
+      series: [],
+    };
+  },
   mounted() {
     this.createChart(); // Initialize chart on component mount
   },
+  props: {
+    countries: {
+      type: Array,
+      required: true,
+    },
+    startYear: {
+      type: Number,
+      required: true,
+    },
+    endYear: {
+      type: Number,
+      required: true,
+    },
+    comparisonData: {
+      type: String,
+      required: true,
+    }
+  },
+  watch: {
+    countries: 'createChart',
+    startYear: 'updateChartData',  // Watch startYear
+    endYear: 'updateChartData',    // Watch endYear
+    comparisonData: 'createChart'
+  },
   methods: {
-    createChart() {
+    async fetchData(url) {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/' + url);
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },
+    filterChartData(data, startYear, endYear) {
+      return data.filter(item => item.year >= startYear && item.year <= endYear);
+    },
+    async createChart() {
+      if (this.root) {
+        this.root.dispose(); // Dispose of the existing chart if it exists
+        this.root = null;
+      }
+
+      if (!this.$el) return;
+
       // Create root element
-      let root_country_comparison = am5.Root.new("chartdiv");
+      let root_country_comparison = am5.Root.new("comparisonchartdiv");
+      this.root = root_country_comparison;
 
       // Set themes
       root_country_comparison.setThemes([am5themes_Animated.new(root_country_comparison)]);
@@ -35,6 +86,8 @@ export default {
           })
       );
 
+      this.chart = chart; // Assign the chart to this.chart
+
       root_country_comparison.interfaceColors.set("text", am5.color(0xffffff));
 
       // Add legend
@@ -45,36 +98,14 @@ export default {
           })
       );
 
-      // Sample data
-      let data = [
-        {
-          year: "2021",
-          europe: 2.5,
-          namerica: 2.5,
-          asia: 2.1,
-          lamerica: 1,
-          meast: 0.8,
-          africa: 0.4,
-        },
-        {
-          year: "2022",
-          europe: 2.6,
-          namerica: 2.7,
-          asia: 2.2,
-          lamerica: 0.5,
-          meast: 0.4,
-          africa: 0.3,
-        },
-        {
-          year: "2023",
-          europe: 2.8,
-          namerica: 2.9,
-          asia: 2.4,
-          lamerica: 0.3,
-          meast: 0.9,
-          africa: 0.5,
-        },
-      ];
+      this.chartData = await this.fetchData(`comparison/${this.countries.join(',')}/${this.comparisonData}`);
+
+      // Initially filter data based on the start and end year
+      this.chartData = this.filterChartData(this.chartData, this.startYear, this.endYear);
+
+      this.chartData.forEach(item => {
+        item.year = item.year.toString().replace(",", "");
+      });
 
       // Create axes
       let xRenderer = am5xy.AxisRendererX.new(root_country_comparison, {
@@ -92,7 +123,7 @@ export default {
       );
 
       xRenderer.grid.template.setAll({ location: 1 });
-      xAxis.data.setAll(data);
+      xAxis.data.setAll(this.chartData);
 
       let yAxis = chart.yAxes.push(
           am5xy.ValueAxis.new(root_country_comparison, {
@@ -100,8 +131,8 @@ export default {
           })
       );
 
-      // Function to create series
-      function makeSeries(name, fieldName) {
+      // Create series for each region
+      const makeSeries = (name, fieldName) => {
         let series = chart.series.push(
             am5xy.ColumnSeries.new(root_country_comparison, {
               name: name,
@@ -113,16 +144,16 @@ export default {
         );
 
         series.columns.template.setAll({
-          tooltipText: "{name}, {categoryX}:{valueY}",
+          tooltipText: "{name}, {categoryX}: {valueY}",
           width: am5.percent(90),
           tooltipY: 0,
           strokeOpacity: 0,
         });
 
-        series.data.setAll(data);
+        series.data.setAll(this.chartData);
 
         // Add labels to columns
-        series.bullets.push(function () {
+        series.bullets.push(() => {
           return am5.Bullet.new(root_country_comparison, {
             locationY: 0,
             sprite: am5.Label.new(root_country_comparison, {
@@ -138,23 +169,49 @@ export default {
         legend.data.push(series);
       }
 
-      // Create series for each region
-      makeSeries("Europe", "europe");
-      makeSeries("North America", "namerica");
-      makeSeries("Asia", "asia");
-      makeSeries("Latin America", "lamerica");
-      makeSeries("Middle East", "meast");
-      makeSeries("Africa", "africa");
+      // Create series for each country
+      this.countries.forEach(country => {
+        makeSeries(country, country);
+      });
 
       // Animate on load
-      chart.appear(1000, 100);
+      await chart.appear(1000, 100);
     },
+
+    updateChartData() {
+      if (!this.chart || !this.chartData) return; // Prevent errors if the chart or data are not ready
+
+      // Filter data based on updated year range
+      const filteredData = this.filterChartData(this.chartData, this.startYear, this.endYear);
+
+      // Update the xAxis with new data
+      let xAxis = this.chart.xAxes.getIndex(0);  // Get the xAxis from the chart
+      if (xAxis) {
+        xAxis.data.setAll(filteredData);
+      }
+
+      // Update the series data for each country
+      this.countries.forEach((country, index) => {
+        let series = this.chart.series.getIndex(index);  // Get the corresponding series for the country
+        if (series) {
+          series.data.setAll(filteredData); // Update the data for the series
+        }
+      });
+
+      // Optionally, you can animate the chart again if needed
+      this.chart.appear(1000, 100);
+    }
   },
+  beforeUnmount() {
+    if (this.root) {
+      this.root.dispose(); // Dispose the chart to prevent memory leaks
+    }
+  }
 };
 </script>
 
 <style scoped>
-#chartdiv {
+#comparisonchartdiv {
   width: 100%;
   height: 500px;
 }
