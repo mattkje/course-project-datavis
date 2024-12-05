@@ -7,6 +7,7 @@ import ChartComponent from "@/components/visualization tools/ContinentCountryBar
 import ContinentChartComponent from "@/components/visualization tools/ContinentCountryBarChart.vue";
 import CountryComparisonChart from "@/components/visualization tools/CountryComparison.vue";
 import MotionChartComponent from "@/components/visualization tools/MotionChart.vue";
+import InformationalBox from "@/components/visualization tools/InformationalBox.vue";
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
@@ -105,6 +106,8 @@ function updateBarUrl(url) {
         <p>Explore the greenhouse gas emissions data by continent</p>
       </div>
     </div>
+
+    <InformationalBox></InformationalBox>
 
     <div class="map-container">
       <div class="mapHeader">
