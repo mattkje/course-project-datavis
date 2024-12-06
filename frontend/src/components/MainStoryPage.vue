@@ -13,7 +13,7 @@ import Slider from "@vueform/slider";
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
 const selectedContinent = ref('Europe');
-const comparisonCountries = ref(["Norway", "Sweden"]);
+const comparisonCountries = ref(['Norway']);
 const comparisonData = ref("co2");
 const comparisonStartYear = ref(2000);
 const comparisonEndYear = ref(2022);
@@ -94,13 +94,20 @@ onMounted(async () => {
 function addCountryToFilter(country) {
   if (!comparisonCountries.value.includes(country)) {
     comparisonCountries.value.push(country);
+    console.log(comparisonCountries.value);
   }
   input.value = '';
   showDropdown.value = false;
 }
 
 function removeCountryFromFilter(country) {
-  comparisonCountries.value = comparisonCountries.value.filter(c => c !== country);
+  // Find the index of the country in the array
+  const index = comparisonCountries.value.indexOf(country);
+
+  // If the country exists in the array, remove it
+  if (index !== -1) {
+    comparisonCountries.value.splice(index, 1);
+  }
 }
 
 function hideDropdownWithDelay() {
@@ -235,7 +242,7 @@ function sliderChange() {
       <div class="mapHeader">
         <h2>Explore the greenhouse gas emissions data by country</h2>
       </div>
-      <CountryComparisonChart :countries="comparisonCountries" :comparisonData="selectedCompUrl.split(',')[1]" :start-year="comparisonStartYear" :end-year="comparisonEndYear"/>
+      <CountryComparisonChart :countries="comparisonCountries.join(',')" :comparisonData="selectedCompUrl.split(',')[1]" :start-year="comparisonStartYear" :end-year="comparisonEndYear"/>
       <div class="innerTextContainer">
           <div class="country-search">
             <input type="text" v-model="input" placeholder="Search for a country" @click="showDropdown = true" @focus="showDropdown = true" @blur="hideDropdownWithDelay">
@@ -515,7 +522,7 @@ input {
   display: flex;
   flex-direction: column;
   gap: 10px; /* Space between items */
-  height: 200px;
+  height: 150px;
   padding: 0;
   margin: 0;
   list-style: none;
