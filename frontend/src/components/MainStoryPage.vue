@@ -2,14 +2,13 @@
 import '@vueform/slider/themes/default.css';
 import ContinentMap from './visualization tools/ContinentMap.vue';
 import ToolBar from "@/components/ToolBar.vue";
-import {ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import PinMap from "@/components/visualization tools/pinMap.vue";
 import ContinentChartComponent from "@/components/visualization tools/ContinentCountryBarChart.vue";
 import CountryComparisonChart from "@/components/visualization tools/CountryComparison.vue";
 import MotionChartComponent from "@/components/visualization tools/MotionChart.vue";
 import InformationalBox from "@/components/visualization tools/InformationalBox.vue";
 import Slider from "@vueform/slider";
-import {SliderRange, SliderRoot} from "radix-vue";
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
@@ -19,6 +18,7 @@ const comparisonData = ref("co2");
 const comparisonStartYear = ref(2000);
 const comparisonEndYear = ref(2022);
 const sliderValue = ref([2000, 2022]);
+const input = ref('');
 
 watch(sliderValue, (newValue) => {
   comparisonStartYear.value = newValue[0];
@@ -61,6 +61,63 @@ const barchartCompButtons = [
 const selectedUrl = ref(buttons[0].url);
 const selectedBarUrl = ref(buttons[0].url);
 const selectedCompUrl = ref(barchartButtons[0].url);
+const countries = ref([]);
+const selectedCountryFilter = ref('');
+const fetchError = ref(null);
+const showDropdown = ref(false);
+let preventHide = false;
+
+const filteredCountries = computed(() => {
+  if (!input.value) return [];
+  return countries.value.filter(country => country.toLowerCase().startsWith(input.value.toLowerCase()));
+})
+
+async function fetchData(url) {
+  try {
+    fetchError.value = null; // Reset error
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+    return await response.json();
+  } catch (error) {
+    fetchError.value = error.message;
+    console.error("Failed to fetch data:", error);
+    return [];
+  }
+}
+
+onMounted(async () => {
+  const data = await fetchData('http://127.0.0.1:5000/countries');
+  countries.value = data; // Assign fetched data
+  console.log("Fetched countries:", data);
+});
+
+function addCountryToFilter(country) {
+  if (!comparisonCountries.value.includes(country)) {
+    comparisonCountries.value.push(country);
+  }
+  input.value = '';
+  showDropdown.value = false;
+}
+
+function removeCountryFromFilter(country) {
+  comparisonCountries.value = comparisonCountries.value.filter(c => c !== country);
+}
+
+function hideDropdownWithDelay() {
+  if (!preventHide) {
+    setTimeout(() => {
+      showDropdown.value = false;
+    }, 200);
+  }
+}
+
+function preventHideDropdown() {
+  preventHide = true;
+}
+
+function allowHideDropdown() {
+  preventHide = false;
+}
 
 function updateUrl(url) {
   selectedUrl.value = url;
@@ -180,7 +237,29 @@ function sliderChange() {
       </div>
       <CountryComparisonChart :countries="comparisonCountries" :comparisonData="selectedCompUrl.split(',')[1]" :start-year="comparisonStartYear" :end-year="comparisonEndYear"/>
       <div class="innerTextContainer">
-        <div>
+          <div class="country-search">
+            <input type="text" v-model="input" placeholder="Search for a country" @click="showDropdown = true" @focus="showDropdown = true" @blur="hideDropdownWithDelay">
+            <div class="country-list" v-if="showDropdown && filteredCountries.length" @mouseenter="preventHideDropdown" @mouseleave="allowHideDropdown">
+              <div class="country-items">
+              <div class="country-item" v-for="country in filteredCountries" :key="country" @click="addCountryToFilter(country)">
+                <p>{{ country }}</p>
+              </div>
+                </div>
+              <div class="item error" v-if="input && !filteredCountries.length">
+                <p>No results found!</p>
+              </div>
+            </div>
+            <div class="selected-filters">
+              <h3>Selected Countries</h3>
+              <ul>
+                <li v-for="country in comparisonCountries" :key="country">
+                  {{ country }}
+                  <button @click="removeCountryFromFilter(country)">x</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        <div class="year-slider">
           <Slider v-model="sliderValue" :min="2000" :max="2022" :step="1" range/>
         </div>
         <p>Explore the greenhouse gas emissions data by country</p>
@@ -371,6 +450,104 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.country-search {
+  position:relative;
+  width: 350px;
+  margin: 0 auto;
+}
+
+.country-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.country-item:hover {
+  background-color: #366e7a;
+}
+
+.item.error {
+  padding: 10px 15px;
+  color: #FFA737;
+  text-align: center;
+}
+
+.country-list {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background: #366e7a;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+input {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  background: white;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.year-slider {
+  margin-top: 30px;
+}
+
+.selected-filters {
+  margin-top: 20px;
+  color: white;
+}
+
+.selected-filters h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.selected-filters ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between items */
+  height: 200px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #4e90a4 #1E555F;
+}
+
+.selected-filters li {
+  background: #366e7a;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.selected-filters li button {
+  margin-top: 5px;
+  background: #146168;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.selected-filters li button:hover {
+  background: firebrick;
 }
 
 input[type="radio"] {

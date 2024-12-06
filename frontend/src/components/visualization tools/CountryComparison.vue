@@ -226,6 +226,7 @@ export default {
 
 #chartdivContainer_countrComparison {
   position: relative;
+  padding-top: 150px;
   width: 100%;
   height: 600px;
   margin: 0 0 40px 0;
