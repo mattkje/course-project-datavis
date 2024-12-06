@@ -45,7 +45,15 @@ export default {
     countries: 'createChart',
     startYear: 'updateChartData',  // Watch startYear
     endYear: 'updateChartData',    // Watch endYear
-    comparisonData: 'createChart'
+    async comparisonData(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.chartData = await this.fetchData(`comparison/${this.countries.join(',')}/${newVal}`);
+        this.chartData.forEach(item => {
+          item.year = item.year.toString().replace(",", "");
+        });
+        this.updateChartData();
+      }
+    }
   },
   methods: {
     async fetchData(url) {

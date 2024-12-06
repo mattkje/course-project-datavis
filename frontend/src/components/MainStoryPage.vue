@@ -48,8 +48,19 @@ const barchartButtons = [
   {label: "Cement Bar", url: "Total Cement Emissions,cumulative_cement_co2", selected: false, name: "Cement"}
 ]
 
+const barchartCompButtons = [
+  {label: "Total Comp", url: "Total Co2 emissions,cumulative_co2", selected: true, name:"Total"},
+  {label: "Land Usage Comp", url: "Total Co2 emissions including land use,cumulative_co2_including_luc", selected: false, name:"Land Usage"},
+  {label: "Coal Comp", url: "Total Coal Emissions,cumulative_coal_co2", selected: false, name:"Coal"},
+  {label: "Oil Comp", url: "Total Oil Emissions,cumulative_oil_co2", selected: false, name:"Oil"},
+  {label: "Flaring Comp", url: "Total Flaring Emissions,cumulative_flaring_co2", selected: false, name: "Flaring"},
+  {label: "Gas Comp", url: "Total Gas Emissions,cumulative_gas_co2", selected: false, name: "Gas"},
+  {label: "Cement Comp", url: "Total Cement Emissions,cumulative_cement_co2", selected: false, name: "Cement"}
+]
+
 const selectedUrl = ref(buttons[0].url);
 const selectedBarUrl = ref(buttons[0].url);
+const selectedCompUrl = ref(barchartButtons[0].url);
 
 function updateUrl(url) {
   selectedUrl.value = url;
@@ -65,6 +76,11 @@ function handleContinentClick(continent) {
 function updateBarUrl(url) {
   selectedBarUrl.value = url;
   barchartButtons.forEach(button => button.selected = (button.url === url));
+}
+
+function updateCompData(url) {
+  selectedCompUrl.value = url;
+  barchartCompButtons.forEach(button => button.selected = (button.url === url));
 }
 
 function sliderChange() {
@@ -162,12 +178,19 @@ function sliderChange() {
       <div class="mapHeader">
         <h2>Explore the greenhouse gas emissions data by country</h2>
       </div>
-      <CountryComparisonChart :countries="comparisonCountries" :comparisonData="comparisonData" :start-year="comparisonStartYear" :end-year="comparisonEndYear"/>
+      <CountryComparisonChart :countries="comparisonCountries" :comparisonData="selectedCompUrl.split(',')[1]" :start-year="comparisonStartYear" :end-year="comparisonEndYear"/>
       <div class="innerTextContainer">
         <div>
           <Slider v-model="sliderValue" :min="2000" :max="2022" :step="1" range/>
         </div>
         <p>Explore the greenhouse gas emissions data by country</p>
+        <div class="button-group">
+          <div v-for="(button, index) in barchartCompButtons" :key="index" class="button-container">
+            <input type="radio" :id="button.label" :value="button.url" v-model="selectedCompUrl"
+                   @change="updateCompData(button.url)">
+            <label :for="button.label">{{ button.name }}</label>
+          </div>
+        </div>
       </div>
     </div>
   </div>
