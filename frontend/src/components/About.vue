@@ -22,7 +22,7 @@ const hoverState = ref(false)
         <div :style="{ display: 'flex', flexDirection: 'column', gap: 7 }">
           <img
               class="Image large"
-              src="/favicon.svg"
+              src="../assets/logo.png"
               alt="Radix UI"
           >
           <div :style="{ display: 'flex', flexDirection: 'column', gap: 15 }">

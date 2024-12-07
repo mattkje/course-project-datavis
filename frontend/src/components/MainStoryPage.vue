@@ -166,8 +166,12 @@ function sliderChange() {
 <template>
   <ToolBar/>
   <div class="main-container">
-    <h1 :style="{ width: TextWidth, maxWidth: TextMaxWidth }">Let's dive into the story of our greenhouse gas
-      emissions</h1>
+    <div class="logoContainer" >
+      <img src="../assets/logo.png" alt="Globe World Stats Logo" class="logo">
+      <h1 :style="{ width: TextWidth, maxWidth: TextMaxWidth }">Let's dive into the story of our greenhouse gas
+        emissions</h1>
+    </div>
+
     <div class="textcontainer" :style="{ width: TextWidth, maxWidth: TextMaxWidth }">
       <p>
         The world is slowly coming to the realization that <span
@@ -182,6 +186,10 @@ function sliderChange() {
         climate history as well as where they are headed, is key to fully supporting the measures necessary to <span
           style="font-weight: 900; color: #f6d0a0; font-family: Inter,sans-serif">REVERT</span>
         our changes. We hope you find value in the experience you are about to start, enjoy. </p>
+    </div>
+
+    <div class="sectionHeader">
+      First, Let's Look at the Past
     </div>
 
     <div class="map-container">
@@ -212,6 +220,7 @@ function sliderChange() {
       </div>
     </div>
 
+
     <div class="map-container">
       <div class="mapHeader">
         <h2>Co2 Emissions Per Continent as Percentage</h2>
@@ -223,6 +232,10 @@ function sliderChange() {
     </div>
 
     <InformationalBox></InformationalBox>
+
+    <div class="sectionHeader">
+      Now, Let's Dive Into the Present
+    </div>
 
     <div class="map-container">
       <div class="mapHeader">
@@ -299,6 +312,9 @@ function sliderChange() {
         </div>
       </div>
     </div>
+    <div class="sectionHeader">
+      How Will the Future Look?
+    </div>
   </div>
 </template>
 
@@ -313,6 +329,25 @@ function sliderChange() {
   gap: 50px;
 }
 
+.logoContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  margin: 0 20vw;
+  gap: 20px;
+}
+
+.logo {
+  position: absolute;
+  right: 0;
+  top: 25%;
+  width: 200px;
+  height: 200px;
+
+}
+
 h1 {
   text-align: left;
   font-size: 4.5rem;
@@ -321,7 +356,6 @@ h1 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1.2;
-  margin: auto;
 }
 
 h2 {
@@ -612,6 +646,14 @@ input[type="radio"] + label:hover {
   background-color: #366e7a;
 }
 
+.sectionHeader {
+  margin: 50vh 0;
+  text-align: center;
+  font-size: 4rem;
+  font-weight: 900;
+  color: #1e555f;
+}
+
 @media screen and (max-width: 1400px) {
   .map-container {
     flex-direction: column-reverse;
@@ -644,6 +686,22 @@ input[type="radio"] + label:hover {
 
   .button-group {
     margin-top: 0;
+  }
+
+  .logoContainer {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  .logo {
+    margin: 40px 0;
+    position: relative;
+    width: 150px;
+    height: 150px;
+  }
+
+  h1[data-v-eb6a0664] {
+    width: 100% !important;
   }
 }
 </style>

@@ -14,7 +14,7 @@ const scrollToTop = () => {
 <template>
   <div class="toolbar">
     <div class="title-box">
-      <img src="../assets/logo.svg" alt="Logo" class="logo" />
+      <img src="../assets/logo.png" alt="Logo" class="logo" />
       <h1 class="title">Globe World Stats</h1>
     </div>
     <About />
