@@ -1,12 +1,49 @@
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
 
+def better_predict_arima(country, prediction_data):
+    # Load the dataset
+    df = pd.read_csv("datasets/globalwarmingdata.csv")
+    # Filter for the selected country
+    country_df = df[df["country"] == country]
+    # Drop rows where the 'year' column is NaN
+    filter_df = country_df.dropna(subset=["year"])
+
+    # Extract only the 'year' and the specified prediction data column
+    result_df = filter_df[["year", prediction_data]].copy()
+    # Convert 'year' to datetime and set it as index
+    result_df["year"] = pd.to_datetime(filter_df["year"], format='%Y')
+    result_df.set_index("year", inplace=True)
+
+    # Prepare for predictions
+    predictions = []
+    last_year = result_df.index.max().year  # The last year in the existing data
+
+    # Loop over columns in case there are multiple columns to forecast (though you're focusing on one)
+    for column in result_df.columns:
+        # Fit an ARIMA model
+        model = ARIMA(result_df[column], order=(1, 1, 1))
+        model_fit = model.fit()
+        # Forecast 5 years into the future
+        forecast = model_fit.forecast(steps=5)
+        forecast_values = forecast.values
+
+        # Build the output in the desired format
+        for i in range(5):
+            year = last_year + i + 1
+            value = round(float(forecast_values[i]), 3)
+            # Append the forecast for each year in a structured dictionary
+            predictions.append({
+                country: value,
+                "year": year
+            })
+
+    return predictions
 
 def predict_arima(country, prediction_data):
     df = pd.read_csv("datasets/globalwarmingdata.csv")
     country_df = df[df["country"] == country]
     filter_df = country_df.dropna(subset=["year"])
-
     if prediction_data == "co2":
         exclude_terms = ["per_capita", "per_gdp", "per_unit_energy", "share", "cumulative", "growth","temperature"]
         co2_columns = [
@@ -28,7 +65,7 @@ def predict_arima(country, prediction_data):
         per_capita_columns = [
             col for col in filter_df.columns
             if "per_capita" in col
-               and "energy" not in col
+                and "energy" not in col
         ]
         per_capita_columns.append('year')
         result_df = filter_df[per_capita_columns].copy()

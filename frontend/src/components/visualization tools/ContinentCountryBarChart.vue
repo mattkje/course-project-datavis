@@ -184,6 +184,7 @@ export default {
 #continentchartdiv {
   width: 100%;
   height: 500px;
+  padding-top: 50px;
 }
 
 #chartdivContainer_continentChart {

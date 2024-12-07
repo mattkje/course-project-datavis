@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import pandas as pd
 
-from calculations import predict_arima, calculate_democracy_rank, calculate_correlation
+from calculations import predict_arima, calculate_democracy_rank, calculate_correlation, better_predict_arima
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -453,3 +453,16 @@ def comparison(countries, comparisonData):
     pivot_df.fillna("N/A", inplace=True)
     result = pivot_df.to_dict(orient="records")
     return jsonify(result)
+
+@app.route("/predictContinents/<prediction_data>")
+def predicts(prediction_data):
+    continents = ["Africa", "Asia", "Europe", "North America", "Oceania", "South America"]
+    predictions = []
+
+    for continent in continents:
+        old_data = comparison(continent, prediction_data).get_json()
+        prediction = better_predict_arima(continent, prediction_data)
+        merged = old_data + prediction
+        predictions.append(merged)
+
+    return predictions

@@ -10,6 +10,7 @@ import MotionChartComponent from "@/components/visualization tools/MotionChart.v
 import InformationalBox from "@/components/visualization tools/InformationalBox.vue";
 import Slider from "@vueform/slider";
 import Globe from "@/components/Globe.vue";
+import ContinentPredictionLineChart from "@/components/visualization tools/ContinentPredictionLineChart.vue";
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
@@ -162,6 +163,12 @@ function sliderChange() {
   [comparisonStartYear.value, comparisonEndYear.value] = sliderValue.value;
   console.log("Slider value changed:", sliderValue.value);
 }
+
+function selectFirstOption() {
+  if (filteredCountries.value.length > 0) {
+    addCountryToFilter(filteredCountries.value[0]);
+  }
+}
 </script>
 
 <template>
@@ -270,14 +277,14 @@ function sliderChange() {
     </div>
     <div class="bar-container">
       <div class="mapHeader">
-        <h2>Explore the greenhouse gas emissions data by country</h2>
+        <h2>Compare data from different countries</h2>
       </div>
       <CountryComparisonChart :countries="comparisonCountries.join(',')" :comparisonData="selectedCompUrl.split(',')[1]"
                               :start-year="comparisonStartYear" :end-year="comparisonEndYear"/>
       <div class="innerTextContainer">
         <div class="country-search">
           <input type="text" v-model="input" placeholder="Search for a country" @click="showDropdown = true"
-                 @focus="showDropdown = true" @blur="hideDropdownWithDelay">
+                 @focus="showDropdown = true" @blur="hideDropdownWithDelay" @keydown.enter="selectFirstOption">
           <div class="country-list" v-if="showDropdown && filteredCountries.length" @mouseenter="preventHideDropdown"
                @mouseleave="allowHideDropdown">
             <div class="country-items">
@@ -311,6 +318,15 @@ function sliderChange() {
             <label :for="button.label">{{ button.name }}</label>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="bar-container">
+      <div class="mapHeader">
+        <h2>Co2 Emissions Per Continent as Percentage</h2>
+      </div>
+      <ContinentPredictionLineChart/>
+      <div>
+
       </div>
     </div>
     <div class="sectionHeader">
