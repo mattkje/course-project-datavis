@@ -270,7 +270,6 @@ function sliderChange() {
         <div class="year-slider">
           <Slider v-model="sliderValue" :min="2000" :max="2022" :step="1" range/>
         </div>
-        <p>Explore the greenhouse gas emissions data by country</p>
         <div class="button-group">
           <div v-for="(button, index) in barchartCompButtons" :key="index" class="button-container">
             <input type="radio" :id="button.label" :value="button.url" v-model="selectedCompUrl"
@@ -506,7 +505,7 @@ input {
 }
 
 .year-slider {
-  margin-top: 30px;
+  margin-top: 50px;
 }
 
 .selected-filters {

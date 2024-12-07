@@ -1,5 +1,5 @@
 import pandas as pd
-from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.tsa.arima.model import ARIMA
 
 
 def predict_arima(country, prediction_data):
@@ -58,7 +58,7 @@ def predict_arima(country, prediction_data):
         for i in range(5):
             if len(predictions) <= i:
                 predictions.append({"year": last_year + i + 1, "country": country})
-            predictions[i][column] = float(forecast_values[i])
+            predictions[i][column] = round(float(forecast_values[i]), 3)
 
     return predictions
 
