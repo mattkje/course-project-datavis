@@ -71,3 +71,24 @@ def calculate_democracy_rank(country):
         raise ValueError(f"No data found for {country} in 2023.")
     country_rank = filter_df[filter_df["country"] == country].index[0] + 1
     return country_rank
+
+import pandas as pd
+
+def calculate_correlation(df, col1, col2, method='pearson'):
+    """
+    Calculate the correlation between two columns in a DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing the data.
+    - col1 (str): The name of the first column.
+    - col2 (str): The name of the second column.
+    - method (str): The correlation method to use. Available: 'pearson', 'spearman', 'kendall'.
+
+    Returns:
+    - The correlation coefficient.
+    """
+    if col1 not in df.columns or col2 not in df.columns:
+        raise ValueError(f"Columns '{col1}' and/or '{col2}' not found in DataFrame.")
+
+    correlation = df[[col1, col2]].corr(method=method).iloc[0, 1]
+    return correlation
