@@ -405,8 +405,8 @@ p {
   background-color: #1E555F;
   position: relative; /* Add this line */
   gap: 20px;
+  padding-top: 50px;
   padding-left: 25px;
-  padding-top: 100px;
   padding-right: 100px;
 }
 
@@ -540,6 +540,8 @@ input {
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
+  font-family: "Corbel Light", serif;
+  font-weight: 700;
 }
 
 .selected-filters li button {
@@ -606,7 +608,7 @@ input[type="radio"] + label:hover {
 
   .bar-container {
     flex-direction: column-reverse;
-    padding: 0 100px;
+    padding: 0 0;
     gap: 0;
   }
 
