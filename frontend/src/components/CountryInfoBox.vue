@@ -169,7 +169,7 @@ defineExpose({
 .info-box {
   position: absolute;
   right: 0;
-  top: 70px;
+  top: 0;
   width: 25%;
   height: calc(100% - 70px);
   padding: 20px;

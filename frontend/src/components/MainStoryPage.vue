@@ -9,6 +9,7 @@ import CountryComparisonChart from "@/components/visualization tools/CountryComp
 import MotionChartComponent from "@/components/visualization tools/MotionChart.vue";
 import InformationalBox from "@/components/visualization tools/InformationalBox.vue";
 import Slider from "@vueform/slider";
+import Globe from "@/components/Globe.vue";
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
@@ -315,6 +316,10 @@ function sliderChange() {
     <div class="sectionHeader">
       How Will the Future Look?
     </div>
+    <div class="map-container" id="globe-container">
+      <Globe/>
+    </div>
+
   </div>
 </template>
 
@@ -652,6 +657,10 @@ input[type="radio"] + label:hover {
   font-size: 4rem;
   font-weight: 900;
   color: #1e555f;
+}
+
+#globe-container {
+  padding: 0;
 }
 
 @media screen and (max-width: 1400px) {
