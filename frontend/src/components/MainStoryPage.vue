@@ -259,6 +259,7 @@ function sliderChange() {
             <div class="selected-filters">
               <h3>Selected Countries</h3>
               <ul>
+                <p id="comparison-error" v-if="comparisonCountries.length === 0">Search for a country to view their data!</p>
                 <li v-for="country in comparisonCountries" :key="country">
                   {{ country }}
                   <button @click="removeCountryFromFilter(country)">x</button>
@@ -557,6 +558,10 @@ input {
 
 .selected-filters li button:hover {
   background: firebrick;
+}
+
+#comparison-error {
+  text-align: center;
 }
 
 input[type="radio"] {

@@ -1,7 +1,7 @@
 <template>
   <div id="chartdivContainer_countrComparison">
     <div ref="comparisonchart" id="comparisonchartdiv">
-      <p v-if="noCountries" id="errorText">No Countries chosen</p>
+      <p v-if="noCountries" id="errorText">No Countries selected</p>
     </div>
   </div>
 </template>
