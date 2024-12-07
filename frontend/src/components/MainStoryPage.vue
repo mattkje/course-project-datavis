@@ -25,8 +25,8 @@ watch(sliderValue, (newValue) => {
   comparisonEndYear.value = newValue[1];
   console.log('Updated Years:', comparisonStartYear.value, comparisonEndYear.value);
 
- sliderChange();
-}, { immediate: true });
+  sliderChange();
+}, {immediate: true});
 
 const buttons = [
   {label: "Total", url: "Total Co2 emissions,cumulative_co2", selected: true},
@@ -39,20 +39,30 @@ const buttons = [
 ];
 
 const barchartButtons = [
-  {label: "Total Bar", url: "Total Co2 emissions,cumulative_co2", selected: true, name:"Total"},
-  {label: "Land Usage Bar", url: "Total Co2 emissions including land use,cumulative_co2_including_luc", selected: false, name:"Land Usage"},
-  {label: "Coal Bar", url: "Total Coal Emissions,cumulative_coal_co2", selected: false, name:"Coal"},
-  {label: "Oil Bar", url: "Total Oil Emissions,cumulative_oil_co2", selected: false, name:"Oil"},
+  {label: "Total Bar", url: "Total Co2 emissions,cumulative_co2", selected: true, name: "Total"},
+  {
+    label: "Land Usage Bar",
+    url: "Total Co2 emissions including land use,cumulative_co2_including_luc",
+    selected: false,
+    name: "Land Usage"
+  },
+  {label: "Coal Bar", url: "Total Coal Emissions,cumulative_coal_co2", selected: false, name: "Coal"},
+  {label: "Oil Bar", url: "Total Oil Emissions,cumulative_oil_co2", selected: false, name: "Oil"},
   {label: "Flaring Bar", url: "Total Flaring Emissions,cumulative_flaring_co2", selected: false, name: "Flaring"},
   {label: "Gas Bar", url: "Total Gas Emissions,cumulative_gas_co2", selected: false, name: "Gas"},
   {label: "Cement Bar", url: "Total Cement Emissions,cumulative_cement_co2", selected: false, name: "Cement"}
 ]
 
 const barchartCompButtons = [
-  {label: "Total Comp", url: "Total Co2 emissions,cumulative_co2", selected: true, name:"Total"},
-  {label: "Land Usage Comp", url: "Total Co2 emissions including land use,cumulative_co2_including_luc", selected: false, name:"Land Usage"},
-  {label: "Coal Comp", url: "Total Coal Emissions,cumulative_coal_co2", selected: false, name:"Coal"},
-  {label: "Oil Comp", url: "Total Oil Emissions,cumulative_oil_co2", selected: false, name:"Oil"},
+  {label: "Total Comp", url: "Total Co2 emissions,cumulative_co2", selected: true, name: "Total"},
+  {
+    label: "Land Usage Comp",
+    url: "Total Co2 emissions including land use,cumulative_co2_including_luc",
+    selected: false,
+    name: "Land Usage"
+  },
+  {label: "Coal Comp", url: "Total Coal Emissions,cumulative_coal_co2", selected: false, name: "Coal"},
+  {label: "Oil Comp", url: "Total Oil Emissions,cumulative_oil_co2", selected: false, name: "Oil"},
   {label: "Flaring Comp", url: "Total Flaring Emissions,cumulative_flaring_co2", selected: false, name: "Flaring"},
   {label: "Gas Comp", url: "Total Gas Emissions,cumulative_gas_co2", selected: false, name: "Gas"},
   {label: "Cement Comp", url: "Total Cement Emissions,cumulative_cement_co2", selected: false, name: "Cement"}
@@ -160,14 +170,18 @@ function sliderChange() {
       emissions</h1>
     <div class="textcontainer" :style="{ width: TextWidth, maxWidth: TextMaxWidth }">
       <p>
-        The world is facing the ever-important challenge of climate change. How can we solve it? This question has
-        become increasingly urgent as we witness the devastating impacts of global warming, from rising sea levels to
-        extreme weather events. Addressing climate change requires a multifaceted approach, including reducing
-        greenhouse gas emissions, transitioning to renewable energy sources, and implementing sustainable practices in
-        agriculture and industry. Governments, businesses, and individuals all have a role to play in this global
-        effort. By investing in clean technologies, promoting energy efficiency, and supporting policies that protect
-        the environment, we can work together to mitigate the effects of climate change and build a more sustainable
-        future for generations to come. </p>
+        The world is slowly coming to the realization that <span
+          style="font-weight: 900; color: #cce79d; font-family: Inter,sans-serif">GLOBAL WARMING</span> is the biggest
+        issue we are facing as a global
+        community. Mass production has led to great growth for society as a whole, but it has led us to <span
+          style="font-weight: 900; color: #e16350; font-family: Inter,sans-serif">IGNORE</span> the
+        consequences of our actions. From rising sea levels to extreme weather events, it’s getting increasingly obvious
+        that something needs to <span
+          style="font-weight: 900; color: #5af351; font-family: Inter,sans-serif">CHANGE</span>. The team behind Globe
+        World Stats strongly believes that knowledge of our
+        climate history as well as where they are headed, is key to fully supporting the measures necessary to <span
+          style="font-weight: 900; color: #f6d0a0; font-family: Inter,sans-serif">REVERT</span>
+        our changes. We hope you find value in the experience you are about to start, enjoy. </p>
     </div>
 
     <div class="map-container">
@@ -179,9 +193,10 @@ function sliderChange() {
       <div class="innerTextContainer">
         <h3>Historic Superpowers Dominate Emissions</h3>
         <p>The history of our emissions follow the empires of old.
-          <span style="font-weight: 900; color: #FFA737;">Europe</span>,
-          <span style="font-weight: 900; color: #BA7BA1;">North America</span> and
-          <span style="font-weight: 900; color: #5BC0EB;">Asia</span> lead the way for total CO<sub>2</sub>
+          <span style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">Europe</span>,
+          <span style="font-weight: 900; color: #BA7BA1; font-family: Inter,sans-serif">North America</span> and
+          <span style="font-weight: 900; color: #5BC0EB; font-family: Inter,sans-serif">Asia</span> lead the way for
+          total CO<sub>2</sub>
           emissions throughout history, while other continents have struggled to keep up. Although there has been a
           shift in emissions contributions as of late, it is still important to take into account our history when
           comparing today's numbers. Below you can select
@@ -226,7 +241,8 @@ function sliderChange() {
       <ContinentChartComponent :continent="selectedContinent" :url="selectedBarUrl"/>
       <div class="innerTextContainer">
         <h3>Country Data</h3>
-        <p>This chart highlights data from the continent: <span style="font-weight: 900; color: #FFA737">{{ selectedContinent }}</span>.
+        <p>This chart highlights data from the continent: <span
+            style="font-weight: 900; color: #FFA737">{{ selectedContinent }}</span>.
           It displays the top 10 countries within a selected category, showcasing cumulative values
           accumulated over the years. Choose a category to explore detailed statistics!</p>
         <div class="button-group">
@@ -242,13 +258,17 @@ function sliderChange() {
       <div class="mapHeader">
         <h2>Explore the greenhouse gas emissions data by country</h2>
       </div>
-      <CountryComparisonChart :countries="comparisonCountries.join(',')" :comparisonData="selectedCompUrl.split(',')[1]" :start-year="comparisonStartYear" :end-year="comparisonEndYear"/>
+      <CountryComparisonChart :countries="comparisonCountries.join(',')" :comparisonData="selectedCompUrl.split(',')[1]"
+                              :start-year="comparisonStartYear" :end-year="comparisonEndYear"/>
       <div class="innerTextContainer">
-          <div class="country-search">
-            <input type="text" v-model="input" placeholder="Search for a country" @click="showDropdown = true" @focus="showDropdown = true" @blur="hideDropdownWithDelay">
-            <div class="country-list" v-if="showDropdown && filteredCountries.length" @mouseenter="preventHideDropdown" @mouseleave="allowHideDropdown">
-              <div class="country-items">
-              <div class="country-item" v-for="country in filteredCountries" :key="country" @click="addCountryToFilter(country)">
+        <div class="country-search">
+          <input type="text" v-model="input" placeholder="Search for a country" @click="showDropdown = true"
+                 @focus="showDropdown = true" @blur="hideDropdownWithDelay">
+          <div class="country-list" v-if="showDropdown && filteredCountries.length" @mouseenter="preventHideDropdown"
+               @mouseleave="allowHideDropdown">
+            <div class="country-items">
+              <div class="country-item" v-for="country in filteredCountries" :key="country"
+                   @click="addCountryToFilter(country)">
                 <p>{{ country }}</p>
               </div>
                 </div>
@@ -334,7 +354,7 @@ p {
   background-color: #1E555F;
   position: relative; /* Add this line */
   gap: 20px;
-  padding-right: 100px;
+  padding-right: 50px;
 }
 
 .map-container::before {
@@ -380,7 +400,7 @@ p {
   position: relative;
   font-size: 1.4rem;
   font-weight: 400;
-  margin: 60px 0px 60px 20px;
+  margin: 60px 0px 60px 0px;
   border: 2px dotted #FFA737;
   max-width: 30%;
   width: 100%;
@@ -461,7 +481,7 @@ p {
 }
 
 .country-search {
-  position:relative;
+  position: relative;
   width: 350px;
   margin: 0 auto;
 }
@@ -596,7 +616,7 @@ input[type="radio"] + label:hover {
 @media screen and (max-width: 1400px) {
   .map-container {
     flex-direction: column-reverse;
-    padding: 0 100px;
+    padding: 0 50px;
     gap: 0;
   }
 

@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import pandas as pd
 
-from calculations import predict_arima, calculate_democracy_rank
+from calculations import predict_arima, calculate_democracy_rank, calculate_correlation
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -412,6 +412,34 @@ def translate_country(country):
 
     result_df.fillna("N/A", inplace=True)
 
+    return jsonify(result_df.to_dict(orient="records"))
+
+
+@app.route("/happiness")
+def happiness():
+    df = pd.read_csv("datasets/happiest-countries-in-the-world-2024.csv")
+    result_df = df[["country", "HappiestCountriesWorldHappiessReportRankings2022", "HappiestCountriesWorldHappiessReportScore2022"]]
+    result_df.sort_values(by="HappiestCountriesWorldHappiessReportRankings2022", inplace=True)
+    result_df.fillna("N/A", inplace=True)
+    return jsonify(result_df.to_dict(orient="records"))
+
+@app.route("/happiness/<country>")
+def happiness_country(country):
+    country_list = country.split(",")
+    df = pd.read_csv("datasets/happiest-countries-in-the-world-2024.csv")
+    result_df = df[df["country"].isin(country_list)]
+    result_df = result_df[["country", "HappiestCountriesWorldHappiessReportRankings2022", "HappiestCountriesWorldHappiessReportScore2022"]]
+    result_df.sort_values(by="HappiestCountriesWorldHappiessReportRankings2022", inplace=True)
+    result_df.fillna("N/A", inplace=True)
+    return jsonify(result_df.to_dict(orient="records"))
+
+@app.route("/interesting-facts/<country>")
+def interesting_facts(country):
+    country_list = country.split(",")
+    df = pd.read_csv("datasets/world-interesting-statistics.csv")
+    df.replace("..", pd.NA, inplace=True)  # Replace '..' with NaN
+    df.fillna(0, inplace=True)  # Fill NaN values with 0
+    result_df = df[df["Country Name"].isin(country_list)]
     return jsonify(result_df.to_dict(orient="records"))
 
 @app.route("/comparison/<countries>/<comparisonData>")

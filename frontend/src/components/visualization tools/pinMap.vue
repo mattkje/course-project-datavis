@@ -256,4 +256,10 @@ export default {
   font-family: Arial, sans-serif;
   font-size: 12px;
 }
+
+@media screen and (max-width: 1400px) {
+  #chartdivContainer_pinMap {
+    padding: 70px 0 40px 0;
+  }
+}
 </style>

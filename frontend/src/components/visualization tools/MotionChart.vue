@@ -343,7 +343,6 @@ export default {
 
     await this.updateSeriesData(this.currentYear);
     const rawData = toRaw(this.yearData[this.currentYear]);
-    console.log(rawData);
     this.bubbleSeries.data.setAll(rawData);
     this.bubbleSeries.appear(1000);
     chart.appear(1000, 100);
