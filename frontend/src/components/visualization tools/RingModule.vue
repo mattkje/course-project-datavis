@@ -157,7 +157,7 @@ export default {
         // Animate chart and series in
         series1.appear(1000);
         series2.appear(1000);
-        chart.appear(1000, 100);
+        await chart.appear(1000, 100);
       });
     }
   }

@@ -11,7 +11,7 @@ import RingModule from "@/components/visualization tools/RingModule.vue";
 </script>
 
 <template>
-  <RingModule :url="'ringmodule/China'"/>
+  <MainStoryPage/>
 </template>
 
 <style scoped>
