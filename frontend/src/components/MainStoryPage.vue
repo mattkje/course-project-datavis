@@ -34,8 +34,8 @@ watch(sliderValue, (newValue) => {
 }, {immediate: true});
 
 const buttons = [
-  {label: "Total", url: "Total Co2 emissions,cumulative_co2", selected: true},
-  {label: "Land Usage", url: "Total Co2 emissions including land use,cumulative_co2_including_luc", selected: false},
+  {label: "Total", url: "Total Co2 Emissions,cumulative_co2", selected: true},
+  {label: "Land Usage", url: "Total Co2 Emissions including land use,cumulative_co2_including_luc", selected: false},
   {label: "Coal", url: "Total Coal Emissions,cumulative_coal_co2", selected: false},
   {label: "Oil", url: "Total Oil Emissions,cumulative_oil_co2", selected: false},
   {label: "Flaring", url: "Total Flaring Emissions,cumulative_flaring_co2", selected: false},
@@ -293,23 +293,24 @@ function scrollToGlobe() {
       <ContinentMap @continent-clicked="handleContinentClick"/>
       <div class="innerTextContainer">
         <p>
-          Click on a continent to view the top 10 countries with the highest greenhouse gas emissions.
-          The data is based on the latest available information from the World Bank
+          Let's dive into the data of the continents.
+          Click on the <span style="font-weight: 900; color: #c2eb5b; font-family: Inter,sans-serif">CONTINENT</span>
+          you are the most interested in learning about to
+          view the countries with the highest greenhouse gas emissions within it.
         </p>
       </div>
     </div>
     <br id="scroll-point">
     <div class="bar-container" id="bar-chart">
       <div class="mapHeader">
-        <h2>Cumulative Data of {{ selectedBarUrl.split(",")[0] }} in {{ selectedContinent }}</h2>
+        <h2>{{ selectedBarUrl.split(",")[0] }} in {{ selectedContinent }}</h2>
       </div>
       <ContinentChartComponent :continent="selectedContinent" :url="selectedBarUrl"/>
       <div class="innerTextContainer">
-        <h3>Country Data</h3>
-        <p>This chart highlights data from the continent: <span
-            style="font-weight: 900; color: #FFA737">{{ selectedContinent }}</span>.
-          It displays the top 10 countries within a selected category, showcasing cumulative values
-          accumulated over the years. Choose a category to explore detailed statistics!</p>
+        <h3>10 Biggest Polluters</h3>
+        <p>This chart highlights the combined Co<sub>2</sub> emissions from <span
+            style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">{{ selectedContinent }}</span> over
+          the last 200 years. Try changing the category to see the different nations contribution.</p>
         <div class="button-group">
           <div v-for="(button, index) in barchartButtons" :key="index" class="button-container">
             <input type="radio" :id="button.label" :value="button.url" v-model="selectedBarUrl"
@@ -416,23 +417,30 @@ function scrollToGlobe() {
     <div class="textcontainer" :style="{ width: TextWidth, maxWidth: TextMaxWidth }">
       <p>
         Western countries are <span
-            style="font-weight: 900; color: #f5c6a8; font-family: Inter,sans-serif">MOVING AWAY</span> from the traditional fossil fuels at a pace that needs to be matched by the
+          style="font-weight: 900; color: #f5c6a8; font-family: Inter,sans-serif">MOVING AWAY</span> from the
+        traditional fossil fuels at a pace that needs to be matched by the
         rest of the world.
         However, these countries need to provide the necessary <span
-          style="font-weight: 900; color: #a8ecf5; font-family: Inter,sans-serif">SUPPORT</span> to the developing world to ensure that the
+          style="font-weight: 900; color: #a8ecf5; font-family: Inter,sans-serif">SUPPORT</span> to the developing world
+        to ensure that the
         transition happens as quickly as possible. Moving large amounts of production overseas only prolongs the
         problem. We require a <span
-          style="font-weight: 900; color: #f5f1a8; font-family: Inter,sans-serif">FUNDAMENTAL TRANSITION</span> into a climate positive production chain, as we are just as strong
+          style="font-weight: 900; color: #f5f1a8; font-family: Inter,sans-serif">FUNDAMENTAL TRANSITION</span> into a
+        climate positive production chain, as we are just as strong
         as our weakest link. Move production back to more sustainable methods, Lift the developing world up to the
         standards we aspire to reach and <span
-          style="font-weight: 900; color: #f5a8f1; font-family: Inter,sans-serif">TOGETHER</span> we can make a difference.
+          style="font-weight: 900; color: #f5a8f1; font-family: Inter,sans-serif">TOGETHER</span> we can make a
+        difference.
       </p>
       <br/><br/>
       <p>
         Before sending you off to explore the data yourself, we want to <span
-          style="font-weight: 900; color: #f5a8bd; font-family: Inter,sans-serif">THANK YOU</span> for taking the time to go on this <span
-          style="font-weight: 900; color: #a8def5; font-family: Inter,sans-serif">JOURNEY.</span> We hope you found value in this presentation and that you aspire to <span
-          style="font-weight: 900; color: #a8f5ae; font-family: Inter,sans-serif">BECOME AN EXAMPLE</span> for the world you want to live in.
+          style="font-weight: 900; color: #f5a8bd; font-family: Inter,sans-serif">THANK YOU</span> for taking the time
+        to go on this <span
+          style="font-weight: 900; color: #a8def5; font-family: Inter,sans-serif">JOURNEY.</span> We hope you found
+        value in this presentation and that you aspire to <span
+          style="font-weight: 900; color: #a8f5ae; font-family: Inter,sans-serif">BECOME AN EXAMPLE</span> for the world
+        you want to live in.
       </p>
     </div>
     <div class="lastHeader">
@@ -479,7 +487,7 @@ h5 {
   color: #1e555f;
   max-width: 60vw;
   margin: auto;
-  
+
 }
 
 .scroll-button {

@@ -217,10 +217,22 @@ export default {
           "value": DataMap["Oceania"]
         }];
 
+      var colorSet = am5.ColorSet.new(this.root_pinMap, {
+        colors: [
+          am5.color(0xBA7BA1), // North America
+          am5.color(0xFFA737), // Europe
+          am5.color(0x5BC0EB), // Asia
+          am5.color(0x9BC53D), // Africa
+          am5.color(0xA133FF), // South America
+          am5.color(0x7BE0AD)  // Oceania
+        ]
+      });
+
       this.pointSeries.data.setAll(data.map(d => ({
         geometry: {type: "Point", coordinates: [d.longitude, d.latitude]},
         title: d.title,
         value: d.value
+
       })));
     }
   },
