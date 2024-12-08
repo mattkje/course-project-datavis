@@ -14,6 +14,7 @@ import ContinentPredictionLineChart from "@/components/visualization tools/Conti
 import StackedLineGraph from "@/components/visualization tools/StackedLineGraph.vue";
 import BarChartComponent from "@/components/visualization tools/bar_chart.vue";
 import AmChartComponent from "@/components/visualization tools/statistics_overview.vue";
+import WorldClimateGoals from "@/components/WorldClimateGoals.vue";
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
@@ -403,9 +404,11 @@ function scrollToGlobe() {
         </div>
       </div>
     </div>
-    <div class="sectionHeader">
-      What can be done?
+    <div class="lastHeader">
+      <h4>What can be done?</h4>
+      <WorldClimateGoals/>
     </div>
+
     <div class="map-container" id="globe-container">
       <Globe/>
     </div>
@@ -418,6 +421,22 @@ function scrollToGlobe() {
 </template>
 
 <style scoped>
+
+
+.lastHeader {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+h4 {
+  margin: 200px 0 50px 0;
+  font-size: 4rem;
+  font-weight: 900;
+  color: #1e555f;
+}
 
 .scroll-button {
   position: fixed;
