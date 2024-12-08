@@ -18,7 +18,7 @@ import OurData from "@/components/OurData.vue";
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
 const selectedContinent = ref('Europe');
-const comparisonCountries = ref([]);
+const comparisonCountries = ref(["China", "United States", "India"]);
 const comparisonData = ref("co2");
 const comparisonStartYear = ref(2000);
 const comparisonEndYear = ref(2022);
@@ -298,7 +298,7 @@ function scrollToGlobe() {
       </div>
     </div>
     <br id="scroll-point">
-    <div class="bar-container" id="bar-chart">
+    <div class="bar-container">
       <div class="mapHeader">
         <h2>{{ selectedBarUrl.split(",")[0] }} in {{ selectedContinent }}</h2>
       </div>
@@ -734,7 +734,7 @@ p {
   gap: 20px;
   padding-top: 50px;
   padding-left: 25px;
-  padding-right: 100px;
+  padding-right: 50px;
 }
 
 .bar-container::before {
@@ -788,8 +788,7 @@ p {
 
 .country-search {
   position: relative;
-  width: 350px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .country-item {
@@ -957,7 +956,7 @@ input[type="radio"] + label:hover {
 
   .bar-container {
     flex-direction: column-reverse;
-    padding: 0 0;
+    padding: 0 50px;
     gap: 0;
   }
 
