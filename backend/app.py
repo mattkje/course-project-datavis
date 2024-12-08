@@ -10,10 +10,13 @@ from calculations import predict_arima, calculate_democracy_rank, calculate_corr
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
+
 def filter_world_data():
     df = pd.read_csv("datasets/world-data-2023.csv")
-    filtered_columns = df[["country", "Abbreviation", "Land Area(Km2)", "Capital/Major City", "Largest city", "Population"]]
+    filtered_columns = df[
+        ["country", "Abbreviation", "Land Area(Km2)", "Capital/Major City", "Largest city", "Population"]]
     return filtered_columns
+
 
 def init_global_data(country):
     df1 = pd.read_csv("datasets/globalwarmingdata.csv")
@@ -21,14 +24,16 @@ def init_global_data(country):
         return df1
     else:
         df2 = filter_world_data()
-        #df3 = pd.read_csv FIND DATASET WITH COUNTRY CODES WITH ONLY TWO LETTERS
+        # df3 = pd.read_csv FIND DATASET WITH COUNTRY CODES WITH ONLY TWO LETTERS
         merged_df = pd.merge(df1, df2, on="country")
 
         return merged_df
 
+
 @app.route("/")
 def home():
     return "Welcome to Group 5's API! :)"
+
 
 @app.route("/country/<country>")
 def country(country):
@@ -45,6 +50,7 @@ def countries():
     countries_list = result_df["country"].unique().tolist()
     return jsonify(countries_list)
 
+
 @app.route("/country_data/<country>")
 def country_data(country):
     country_list = country.split(",")
@@ -53,12 +59,14 @@ def country_data(country):
     result_df.fillna("N/A", inplace=True)
     return jsonify(result_df.to_dict(orient="records"))
 
+
 @app.route("/year/<year>")
 def year(year):
     merged_df = init_global_data("data")
     result_df = merged_df[merged_df["year"] == int(year)]
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
+
 
 @app.route("/country_year/<country>/<year>")
 def country_year(country, year):
@@ -68,13 +76,16 @@ def country_year(country, year):
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
 
+
 @app.route("/country_year_range/<country>/<start_year>/<end_year>")
 def country_year_range(country, start_year, end_year):
     country_list = country.split(",")
     merged_df = init_global_data(country_list)
-    result_df = merged_df[(merged_df["country"].isin(country_list)) & (merged_df["year"] >= int(start_year)) & (merged_df["year"] <= int(end_year))]
+    result_df = merged_df[(merged_df["country"].isin(country_list)) & (merged_df["year"] >= int(start_year)) & (
+                merged_df["year"] <= int(end_year))]
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
+
 
 @app.route("/country_code/<country_code>")
 def country_code(country_code):
@@ -83,6 +94,7 @@ def country_code(country_code):
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
 
+
 @app.route("/country_code_latest/<country_code>")
 def country_code_latest(country_code):
     merged_df = init_global_data(country_code)
@@ -90,6 +102,7 @@ def country_code_latest(country_code):
     result_df = result_df[result_df["year"] == result_df["year"].max()]
     result_df.fillna("N/A", inplace=True)  # Replace NaN values with "N/A"
     return jsonify(result_df.to_dict(orient="records"))
+
 
 @app.route("/energy-per-capita/<country>")
 def energy_per_capita(country):
@@ -101,6 +114,7 @@ def energy_per_capita(country):
     result_dict = dict(zip(result_df["year"], result_df["energy_per_capita"]))
     return jsonify(result_dict)
 
+
 @app.route("/co2-growth-abs/<country>")
 def co2_growth_abs(country):
     country_list = country.split(",")
@@ -111,6 +125,7 @@ def co2_growth_abs(country):
     result_dict = dict(zip(result_df["year"], result_df["co2_growth_abs"]))
     return jsonify(result_dict)
 
+
 @app.route("/co2_growth_prct/<country>/<int:start_year>/<int:end_year>")
 def co2_growth_percentage(country, start_year, end_year):
     country_list = country.split(",")
@@ -120,6 +135,7 @@ def co2_growth_percentage(country, start_year, end_year):
     result_df = result_df[["year", "co2_growth_prct", "country"]]
     result_df.fillna(0, inplace=True)
     return jsonify(result_df.to_dict(orient="records"))
+
 
 @app.route("/share-global/<country>", defaults={'start_year': 1829, 'end_year': 2022})
 @app.route("/co2-per-capita/<country>/<int:start_year>/<int:end_year>")
@@ -148,6 +164,7 @@ def continent_data(continent, data):
 
     return jsonify(result_df.to_dict(orient="records"))
 
+
 @app.route("/per_capita/<country>", defaults={'start_year': 1829, 'end_year': 2022})
 @app.route("/per_capita/<country>/<int:start_year>/<int:end_year>")
 def per_capita(country, start_year, end_year):
@@ -167,6 +184,7 @@ def per_capita(country, start_year, end_year):
     per_capita_data_df = result_df[per_capita_columns].copy()
     per_capita_data_df.fillna(0, inplace=True)
     return jsonify(per_capita_data_df.to_dict(orient="records"))
+
 
 @app.route("/temperature/<country>", defaults={'start_year': 1829, 'end_year': 2022})
 @app.route("/temperature/<country>/<int:start_year>/<int:end_year>")
@@ -207,6 +225,7 @@ def cumulative(country, start_year, end_year):
     cumulative_data_df.fillna(0, inplace=True)
     return jsonify(cumulative_data_df.to_dict(orient="records"))
 
+
 @app.route("/share-global/<country>", defaults={'start_year': 1829, 'end_year': 2022})
 @app.route("/share-global/<country>/<int:start_year>/<int:end_year>")
 def share_global(country, start_year, end_year):
@@ -225,6 +244,7 @@ def share_global(country, start_year, end_year):
     share_data_df = result_df[share_columns].copy()
     share_data_df.fillna(0, inplace=True)
     return jsonify(share_data_df.to_dict(orient="records"))
+
 
 @app.route("/ghg/<country>", defaults={'start_year': 1829, 'end_year': 2022})
 @app.route("/ghg/<country>/<int:start_year>/<int:end_year>")
@@ -246,6 +266,7 @@ def ghg_per_capita(country, start_year, end_year):
     ghg_data_df.fillna(0, inplace=True)
 
     return jsonify(ghg_data_df.to_dict(orient="records"))
+
 
 @app.route("/gdp/<country>", defaults={'start_year': 1829, 'end_year': 2022})
 @app.route("/gdp/<country>/<int:start_year>/<int:end_year>")
@@ -276,6 +297,7 @@ def country_gdp(country, start_year, end_year):
     # Convert the filtered DataFrame to JSON format
     return jsonify(gdp_data_df.to_dict(orient="records"))
 
+
 @app.route("/co2/<country>", defaults={'start_year': 1829, 'end_year': 2022})
 @app.route("/co2/<country>/<int:start_year>/<int:end_year>")
 def country_co2(country, start_year, end_year):
@@ -287,7 +309,7 @@ def country_co2(country, start_year, end_year):
     result_df = result_df[(result_df["year"] >= start_year) & (result_df["year"] <= end_year)]
 
     # List of terms to exclude from CO2-related fields
-    exclude_terms = ["per_capita", "per_gdp", "per_unit_energy", "share", "cumulative", "growth","temperature"]
+    exclude_terms = ["per_capita", "per_gdp", "per_unit_energy", "share", "cumulative", "growth", "temperature"]
 
     # Select CO2 columns, excluding specific variants, plus 'year'
     co2_columns = [
@@ -306,9 +328,9 @@ def country_co2(country, start_year, end_year):
     # Convert the filtered DataFrame to JSON format
     return jsonify(co2_data_df.to_dict(orient="records"))
 
+
 @app.route("/<prediction_data>/<country>/predict")
 def predict(country, prediction_data):
-
     if prediction_data == "co2":
         previous_country_data = country_co2(country, 2000, 2022).get_json()
     elif prediction_data == "gdp":
@@ -329,7 +351,9 @@ def predict(country, prediction_data):
 
     return jsonify(combined_data)
 
+
 import csv
+
 
 def load_country_to_continent():
     country_to_continent = {}
@@ -339,10 +363,6 @@ def load_country_to_continent():
         for rows in reader:
             country_to_continent[rows[0]] = rows[1]
     return country_to_continent
-
-
-
-
 
 
 @app.route("/gdp_co2")
@@ -399,6 +419,7 @@ def additional_data(country):
 
     return jsonify(result_df.to_dict(orient="records"))
 
+
 @app.route("/translate/<country>")
 def translate_country(country):
     country_list = country.split(",")
@@ -407,7 +428,8 @@ def translate_country(country):
 
     for country_name in country_list:
         if country_name != "Oman" and country_name != "Sudan":
-            country_data = df1[df1["official_name_en"].str.contains(country_name, case=False, na=False)][["ISO3166-1-Alpha-2"]]
+            country_data = df1[df1["official_name_en"].str.contains(country_name, case=False, na=False)][
+                ["ISO3166-1-Alpha-2"]]
         else:
             country_data = df1[df1["official_name_en"] == country_name][["ISO3166-1-Alpha-2"]]
         country_data.rename(columns={"ISO3166-1-Alpha-2": "countryCode"}, inplace=True)
@@ -421,20 +443,24 @@ def translate_country(country):
 @app.route("/happiness")
 def happiness():
     df = pd.read_csv("datasets/happiest-countries-in-the-world-2024.csv")
-    result_df = df[["country", "HappiestCountriesWorldHappiessReportRankings2022", "HappiestCountriesWorldHappiessReportScore2022"]]
+    result_df = df[["country", "HappiestCountriesWorldHappiessReportRankings2022",
+                    "HappiestCountriesWorldHappiessReportScore2022"]]
     result_df.sort_values(by="HappiestCountriesWorldHappiessReportRankings2022", inplace=True)
     result_df.fillna("N/A", inplace=True)
     return jsonify(result_df.to_dict(orient="records"))
+
 
 @app.route("/happiness/<country>")
 def happiness_country(country):
     country_list = country.split(",")
     df = pd.read_csv("datasets/happiest-countries-in-the-world-2024.csv")
     result_df = df[df["country"].isin(country_list)]
-    result_df = result_df[["country", "HappiestCountriesWorldHappiessReportRankings2022", "HappiestCountriesWorldHappiessReportScore2022"]]
+    result_df = result_df[["country", "HappiestCountriesWorldHappiessReportRankings2022",
+                           "HappiestCountriesWorldHappiessReportScore2022"]]
     result_df.sort_values(by="HappiestCountriesWorldHappiessReportRankings2022", inplace=True)
     result_df.fillna("N/A", inplace=True)
     return jsonify(result_df.to_dict(orient="records"))
+
 
 @app.route("/interesting-facts/<country>")
 def interesting_facts(country):
@@ -445,17 +471,20 @@ def interesting_facts(country):
     result_df = df[df["Country Name"].isin(country_list)]
     return jsonify(result_df.to_dict(orient="records"))
 
+
 @app.route("/comparison/<countries>/<comparisonData>")
 def comparison(countries, comparisonData):
     country_list = countries.split(",")
     merged_df = init_global_data(country_list)
-    result_df = merged_df[merged_df["country"].isin(country_list) & (merged_df["year"] >= 2000) & (merged_df["year"] <= 2022)]
+    result_df = merged_df[
+        merged_df["country"].isin(country_list) & (merged_df["year"] >= 2000) & (merged_df["year"] <= 2022)]
 
     pivot_df = result_df.pivot(index="year", columns="country", values=comparisonData).reset_index()
 
     pivot_df.fillna("N/A", inplace=True)
     result = pivot_df.to_dict(orient="records")
     return jsonify(result)
+
 
 @app.route("/predictContinents/<prediction_data>")
 def predicts(prediction_data):
@@ -510,3 +539,57 @@ def electricity_percentage(country):
             result_df.loc[index, result_df.columns != "year"] = (row.drop(labels=["year"]) / total) * 100
 
     return jsonify(result_df.to_dict(orient="records"))
+
+
+@app.route("/rankings/<country>")
+def rankings(country):
+    country_list = country.split(",")
+    merged_df = init_global_data(country_list)
+
+    # Select the last year (last row)
+    last_year = merged_df["year"].max()
+    last_year_df = merged_df[merged_df["year"] == last_year]
+
+    # Find rankings for each category that includes "per_capita"
+    per_capita_columns = [col for col in last_year_df.columns if "per_capita" in col]
+    per_capita_columns = [col for col in per_capita_columns if
+                          any(term in col for term in ["co2_including_luc"])]
+    rankings = {}
+
+    for col in per_capita_columns:
+        last_year_df = last_year_df.sort_values(by=col, ascending=False)
+        last_year_df["rank"] = last_year_df[col].rank(ascending=False)
+        last_year_df["rank"].fillna(0, inplace=True)  # Replace NaN values with 0
+        country_rank = last_year_df[last_year_df["country"] == country][["rank"]]
+        rankings[col] = country_rank.to_dict(orient="records")
+
+    return jsonify(rankings)
+
+@app.route("/ringmodule/<country>")
+def ringmodule(country):
+    country_list = country.split(",")
+    merged_df = init_global_data(country_list)
+
+    # Select the last year (last row)
+    last_year = merged_df["year"].max()
+    last_year_df = merged_df[merged_df["year"] == last_year].copy()
+
+    # Find columns that include "cumulative"
+    cumulative_columns = [col for col in last_year_df.columns if "cumulative" in col and "share" not in col]
+    percentages = {}
+
+    for col in cumulative_columns:
+        total = last_year_df[col].sum()
+        if total > 0:
+            last_year_df.loc[:, f"{col}_percentage"] = (last_year_df[col] / total) * 100
+        else:
+            last_year_df.loc[:, f"{col}_percentage"] = 0
+        country_percentage = last_year_df[last_year_df["country"] == country][f"{col}_percentage"].values[0]
+        percentages[col] = country_percentage
+
+    # Sort percentages and select top 5
+    top_percentages = dict(sorted(percentages.items(), key=lambda item: item[1], reverse=True)[:5])
+
+    return jsonify(top_percentages)
+
+

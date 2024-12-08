@@ -38,4 +38,14 @@ export const prettyNames = {
     "North America": "North America",
     "Oceania": "Oceania",
     "South America": "South America",
+    "cumulative_other_co2": "Other CO\u2082",
+    "cumulative_coal_co2": "Coal CO\u2082",
+    "cumulative_cement_co2:": "Cement CO\u2082",
+    "cumulative_gas_co2": "Gas CO\u2082",
+    "cumulative_oil_co2": "Oil CO\u2082",
+    "cumulative_flaring_co2": "Flaring CO\u2082",
+    "cumulative_co2": "CO\u2082",
+    "cumulative_co2_including_luc": "CO\u2082 w/Land Use Change",
+    "cumulative_luc_co2:": "Land Use Change CO\u2082",
+
 };

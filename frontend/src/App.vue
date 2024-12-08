@@ -7,10 +7,11 @@ import SearchBar from "@/components/SearchBar.vue";
 import StartScreen from "@/components/StartScreen.vue";
 import ContinentMap from "@/components/visualization tools/ContinentMap.vue";
 import MainStoryPage from "@/components/MainStoryPage.vue";
+import RingModule from "@/components/visualization tools/RingModule.vue";
 </script>
 
 <template>
-  <MainStoryPage />
+  <RingModule :url="'ringmodule/China'"/>
 </template>
 
 <style scoped>

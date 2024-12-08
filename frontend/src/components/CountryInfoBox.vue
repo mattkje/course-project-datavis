@@ -10,21 +10,26 @@
           </div>
 
           <div class="top-bar">
-            <p>Displaying greenhouse gas data for {{ countryName }}</p>
-            <div class="user-interactive-items">
-              <div class="future-checkbox">
-                <label for="futureCheckbox">Show future predictions:</label>
-                <input type="checkbox" id="futureCheckbox" v-model="isFuture">
-              </div>
-              <div class="dropdown-container">
-                <span>Measure by:</span>
-                <select class="dropdown" v-model="selectedMeasure">
-                  <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
-                  <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
-                  <option :value="`line:Per/Capita,per_capita/${countryName}`">Per Capita</option>
-                  <option :value="`bar:%,co2_growth_prct/${countryName}`">Growth %</option>
-                </select>
-              </div>
+            <div id="left-top-bar">
+              <p>Displaying greenhouse gas data for {{ countryName }}</p>
+            </div>
+            <div id="right-top-bar">
+              <RingModule/>
+            </div>
+          </div>
+          <div class="user-interactive-items">
+            <div class="future-checkbox">
+              <label for="futureCheckbox">Show future predictions:</label>
+              <input type="checkbox" id="futureCheckbox" v-model="isFuture">
+            </div>
+            <div class="dropdown-container">
+              <span>Measure by:</span>
+              <select class="dropdown" v-model="selectedMeasure">
+                <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
+                <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
+                <option :value="`line:Per/Capita,per_capita/${countryName}`">Per Capita</option>
+                <option :value="`bar:%,co2_growth_prct/${countryName}`">Growth %</option>
+              </select>
             </div>
           </div>
           <component
@@ -60,6 +65,7 @@ import { ref, watch, computed } from 'vue';
 import StatisticsOverview from "@/components/visualization tools/statistics_overview.vue";
 import BarChartComponent from "@/components/visualization tools/bar_chart.vue";
 import CountryComparisonChart from "@/components/visualization tools/CountryComparison.vue";
+import RingModule from "@/components/visualization tools/RingModule.vue";
 
 const selectedItems = ref([]);
 const isFuture = ref(false);
