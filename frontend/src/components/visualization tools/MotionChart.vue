@@ -143,7 +143,7 @@ export default {
 
       let xAxis = chart.xAxes.push(am5xy.ValueAxis.new(root, {
         min: 0,
-        max: 6200,
+        max: 11500,
         renderer: am5xy.AxisRendererX.new(root, {minGridDistance: 50}),
         tooltip: am5.Tooltip.new(root, {})
       }));
