@@ -239,7 +239,9 @@ function scrollToGlobe() {
       </div>
       <MotionChartComponent url="Total Co2 emissions,cumulative_co2"/>
       <div class="innerTextContainer">
-        <p>Explore the greenhouse gas emissions data by continent</p>
+        <h3>The Pollution Evolution</h3>
+        <p>Let's start our journey by looking through the evolution of climate emissions. The past provides insight into the situation we find ourselves in today.
+        See which empires dominated early on, inspect outliers and see the rise of our current powerhouses.Enjoy the "movie" and explore each country to see where they lie on the climate scale.</p>
       </div>
     </div>
 
