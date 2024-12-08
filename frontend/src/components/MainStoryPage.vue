@@ -241,11 +241,18 @@ function scrollToGlobe() {
       <MotionChartComponent url="Total Co2 emissions,cumulative_co2"/>
       <div class="innerTextContainer">
         <h3>The Pollution Evolution</h3>
-        <p>Let's start our journey by looking through the evolution of climate emissions. The past provides insight into the situation we find ourselves in today.
-        See which empires dominated early on, inspect outliers and see the rise of our current powerhouses.Enjoy the "movie" and explore each country to see where they lie on the climate scale.</p>
+        <p>Let's start our journey by looking through the evolution of climate emissions. The past provides insight into
+          the situation we find ourselves in today.
+          See which empires dominated early on, inspect outliers and see the rise of our current powerhouses.Enjoy the
+          "movie" and explore each country to see where they lie on the climate scale.</p>
+        <br/>
+        <p>Spot something interesting?</p>
       </div>
     </div>
 
+    <div class="afterTextContainer">
+      <h5> A couple of countries are clear outliers, let's have a look a them.</h5>
+    </div>
     <InformationalBox></InformationalBox>
 
     <div class="sectionHeader">
@@ -359,7 +366,7 @@ function scrollToGlobe() {
       </div>
     </div>
     <div class="sectionHeader">
-      How Will the Future Look?
+      Our Future
     </div>
     <div class="bar-container">
       <div class="mapHeader">
@@ -385,14 +392,16 @@ function scrollToGlobe() {
       <div class="multipleContainer">
         <StackedLineGraph :url="'percentage,electricity_percentage/China,false'" :detailed="detailed"/>
         <StackedLineGraph url="percentage,electricity_percentage/United States,false" :detailed="detailed"/>
-        <StackedLineGraph url="percentage,electricity_percentage/India,false" :detailed="detailed"/>
+        <StackedLineGraph url="percentage,electricity_percentage/Saudi Arabia,false" :detailed="detailed"/>
       </div>
       <div class="innerTextContainer">
         <h3>Electricity Production</h3>
         <p>Electricity production is a key factor in the world's greenhouse gas emissions. The top 3 countries in
-          electricity production are <span style="font-weight: 900; color: #FFA737">China</span>,
-          <span style="font-weight: 900; color: #BA7BA1">United States</span> and
-          <span style="font-weight: 900; color: #5BC0EB">Russia</span>. The chart above shows the percentage of
+          electricity production are <span
+              style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">China</span>,
+          <span style="font-weight: 900; color: #BA7BA1; font-family: Inter,sans-serif">United States</span> and
+          <span style="font-weight: 900; color: #5BC0EB; font-family: Inter,sans-serif">Russia</span>. The chart above
+          shows the percentage of
           electricity production in each country. The data is based on the latest available data from the World Bank.
         </p>
         <div class="toggle-container">
@@ -404,9 +413,35 @@ function scrollToGlobe() {
         </div>
       </div>
     </div>
+    <div class="textcontainer" :style="{ width: TextWidth, maxWidth: TextMaxWidth }">
+      <p>
+        Western countries are <span
+            style="font-weight: 900; color: #f5c6a8; font-family: Inter,sans-serif">MOVING AWAY</span> from the traditional fossil fuels at a pace that needs to be matched by the
+        rest of the world.
+        However, these countries need to provide the necessary <span
+          style="font-weight: 900; color: #a8ecf5; font-family: Inter,sans-serif">SUPPORT</span> to the developing world to ensure that the
+        transition happens as quickly as possible. Moving large amounts of production overseas only prolongs the
+        problem. We require a <span
+          style="font-weight: 900; color: #f5f1a8; font-family: Inter,sans-serif">FUNDAMENTAL TRANSITION</span> into a climate positive production chain, as we are just as strong
+        as our weakest link. Move production back to more sustainable methods, Lift the developing world up to the
+        standards we aspire to reach and <span
+          style="font-weight: 900; color: #f5a8f1; font-family: Inter,sans-serif">TOGETHER</span> we can make a difference.
+      </p>
+      <br/><br/>
+      <p>
+        Before sending you off to explore the data yourself, we want to <span
+          style="font-weight: 900; color: #f5a8bd; font-family: Inter,sans-serif">THANK YOU</span> for taking the time to go on this <span
+          style="font-weight: 900; color: #a8def5; font-family: Inter,sans-serif">JOURNEY.</span> We hope you found value in this presentation and that you aspire to <span
+          style="font-weight: 900; color: #a8f5ae; font-family: Inter,sans-serif">BECOME AN EXAMPLE</span> for the world you want to live in.
+      </p>
+    </div>
     <div class="lastHeader">
-      <h4>What can be done?</h4>
+      <h4>What can we do?</h4>
       <WorldClimateGoals/>
+    </div>
+
+    <div class="sectionHeader">
+      Enjoy exploring our data!
     </div>
 
     <div class="map-container" id="globe-container">
@@ -415,7 +450,7 @@ function scrollToGlobe() {
 
     <!-- Fixed Icon Button -->
     <button class="scroll-button" @click="scrollToGlobe">
-      <font-awesome-icon icon="fa-solid fa-globe" style="color: #FFFFFF; height: 22px" />
+      <font-awesome-icon icon="fa-solid fa-globe" style="color: #FFFFFF; height: 22px"/>
     </button>
   </div>
 </template>
@@ -432,10 +467,19 @@ function scrollToGlobe() {
 }
 
 h4 {
-  margin: 200px 0 50px 0;
+  margin: 50px auto;
   font-size: 4rem;
   font-weight: 900;
   color: #1e555f;
+}
+
+h5 {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #1e555f;
+  max-width: 60vw;
+  margin: auto;
+  
 }
 
 .scroll-button {
@@ -453,6 +497,7 @@ h4 {
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
 .toggle-container {
   position: absolute;
   bottom: 10px;
@@ -596,6 +641,10 @@ p {
   font-weight: 400;
   margin: auto;
 
+}
+
+.textcontainer p {
+  font-size: 24px;
 }
 
 .textcontainer::before {
