@@ -123,14 +123,6 @@ export default {
       const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {behavior: "none"}));
       cursor.lineY.set("visible", false);
 
-      var scrollbarX = am5.Scrollbar.new(root, {
-        orientation: "horizontal"
-      });
-      chart.set("scrollbarY", am5.Scrollbar.new(root, {orientation: "vertical"}));
-
-      chart.set("scrollbarX", scrollbarX);
-      chart.bottomAxesContainer.children.push(scrollbarX);
-
       const legend = chart.rightAxesContainer.children.push(am5.Legend.new(root, {
         width: 300,
         paddingLeft: 15,
