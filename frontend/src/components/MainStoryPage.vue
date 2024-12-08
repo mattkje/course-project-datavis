@@ -465,6 +465,29 @@ function scrollToGlobe() {
 
 <style scoped>
 
+.country-information-con {
+  display: flex;
+  justify-content: center;
+  background-color: #1E555F;
+  position: relative;
+  gap: 20px;
+  padding-top: 50px;
+  padding-left: 25px;
+  padding-right: 100px;
+}
+
+.country-information-con::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  border-top: 2px dotted #FFA737;
+  border-bottom: 2px dotted #FFA737;
+  pointer-events: none;
+}
+
 
 .lastHeader {
   margin: auto;

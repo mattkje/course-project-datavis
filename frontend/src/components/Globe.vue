@@ -49,6 +49,7 @@ export default {
     onMounted(() => {
       function selectCountryInfo(name, id) {
         if (countryInfoBox.value) {
+          document.getElementById("chartdiv_globe").style.width = "75%";
           fetch('http://127.0.0.1:5000/country_data/' + name)
               .then(response => response.json())
               .then(data => {
@@ -186,9 +187,10 @@ export default {
 #chartdiv_globe {
   width: 100%;
   height: 100%;
-  max-width: 85%;
-  max-height: 85%;
+  max-width: 100%;
+  max-height: 100%;
   left: 0;
+  transition: width 0.5s ease-in-out;
 }
 
 #chartdivContainer_globe {
@@ -196,7 +198,7 @@ export default {
   justify-content: center;
   align-items: start;
   width: 100%;
-  height: 100vh;
-  padding: 140px 20vw 60px 0;
+  height: 90vh;
+  padding: 60px 0 60px 0;
 }
 </style>

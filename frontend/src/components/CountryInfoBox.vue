@@ -2,16 +2,15 @@
   <div v-if="isVisible" :class="['info-box', { expanded: isExpanded }]">
     <div :class="['handle', { expanded: isExpanded }]" @click="toggleExpand"></div>
     <div :class="['content', { expanded: isExpanded }]">
-
-      <div v-if="isExpanded" class="expandedContainer">
+      <div v-if="isExpanded" class="wholeContainer">
         <div class="panel-1">
           <div class="header">
             <img :src="flagId" alt="flag" class="flag"/>
             <h2>{{ countryName }}</h2>
           </div>
-          <p>Displaying greenhouse gas data for {{ countryName }}</p>
+
           <div class="top-bar">
-            <search-bar @update:selectedItems="handleSelectedItems"/>
+            <p>Displaying greenhouse gas data for {{ countryName }}</p>
             <div class="user-interactive-items">
               <div class="future-checkbox">
                 <label for="futureCheckbox">Show future predictions:</label>
@@ -19,10 +18,10 @@
               </div>
               <div class="dropdown-container">
                 <span>Measure by:</span>
-               <select class="dropdown" v-model="selectedMeasure">
+                <select class="dropdown" v-model="selectedMeasure">
                   <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
-                 <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
-                 <option :value="`line:Per/Capita,per_capita/${countryName}`">Per Capita</option>
+                  <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
+                  <option :value="`line:Per/Capita,per_capita/${countryName}`">Per Capita</option>
                   <option :value="`bar:%,co2_growth_prct/${countryName}`">Growth %</option>
                 </select>
               </div>
@@ -33,10 +32,15 @@
               :is="selectedChartComponent"
               :url="selectedMeasureUrl"
               :key="chartKey"/>
+          <CountryComparisonChart
+              :countries="comparisonCountries.join(',')"
+              :comparisonData="selectedCompUrl"
+              :start-year="comparisonStartYear"
+              :end-year="comparisonEndYear"/>
         </div>
-        <country-key-information></country-key-information>
-        <dual-pie-chart-component :url="countryName"></dual-pie-chart-component>
+        <div class="spacings"></div>
       </div>
+
       <template v-if="!isExpanded">
         <div class="header">
           <img :src="flagId" alt="flag" class="flag"/>
@@ -52,13 +56,10 @@
 </template>
 
 <script setup>
-import {ref, watch, computed} from 'vue';
+import { ref, watch, computed } from 'vue';
 import StatisticsOverview from "@/components/visualization tools/statistics_overview.vue";
 import BarChartComponent from "@/components/visualization tools/bar_chart.vue";
-import SearchBar from "@/components/SearchBar.vue";
-import CountryKeyInformation from "@/components/CountryKeyInformation.vue";
-import DualPieChartComponent from "@/components/visualization tools/DualPieChart.vue";
-import {CheckboxIndicator} from "radix-vue";
+import CountryComparisonChart from "@/components/visualization tools/CountryComparison.vue";
 
 const selectedItems = ref([]);
 const isFuture = ref(false);
@@ -71,6 +72,10 @@ const isVisible = ref(false);
 const isExpanded = ref(false);
 const selectedMeasure = ref(`line:million tons,co2/${countryName.value}`);
 const flagId = ref('');
+const comparisonCountries = ref([countryName.value]);
+const comparisonStartYear = ref(1990);
+const comparisonEndYear = ref(2020);
+const selectedCompUrl = ref(`co2/${countryName.value}`);
 
 const handleSelectedItems = (items) => {
   selectedItems.value = items;
@@ -96,6 +101,8 @@ function updateCountryInfo(name, pop, areaSize, cap, id) {
   isVisible.value = true;
   selectedMeasure.value = `line:million tons,co2/${name}`;
   flagId.value = `public/countryflags/${id}.svg`;
+  comparisonCountries.value = [name];
+  selectedCompUrl.value = `co2`;
 }
 
 function hideCountryInfo() {
@@ -104,6 +111,12 @@ function hideCountryInfo() {
 
 function toggleExpand() {
   isExpanded.value = !isExpanded.value;
+    setTimeout(() => {
+      window.scrollBy({
+        top: window.innerHeight * 1.1,
+        behavior: 'smooth'
+      });
+    }, 300);
 }
 
 defineExpose({
@@ -114,6 +127,13 @@ defineExpose({
 </script>
 
 <style scoped>
+.wholeContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2%;
+  height: 100%;
+}
+
 .chart {
   width: 100%;
   height: 100%;
@@ -167,21 +187,16 @@ defineExpose({
 .info-box {
   position: absolute;
   right: 0;
-  top: 0;
+  top: 50%;
   width: 25%;
-  height: calc(100% - 70px);
+  height: 60%;
   padding: 20px;
-  background: linear-gradient(
-      135deg,
-      var(--color-background) 15%,
-      var(--color-background) 15%,
-      var(--color-background) 15%,
-      var(--color-background) 85%,
-      var(--vt-c-secondary) 85%,
-      var(--vt-c-secondary) 100%
-  );
+  background: #1E555F;
+  border: 2px dotted #FFA737;
+  border-radius: 18px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.5s ease;
+  transform: translateY(-50%);
 }
 
 h2 {
@@ -195,10 +210,10 @@ h2 {
 .info-box.expanded {
   display: flex;
   justify-content: space-between;
-  width: 97%;
-  height: calc(100% - 70px);
+  width: 100%;
+  height: 180vh;
   right: 0;
-  top: 70px;
+  top: 200vh;
   padding: 20px;
   margin: 0;
 }
@@ -275,6 +290,10 @@ h2 {
   padding-left: 0;
 }
 
+.spacings {
+  height: 100px;
+}
+
 .close-btn {
   position: absolute;
   right: 20px;
@@ -288,7 +307,7 @@ h2 {
 
 h2 {
   margin-top: 0;
-  color: #424242;
+  color: #ffffff;
   font-family: Inter, sans-serif;
   font-weight: 900;
   font-size: 2rem;
@@ -298,7 +317,7 @@ p {
   font-family: Inter, sans-serif;
   font-weight: bold;
   margin: 5px 0;
-  color: #525252;
+  color: #ffffff;
 }
 
 .header {
@@ -314,7 +333,7 @@ p {
 
 .expandedContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   gap: 4%;
   width: 100%;
@@ -322,7 +341,7 @@ p {
 }
 
 .panel-1 {
-  width: 70%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -331,5 +350,13 @@ p {
 .future-checkbox {
   margin-right: 5px;
   gap: 5px;
+}
+
+span {
+  color: #ffffff;
+}
+
+label {
+  color: #ffffff;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div id="chartdiv" ref="chartdiv">
-<div class="measurement-label" v-if="!isContinent">Measured in <span class="bold">{{ measurement }}</span></div>
+<!--<div class="measurement-label" v-if="!isContinent">Measured in <span class="bold">{{ measurement }}</span></div>-->
   </div>
 </template>
 
@@ -68,10 +68,8 @@ export default {
         renderer: am5xy.AxisRendererY.new(root, {})
       }));
 
-      if (this.isContinent) {
-        xAxis.get("renderer").labels.template.setAll({fill: am5.color(0xFFFFFF)}); // Red color for x-axis labels
-        yAxis.get("renderer").labels.template.setAll({fill: am5.color(0xFFFFFF)}); // Blue color for y-axis labels
-      }
+      xAxis.get("renderer").labels.template.setAll({fill: am5.color(0xFFFFFF)}); // Red color for x-axis labels
+      yAxis.get("renderer").labels.template.setAll({fill: am5.color(0xFFFFFF)}); // Blue color for y-axis labels
 
       const fields = Object.keys(data[0]).filter(key => key !== "year" && key !== "country");
       const measurement = this.url.split(',')[0];
@@ -156,13 +154,9 @@ export default {
         });
       });
 
-      if (this.isContinent) {
-        legend.labels.template.setAll({fill: am5.color(0xFFFFFF)});
-        legend.valueLabels.template.setAll({fill: am5.color(0xFFFFFF)});
-      } else {
-        legend.labels.template.setAll({fill: am5.color(0x000000)});
-        legend.valueLabels.template.setAll({fill: am5.color(0x000000)});
-      }
+      legend.labels.template.setAll({fill: am5.color(0xFFFFFF)});
+      legend.valueLabels.template.setAll({fill: am5.color(0xFFFFFF)});
+
 
       legend.valueLabels.template.setAll({
         width: am5.p200,
@@ -202,9 +196,9 @@ export default {
 <style scoped>
 #chartdiv {
   margin-top: 6rem;
-  width: 70%;
+  width: 100%;
   height: 500px;
-  max-width: 70%;
+  max-width: 100%;
 }
 
 .measurement-label {
