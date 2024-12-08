@@ -184,7 +184,7 @@ function scrollToGlobe() {
   <div class="main-container">
     <div class="logoContainer">
       <img src="../assets/logo.png" alt="Globe World Stats Logo" class="logo">
-      <h1 :style="{ width: TextWidth, maxWidth: TextMaxWidth }">Let's dive into the story of our greenhouse gas
+      <h1>Let's dive into the story of our greenhouse gas
         emissions</h1>
     </div>
 
@@ -458,7 +458,9 @@ function scrollToGlobe() {
   flex-direction: column;
   justify-content: center;
   align-items: start;
-  margin: 0 20vw;
+  max-width: 1000px;
+  width: 65%;
+  margin: auto;
   gap: 20px;
 }
 
@@ -479,6 +481,7 @@ h1 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1.2;
+  width: 80%;
 }
 
 h2 {
@@ -834,6 +837,8 @@ input[type="radio"] + label:hover {
   .logoContainer {
     flex-direction: column-reverse;
     align-items: center;
+    min-width: 0;
+    gap: 0px
   }
 
   .logo {
