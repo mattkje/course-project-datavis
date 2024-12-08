@@ -13,6 +13,7 @@ import Globe from "@/components/Globe.vue";
 import StackedLineGraph from "@/components/visualization tools/StackedLineGraph.vue";
 import AmChartComponent from "@/components/visualization tools/statistics_overview.vue";
 import WorldClimateGoals from "@/components/WorldClimateGoals.vue";
+import OurData from "@/components/OurData.vue";
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
@@ -451,6 +452,8 @@ function scrollToGlobe() {
     <div class="map-container" id="globe-container">
       <Globe/>
     </div>
+
+    <OurData :style="{ width: TextWidth, maxWidth: TextMaxWidth }"/>
 
     <!-- Fixed Icon Button -->
     <button class="scroll-button" @click="scrollToGlobe">

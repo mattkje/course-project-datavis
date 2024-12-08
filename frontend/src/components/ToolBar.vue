@@ -1,14 +1,16 @@
 <script setup>
-import { ref } from 'vue';
-import { Label } from 'radix-vue';
-
 import '@fortawesome/fontawesome-free/css/all.css';
 import About from "@/components/About.vue";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
+
+const scrollToBottom = () => {
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+};
+
 </script>
 
 <template>
@@ -17,7 +19,10 @@ const scrollToTop = () => {
       <img src="../assets/logo.png" alt="Logo" class="logo" />
       <h1 class="title">Globe World Stats</h1>
     </div>
-    <About />
+    <div class="rightside">
+      <h2 @click="scrollToBottom">Our Data</h2>
+      <About />
+    </div>
   </div>
   <button class="back-to-top" @click="scrollToTop">
     <font-awesome-icon :icon="['fas', 'arrow-up']" />
@@ -44,6 +49,7 @@ const scrollToTop = () => {
 .title-box {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .logo {
@@ -65,37 +71,20 @@ const scrollToTop = () => {
   transition: all 0.7s ease-in-out;
 }
 
-.search-box {
+.rightside {
   display: flex;
+  gap: 20px;
+  justify-content: center;
   align-items: center;
-  margin-left: auto;
 }
 
-.LabelRoot {
-  margin-right: 0.5rem;
+h2 {
   font-family: Inter, sans-serif;
-  font-weight: 700;
-  transform: translateX(100px);
-  color: var(--color-text);
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: #1E555F;
+  cursor: pointer;
 }
-
-.Input {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
-  font-family: Inter, sans-serif;
-  font-size: 1rem;
-  color: var(--color-text);
-  background-color: var(--color-background-mute);
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.Input:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.5);
-  outline: none;
-}
-
 .back-to-top {
   position: fixed;
   bottom: 80px;
