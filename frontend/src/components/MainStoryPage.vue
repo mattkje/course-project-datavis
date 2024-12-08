@@ -18,7 +18,7 @@ import AmChartComponent from "@/components/visualization tools/statistics_overvi
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
 const selectedContinent = ref('Europe');
-const comparisonCountries = ref(['Norway']);
+const comparisonCountries = ref([]);
 const comparisonData = ref("co2");
 const comparisonStartYear = ref(2000);
 const comparisonEndYear = ref(2022);
@@ -190,6 +190,7 @@ function selectFirstOption() {
   if (filteredCountries.value.length > 0) {
     addCountryToFilter(filteredCountries.value[0]);
   }
+  showDropdown.value = true;
 }
 
 function toggleDetailed() {
@@ -231,6 +232,23 @@ function scrollToGlobe() {
       First, Let's Look at the Past
     </div>
 
+
+    <div class="map-container">
+      <div class="mapHeader">
+        <h2>Co2 Emissions Per Continent as Percentage</h2>
+      </div>
+      <MotionChartComponent url="Total Co2 emissions,cumulative_co2"/>
+      <div class="innerTextContainer">
+        <p>Explore the greenhouse gas emissions data by continent</p>
+      </div>
+    </div>
+
+    <InformationalBox></InformationalBox>
+
+    <div class="sectionHeader">
+      Now, Let's Dive Into the Present
+    </div>
+
     <div class="map-container">
       <div class="mapHeader">
         <h2>Co2 Emissions Per Continent as Percentage</h2>
@@ -258,37 +276,22 @@ function scrollToGlobe() {
         </div>
       </div>
     </div>
-
-
     <div class="map-container">
       <div class="mapHeader">
-        <h2>Co2 Emissions Per Continent as Percentage</h2>
-      </div>
-      <MotionChartComponent url="Total Co2 emissions,cumulative_co2"/>
-      <div class="innerTextContainer">
-        <p>Explore the greenhouse gas emissions data by continent</p>
-      </div>
-    </div>
-
-    <InformationalBox></InformationalBox>
-
-    <div class="sectionHeader">
-      Now, Let's Dive Into the Present
-    </div>
-
-    <div class="map-container">
-      <div class="mapHeader">
-        <h2>Explore the greenhouse gas emissions data by country</h2>
+        <h2>Explore the Greenhouse Gas Emission Data By Continent</h2>
       </div>
       <ContinentMap @continent-clicked="handleContinentClick"/>
       <div class="innerTextContainer">
-        <p>Explore the greenhouse gas emissions data by continent</p>
+        <p>
+          Click on a continent to view the top 10 countries with the highest greenhouse gas emissions.
+          The data is based on the latest available information from the World Bank
+        </p>
       </div>
     </div>
     <br id="scroll-point">
     <div class="bar-container" id="bar-chart">
       <div class="mapHeader">
-        <h2>Cumulative data of {{ selectedBarUrl.split(",")[0] }} in {{ selectedContinent }}</h2>
+        <h2>Cumulative Data of {{ selectedBarUrl.split(",")[0] }} in {{ selectedContinent }}</h2>
       </div>
       <ContinentChartComponent :continent="selectedContinent" :url="selectedBarUrl"/>
       <div class="innerTextContainer">
@@ -308,7 +311,7 @@ function scrollToGlobe() {
     </div>
     <div class="bar-container">
       <div class="mapHeader">
-        <h2>Compare data from different countries</h2>
+        <h2>Compare Data From Different Countries</h2>
       </div>
       <CountryComparisonChart :countries="comparisonCountries.join(',')" :comparisonData="selectedCompUrl.split(',')[1]"
                               :start-year="comparisonStartYear" :end-year="comparisonEndYear"/>
@@ -356,6 +359,26 @@ function scrollToGlobe() {
       How Will the Future Look?
     </div>
     <div class="bar-container">
+      <div class="mapHeader">
+        <h2>Co<sub>2</sub> Emission Predictions the Next 5 Years</h2>
+      </div>
+      <AmChartComponent :url="selectedContinentUrl" :key="selectedContinentUrl" :isContinent="true"/>
+      <div class="innerTextContainer">
+        <p>
+          Predictions for the next 5 years are based on the current data and trends. The chart shows the
+          predicted CO<sub>2</sub> emissions for the next 5 years for each continent. Choose a category underneath to
+          see the predictions for that specific category!
+        </p>
+        <div class="button-group">
+          <div v-for="(button, index) in linechartContinentButtons" :key="index" class="button-container">
+            <input type="radio" :id="button.label" :value="button.url" v-model="selectedContinentUrl"
+                   @change="updateContinentData(button.url)">
+            <label :for="button.label">{{ button.name }}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bar-container">
       <div class="multipleContainer">
         <StackedLineGraph :url="'percentage,electricity_percentage/China,false'" :detailed="detailed"/>
         <StackedLineGraph url="percentage,electricity_percentage/United States,false" :detailed="detailed"/>
@@ -375,26 +398,6 @@ function scrollToGlobe() {
             <input type="checkbox" v-model="detailed">
             <span class="toggle-slider"></span>
           </label>
-        </div>
-      </div>
-    </div>
-    <div class="bar-container">
-      <div class="mapHeader">
-        <h2>Co<sub>2</sub> Emission Predictions the Next 5 Years</h2>
-      </div>
-      <AmChartComponent :url="selectedContinentUrl" :key="selectedContinentUrl" :isContinent="true"/>
-      <div class="innerTextContainer">
-        <p>
-          Predictions for the next 5 years are based on the current data and trends. The chart shows the
-          predicted CO<sub>2</sub> emissions for the next 5 years for each continent. Choose a category underneath to
-          see the predictions for that specific category!
-        </p>
-        <div class="button-group">
-          <div v-for="(button, index) in linechartContinentButtons" :key="index" class="button-container">
-            <input type="radio" :id="button.label" :value="button.url" v-model="selectedContinentUrl"
-                   @change="updateContinentData(button.url)">
-            <label :for="button.label">{{ button.name }}</label>
-          </div>
         </div>
       </div>
     </div>
