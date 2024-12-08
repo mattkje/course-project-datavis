@@ -169,6 +169,11 @@ export default {
         textAlign: "right"
       });
 
+      legend.itemContainers.template.setAll({
+        paddingTop: 2,
+        paddingBottom: 2
+      });
+
       legend.data.setAll(chart.series.values);
       chart.appear(1000, 100);
     });
@@ -195,7 +200,7 @@ export default {
 
 <style scoped>
 #chartdiv {
-  margin-top: 6rem;
+  margin-top: 1rem;
   width: 100%;
   height: 500px;
   max-width: 100%;

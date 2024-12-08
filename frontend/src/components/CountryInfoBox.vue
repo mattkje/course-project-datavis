@@ -8,15 +8,12 @@
             <img :src="flagId" alt="flag" class="flag"/>
             <h2>{{ countryName }}</h2>
           </div>
-
           <div class="top-bar">
             <div id="left-top-bar">
               <p>Displaying greenhouse gas data for {{ countryName }}</p>
             </div>
             <div id="right-top-bar">
-              <RingModule/>
             </div>
-          </div>
           <div class="user-interactive-items">
             <div class="future-checkbox">
               <label for="futureCheckbox">Show future predictions:</label>
@@ -31,17 +28,61 @@
                 <option :value="`bar:%,co2_growth_prct/${countryName}`">Growth %</option>
               </select>
             </div>
+            </div>
           </div>
+          <div class="graphs">
           <component
               v-if="selectedMeasureUrl"
               :is="selectedChartComponent"
               :url="selectedMeasureUrl"
               :key="chartKey"/>
-          <CountryComparisonChart
-              :countries="comparisonCountries.join(',')"
-              :comparisonData="selectedCompUrl"
-              :start-year="comparisonStartYear"
-              :end-year="comparisonEndYear"/>
+          <div class="comparison">
+            <CountryComparisonChart
+                :countries="comparisonCountries.join(',')"
+                :comparisonData="selectedComparisonUrl.split(',')[1]"
+                :start-year="comparisonStartYear"
+                :end-year="comparisonEndYear"/>
+            <div class="innerTextContainer">
+              <div class="country-search">
+                <input type="text" v-model="input" placeholder="Search for a country" @click="showDropdown = true"
+                       @focus="showDropdown = true" @blur="hideDropdownWithDelay" @keydown.enter="selectFirstOption">
+                <div class="country-list" v-if="showDropdown && filteredCountries.length" @mouseenter="preventHideDropdown"
+                     @mouseleave="allowHideDropdown">
+                  <div class="country-items">
+                    <div class="country-item" v-for="country in filteredCountries" :key="country"
+                         @click="addCountryToFilter(country)">
+                      <p>{{ country }}</p>
+                    </div>
+                  </div>
+                  <div class="item error" v-if="input && !filteredCountries.length">
+                    <p>No results found!</p>
+                  </div>
+                </div>
+                <div class="selected-filters">
+                  <h3>Selected Countries</h3>
+                  <ul>
+                    <p id="comparison-error" v-if="comparisonCountries.length === 0">Search for a country to view their
+                      data!</p>
+                    <li v-for="country in comparisonCountries" :key="country">
+                      {{ country }}
+                      <button @click="removeCountryFromFilter(country)">x</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="year-slider">
+                <Slider v-model="sliderValue" :min="2000" :max="2022" :step="1" range/>
+              </div>
+              <div class="button-group">
+                <div v-for="(button, index) in barchartCompButtons" :key="index" class="button-container">
+                  <input type="radio" :id="button.label" :value="button.url" v-model="selectedComparisonUrl"
+                         @change="updateCompData(button.url)">
+                  <label :for="button.label">{{ button.name }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
         </div>
         <div class="spacings"></div>
       </div>
@@ -61,15 +102,32 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import StatisticsOverview from "@/components/visualization tools/statistics_overview.vue";
 import BarChartComponent from "@/components/visualization tools/bar_chart.vue";
 import CountryComparisonChart from "@/components/visualization tools/CountryComparison.vue";
+import Slider from "@vueform/slider";
 import RingModule from "@/components/visualization tools/RingModule.vue";
 
 const selectedItems = ref([]);
 const isFuture = ref(false);
 
+const barchartCompButtons = [
+  {label: "Total Comparison", url: "Total Co2 emissions,cumulative_co2", selected: true, name: "Total"},
+  {
+    label: "Land Usage Comparison",
+    url: "Total Co2 emissions including land use,cumulative_co2_including_luc",
+    selected: false,
+    name: "Land Usage"
+  },
+  {label: "Coal Comparison", url: "Total Coal Emissions,cumulative_coal_co2", selected: false, name: "Coal"},
+  {label: "Oil Comparison", url: "Total Oil Emissions,cumulative_oil_co2", selected: false, name: "Oil"},
+  {label: "Flaring Comparison", url: "Total Flaring Emissions,cumulative_flaring_co2", selected: false, name: "Flaring"},
+  {label: "Gas Comparison", url: "Total Gas Emissions,cumulative_gas_co2", selected: false, name: "Gas"},
+  {label: "Cement Comparison", url: "Total Cement Emissions,cumulative_cement_co2", selected: false, name: "Cement"}
+];
+
+const selectedComparisonUrl = ref("Total Co2 emissions,cumulative_co2");
 const countryName = ref('');
 const population = ref('');
 const area = ref('');
@@ -79,9 +137,51 @@ const isExpanded = ref(false);
 const selectedMeasure = ref(`line:million tons,co2/${countryName.value}`);
 const flagId = ref('');
 const comparisonCountries = ref([countryName.value]);
-const comparisonStartYear = ref(1990);
-const comparisonEndYear = ref(2020);
-const selectedCompUrl = ref(`co2/${countryName.value}`);
+const comparisonStartYear = ref(2000);
+const comparisonEndYear = ref(2022);
+const sliderValue = ref([2000, 2022]);
+const input = ref('');
+const fetchError = ref(null);
+const showDropdown = ref(false);
+const countries = ref([]);
+let preventHide = false;
+
+const filteredCountries = computed(() => {
+  if (!input.value) return [];
+  return countries.value.filter(country => country.toLowerCase().startsWith(input.value.toLowerCase()));
+})
+
+onMounted(async () => {
+  countries.value = await fetchData('http://127.0.0.1:5000/countries'); // Assign fetched data
+});
+
+watch(selectedComparisonUrl, (newValue) => {
+  if (!newValue.includes(',')) {
+    selectedComparisonUrl.value = "Total Co2 emissions,cumulative_co2";
+  }
+});
+
+async function fetchData(url) {
+  try {
+    fetchError.value = null; // Reset error
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+    return await response.json();
+  } catch (error) {
+    fetchError.value = error.message;
+    console.error("Failed to fetch data:", error);
+    return [];
+  }
+}
+
+watch(sliderValue, (newValue) => {
+  comparisonStartYear.value = newValue[0];
+  comparisonEndYear.value = newValue[1];
+
+  sliderChange();
+}, {immediate: true});
+
+console.log(selectedComparisonUrl.value);
 
 const handleSelectedItems = (items) => {
   selectedItems.value = items;
@@ -99,6 +199,56 @@ const selectedMeasureUrl = computed(() => {
 
 const chartKey = computed(() => `${selectedMeasure.value}-${isFuture.value}`);
 
+function sliderChange() {
+  [comparisonStartYear.value, comparisonEndYear.value] = sliderValue.value;
+}
+
+function hideDropdownWithDelay() {
+  if (!preventHide) {
+    setTimeout(() => {
+      showDropdown.value = false;
+    }, 200);
+  }
+}
+
+function selectFirstOption() {
+  if (filteredCountries.value.length > 0) {
+    addCountryToFilter(filteredCountries.value[0]);
+  }
+  showDropdown.value = true;
+}
+
+function preventHideDropdown() {
+  preventHide = true;
+}
+
+function allowHideDropdown() {
+  preventHide = false;
+}
+
+function addCountryToFilter(country) {
+  if (!comparisonCountries.value.includes(country)) {
+    comparisonCountries.value.push(country);
+  }
+  input.value = '';
+  showDropdown.value = false;
+}
+
+function removeCountryFromFilter(country) {
+  // Find the index of the country in the array
+  const index = comparisonCountries.value.indexOf(country);
+
+  // If the country exists in the array, remove it
+  if (index !== -1) {
+    comparisonCountries.value.splice(index, 1);
+  }
+}
+
+function updateCompData(url) {
+  selectedComparisonUrl.value = url;
+  barchartCompButtons.forEach(button => button.selected = (button.url === url));
+}
+
 function updateCountryInfo(name, pop, areaSize, cap, id) {
   countryName.value = name;
   population.value = pop;
@@ -108,7 +258,7 @@ function updateCountryInfo(name, pop, areaSize, cap, id) {
   selectedMeasure.value = `line:million tons,co2/${name}`;
   flagId.value = `public/countryflags/${id}.svg`;
   comparisonCountries.value = [name];
-  selectedCompUrl.value = `co2`;
+  selectedComparisonUrl.value = `co2`;
 }
 
 function hideCountryInfo() {
@@ -148,7 +298,6 @@ defineExpose({
 .top-bar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   width: 100%;
 }
 
@@ -156,10 +305,167 @@ defineExpose({
   flex: 1;
 }
 
+.button-group {
+  margin-top: 10px;
+  justify-self: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .future-checkbox {
   display: flex;
   align-items: center;
-  color: black;
+  white-space: nowrap;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.country-search {
+  position: relative;
+  width: 350px;
+  margin: 0 auto;
+}
+
+.country-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.country-item:hover {
+  background-color: #366e7a;
+}
+
+.country-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.country-item:hover {
+  background-color: #366e7a;
+}
+
+.item.error {
+  padding: 10px 15px;
+  color: #FFA737;
+  text-align: center;
+}
+
+.country-list {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background: #366e7a;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+input {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  background: white;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.year-slider {
+  margin-top: 50px;
+}
+
+.selected-filters {
+  margin-top: 20px;
+  color: white;
+}
+
+.selected-filters h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.selected-filters ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between items */
+  height: 150px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #4e90a4 #1E555F;
+}
+
+.selected-filters li {
+  background: #366e7a;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  font-family: "Corbel Light", serif;
+  font-weight: 700;
+}
+
+.selected-filters li button {
+  margin-top: 5px;
+  background: #146168;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.selected-filters li button:hover {
+  background: firebrick;
+}
+
+#comparison-error {
+  text-align: center;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+input[type="radio"] + label {
+  background-color: #4e90a4;
+  width: 140px;
+  height: 50px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+input[type="radio"]:checked + label {
+  background-color: #366e7a;
+}
+
+input[type="radio"] + label:hover {
+  background-color: #366e7a;
 }
 
 .user-interactive-items {
@@ -217,9 +523,9 @@ h2 {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  height: 180vh;
+  height: auto;
   right: 0;
-  top: 200vh;
+  top: 185vh;
   padding: 20px;
   margin: 0;
 }
@@ -282,7 +588,14 @@ h2 {
   display: flex;
   flex-direction: column;
   transition: all 0.5s ease;
+}
 
+.comparison {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: auto; /* Allow height to adjust dynamically */
+  gap: 20px; /* Add some spacing between items */
 }
 
 .content.expanded {
@@ -337,6 +650,14 @@ p {
   margin-right: 10px;
 }
 
+h3 {
+  justify-self: left;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #FFA737;
+  margin: 0;
+}
+
 .expandedContainer {
   display: flex;
   flex-direction: column;
@@ -358,11 +679,59 @@ p {
   gap: 5px;
 }
 
+.graphs {
+  width: 100%;
+  height: 100%;
+  gap: 100px;
+}
+
 span {
   color: #ffffff;
 }
 
 label {
   color: #ffffff;
+}
+
+.innerTextContainer {
+  color: white;
+  border-radius: 18px;
+  padding: 40px;
+  position: relative;
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin: 60px 0px 60px 0px;
+  border: 2px dotted #FFA737;
+  max-width: 30%;
+  width: 100%;
+  box-sizing: border-box;
+  display: grid;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+@media screen and (max-width: 1400px) {
+  .button-group {
+    margin-top: 0;
+  }
+
+  .innerTextContainer {
+    max-width: 100%;
+    width: 95%;
+    margin: 80px auto 0 auto;
+    gap: 20px;
+  }
+
+  .comparison {
+    flex-direction: column-reverse;
+    padding: 0 50px;
+    gap: 0;
+  }
+
+  .info-box.expanded {
+    top: 220vh;
+  }
 }
 </style>

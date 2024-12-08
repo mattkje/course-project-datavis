@@ -10,9 +10,7 @@ import MotionChartComponent from "@/components/visualization tools/MotionChart.v
 import InformationalBox from "@/components/visualization tools/InformationalBox.vue";
 import Slider from "@vueform/slider";
 import Globe from "@/components/Globe.vue";
-import ContinentPredictionLineChart from "@/components/visualization tools/ContinentPredictionLineChart.vue";
 import StackedLineGraph from "@/components/visualization tools/StackedLineGraph.vue";
-import BarChartComponent from "@/components/visualization tools/bar_chart.vue";
 import AmChartComponent from "@/components/visualization tools/statistics_overview.vue";
 import WorldClimateGoals from "@/components/WorldClimateGoals.vue";
 
@@ -118,8 +116,7 @@ async function fetchData(url) {
 }
 
 onMounted(async () => {
-  const data = await fetchData('http://127.0.0.1:5000/countries');
-  countries.value = data; // Assign fetched data
+  countries.value = await fetchData('http://127.0.0.1:5000/countries'); // Assign fetched data
 });
 
 function addCountryToFilter(country) {
@@ -184,7 +181,6 @@ function updateContinentData(url) {
 
 function sliderChange() {
   [comparisonStartYear.value, comparisonEndYear.value] = sliderValue.value;
-  console.log("Slider value changed:", sliderValue.value);
 }
 
 function selectFirstOption() {
@@ -338,7 +334,7 @@ function scrollToGlobe() {
                 <p>{{ country }}</p>
               </div>
             </div>
-            <div class="item error" v-if="input && !filteredCountries.length">
+            <div class="item-error" v-if="input && !filteredCountries.length">
               <p>No results found!</p>
             </div>
           </div>
