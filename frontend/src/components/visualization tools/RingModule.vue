@@ -24,8 +24,11 @@ export default {
   mounted() {
     this.InitializeRingModule();
   },
+  watch: {
+    url: 'InitializeRingModule'
+  },
   methods: {
-    fetchData(url) {
+    async fetchData(url) {
       return fetch(api + url)
           .then(response => response.json())
           .then(data => {
@@ -33,9 +36,14 @@ export default {
           });
     },
     async InitializeRingModule() {
+      if (this.root) {
+        this.root.dispose();
+      }
+
       am5.ready(async () => {
         // Create root element
         var root = am5.Root.new("chartdiv_RingModule");
+        this.root = root;
 
         // Set themes
         root.setThemes([am5themes_Animated.new(root)]);
@@ -174,7 +182,7 @@ export default {
   position: relative;
   justify-content: center;
   width: 100%;
-  height: 850px;
+  height: 400px;
   padding: 90px 0 60px 0;
 }
 </style>

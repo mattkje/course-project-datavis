@@ -8,6 +8,10 @@
             <img :src="flagId" alt="flag" class="flag"/>
             <h2>{{ countryName }}</h2>
           </div>
+          <div class="ring-module">
+            <RingModule :url="ringModuleUrl"/>
+          </div>
+
           <div class="top-bar">
             <div id="left-top-bar">
               <p>Displaying greenhouse gas data for {{ countryName }}</p>
@@ -31,11 +35,12 @@
             </div>
           </div>
           <div class="graphs">
-          <component
+          <component class="line-chart-stats"
               v-if="selectedMeasureUrl"
               :is="selectedChartComponent"
               :url="selectedMeasureUrl"
               :key="chartKey"/>
+            <p class="compare-title">Compare Data With Other Countries</p>
           <div class="comparison">
             <CountryComparisonChart
                 :countries="comparisonCountries.join(',')"
@@ -144,6 +149,7 @@ const input = ref('');
 const fetchError = ref(null);
 const showDropdown = ref(false);
 const countries = ref([]);
+const ringModuleUrl = ref(`ringmodule/${countryName.value}`);
 let preventHide = false;
 
 const filteredCountries = computed(() => {
@@ -180,6 +186,13 @@ watch(sliderValue, (newValue) => {
 
   sliderChange();
 }, {immediate: true});
+
+watch(countryName, (newCountryName) => {
+  if (newCountryName) {
+    console.log(newCountryName);
+    ringModuleUrl.value = `ringmodule/${newCountryName}`;
+  }
+});
 
 console.log(selectedComparisonUrl.value);
 
@@ -685,12 +698,20 @@ h3 {
   gap: 100px;
 }
 
+.compare-title {
+  padding-top: 50px;
+}
+
 span {
   color: #ffffff;
 }
 
 label {
   color: #ffffff;
+}
+
+.ring-module {
+
 }
 
 .innerTextContainer {
