@@ -265,9 +265,9 @@ function scrollToGlobe() {
       <div class="innerTextContainer">
         <h3>Historic Superpowers Dominate Emissions</h3>
         <p>The history of our emissions follow the empires of old.
-          <span style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">Europe</span>,
-          <span style="font-weight: 900; color: #BA7BA1; font-family: Inter,sans-serif">North America</span> and
-          <span style="font-weight: 900; color: #5BC0EB; font-family: Inter,sans-serif">Asia</span> lead the way for
+          <span style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">EUROPE</span>,
+          <span style="font-weight: 900; color: #BA7BA1; font-family: Inter,sans-serif">NORTH AMERICA</span> and
+          <span style="font-weight: 900; color: #5BC0EB; font-family: Inter,sans-serif">ASIA</span> lead the way for
           total CO<sub>2</sub>
           emissions throughout history, while other continents have struggled to keep up. Although there has been a
           shift in emissions contributions as of late, it is still important to take into account our history when
@@ -315,11 +315,15 @@ function scrollToGlobe() {
             <label :for="button.label">{{ button.name }}</label>
           </div>
         </div>
+        <div class="measurement">
+          Measured in <span
+            style="font-weight: 900; color: #f5d4a8; font-family: Inter,sans-serif">million tonnes</span>
+        </div>
       </div>
     </div>
     <div class="bar-container">
       <div class="mapHeader">
-        <h2>Compare Data From Different Countries</h2>
+        <h2>Compare Co2 Emission From Different Countries</h2>
       </div>
       <CountryComparisonChart :countries="comparisonCountries.join(',')" :comparisonData="selectedCompUrl.split(',')[1]"
                               :start-year="comparisonStartYear" :end-year="comparisonEndYear"/>
@@ -361,6 +365,10 @@ function scrollToGlobe() {
             <label :for="button.label">{{ button.name }}</label>
           </div>
         </div>
+        <div class="measurement">
+          Measured in <span
+            style="font-weight: 900; color: #f5d4a8; font-family: Inter,sans-serif">million tonnes</span>
+        </div>
       </div>
     </div>
     <div class="sectionHeader">
@@ -368,14 +376,26 @@ function scrollToGlobe() {
     </div>
     <div class="bar-container">
       <div class="mapHeader">
-        <h2>Co<sub>2</sub> Emission Predictions the Next 5 Years</h2>
+        <h2>Co2 Emissions Predictions the Next 5 Years</h2>
       </div>
       <AmChartComponent :url="selectedContinentUrl" :key="selectedContinentUrl" :isContinent="true"/>
       <div class="innerTextContainer">
         <p>
-          Predictions for the next 5 years are based on the current data and trends. The chart shows the
-          predicted CO<sub>2</sub> emissions for the next 5 years for each continent. Choose a category underneath to
-          see the predictions for that specific category!
+          These are our <span
+            style="font-weight: 900; color: #f5a8a8; font-family: Inter,sans-serif">PREDICTIONS</span> for the next 5
+          years. The data is based on the current trend of emissions. As you
+          can see, <span style="font-weight: 900; color: #5BC0EB; font-family: Inter,sans-serif">ASIA</span> is expected
+          to continue its growth in emissions, while <span
+            style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">EUROPE</span>, and <span
+            style="font-weight: 900; color: #BA7BA1; font-family: Inter,sans-serif">NORTH AMERICA</span> are
+          expected to
+          slightly decrease their emissions. <span
+            style="font-weight: 900; color: #5BC0EB; font-family: Inter,sans-serif">ASIA</span> is entering it's
+          <span
+              style="font-weight: 900; color: #e57365; font-family: Inter,sans-serif">MASS PRODUCTION</span> phase similar to what the western
+          countries experienced earlier. The issue, as you will see below is that their emissions might not be as <span
+            style="font-weight: 900; color: #6eeb5b; font-family: Inter,sans-serif">CLEAN</span>
+          as western nations.
         </p>
         <div class="button-group">
           <div v-for="(button, index) in linechartContinentButtons" :key="index" class="button-container">
@@ -396,11 +416,12 @@ function scrollToGlobe() {
         <h3>Electricity Production</h3>
         <p>Electricity production is a key factor in the world's greenhouse gas emissions. The top 3 countries in
           electricity production are <span
-              style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">China</span>,
-          <span style="font-weight: 900; color: #BA7BA1; font-family: Inter,sans-serif">United States</span> and
-          <span style="font-weight: 900; color: #5BC0EB; font-family: Inter,sans-serif">Russia</span>. The chart above
+              style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">CHINA</span>,
+          <span style="font-weight: 900; color: #BA7BA1; font-family: Inter,sans-serif">UNITED STATES</span> and
+          <span style="font-weight: 900; color: #5BC0EB; font-family: Inter,sans-serif">SAUDI ARABIA</span>. The chart
+          above
           shows the percentage of
-          electricity production in each country. The data is based on the latest available data from the World Bank.
+          electricity production in each country. The data is retrieved from Our World In Data.
         </p>
         <div class="toggle-container">
           <label class="toggle-label">
@@ -494,6 +515,14 @@ function scrollToGlobe() {
   justify-content: center;
   flex-direction: column;
   align-items: center;
+}
+
+.measurement {
+  text-align: end;
+  position: relative;
+  bottom: 0;
+  right: 0;
+  font-size: 0.9rem;
 }
 
 h4 {
@@ -729,6 +758,7 @@ p {
 .bar-container {
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: #1E555F;
   position: relative; /* Add this line */
   gap: 20px;
