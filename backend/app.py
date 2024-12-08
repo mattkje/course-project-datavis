@@ -1,3 +1,5 @@
+import logging
+
 from flask import Flask, jsonify
 from flask_cors import CORS
 import pandas as pd
@@ -466,3 +468,33 @@ def predicts(prediction_data):
         predictions.append(merged)
 
     return predictions
+
+
+@app.route("/electricity/<country>")
+def electricity(country):
+    country_list = country.split(",")
+    df = pd.read_csv("datasets/electricity_prod_source.csv")
+    result_df = df[df["Entity"].isin(country_list)]
+    result_df.fillna("N/A", inplace=True)
+    result_df = result_df.drop(columns=["Code", "Entity"])
+    # Drop columns where all values are 0
+    result_df = result_df.loc[:, (result_df != 0).any(axis=0)]
+
+    return jsonify(result_df.to_dict(orient="records"))
+
+
+@app.route("/electricity_percentage/<country>")
+def electricity_percentage(country):
+    country_list = country.split(",")
+    df = pd.read_csv("datasets/electricity_prod_source.csv")
+    result_df = df[df["Entity"].isin(country_list)]
+    result_df.fillna(0, inplace=True)  # Replace NaN values with 0 for percentage calculation
+    result_df = result_df.drop(columns=["Code", "Entity"])
+
+    # Calculate percentage for each column except 'year'
+    for index, row in result_df.iterrows():
+        total = row.drop(labels=["year"]).sum()
+        if total != 0:
+            result_df.loc[index, result_df.columns != "year"] = (row.drop(labels=["year"]) / total) * 100
+
+    return jsonify(result_df.to_dict(orient="records"))

@@ -32,7 +32,6 @@ export default {
     root.container.set("layout", root.verticalLayout);
 
     this.fetchData(this.url).then(data => {
-      console.log(data);
       const transformData = (series) => {
         return Object.keys(series)
             .filter(key => !['co2', 'co2_including_luc', 'country', 'year', 'land_use_change_co2'].includes(key))

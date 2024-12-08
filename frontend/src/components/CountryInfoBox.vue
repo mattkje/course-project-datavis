@@ -74,7 +74,6 @@ const flagId = ref('');
 
 const handleSelectedItems = (items) => {
   selectedItems.value = items;
-  console.log('Selected items:', selectedItems.value);
 };
 
 const selectedChartComponent = computed(() => {
@@ -97,7 +96,6 @@ function updateCountryInfo(name, pop, areaSize, cap, id) {
   isVisible.value = true;
   selectedMeasure.value = `line:million tons,co2/${name}`;
   flagId.value = `public/countryflags/${id}.svg`;
-  console.log("Country info updated:", name, pop, areaSize, cap, id);
 }
 
 function hideCountryInfo() {

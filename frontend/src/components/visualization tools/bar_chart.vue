@@ -66,7 +66,6 @@ export default {
       const measure = this.url.split(',')[0];
       const temp = this.url.split(',')[1];
       const value = temp.split('/')[0];
-      console.log(value);
 
       const series = chart.series.push(am5xy.ColumnSeries.new(root, {
         name: prettyNames[value],
@@ -111,8 +110,6 @@ export default {
   methods: {
     async fetchData(url) {
       const temp = url.split(',')[1];
-      console.log("temp");
-      console.log(temp);
       const response = await fetch(`${api}${temp}`);
       if (response.ok) {
         return await response.json();

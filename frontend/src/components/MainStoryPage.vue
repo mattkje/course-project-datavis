@@ -11,6 +11,7 @@ import InformationalBox from "@/components/visualization tools/InformationalBox.
 import Slider from "@vueform/slider";
 import Globe from "@/components/Globe.vue";
 import ContinentPredictionLineChart from "@/components/visualization tools/ContinentPredictionLineChart.vue";
+import StackedLineGraph from "@/components/visualization tools/StackedLineGraph.vue";
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
@@ -25,7 +26,6 @@ const input = ref('');
 watch(sliderValue, (newValue) => {
   comparisonStartYear.value = newValue[0];
   comparisonEndYear.value = newValue[1];
-  console.log('Updated Years:', comparisonStartYear.value, comparisonEndYear.value);
 
   sliderChange();
 }, {immediate: true});
@@ -100,13 +100,11 @@ async function fetchData(url) {
 onMounted(async () => {
   const data = await fetchData('http://127.0.0.1:5000/countries');
   countries.value = data; // Assign fetched data
-  console.log("Fetched countries:", data);
 });
 
 function addCountryToFilter(country) {
   if (!comparisonCountries.value.includes(country)) {
     comparisonCountries.value.push(country);
-    console.log(comparisonCountries.value);
   }
   input.value = '';
   showDropdown.value = false;
@@ -332,6 +330,22 @@ function selectFirstOption() {
     <div class="sectionHeader">
       How Will the Future Look?
     </div>
+    <div class="bar-container" >
+      <div class="multipleContainer">
+        <StackedLineGraph :url="'percentage,electricity_percentage/China,false'"/>
+        <StackedLineGraph url="percentage,electricity_percentage/United States,false"/>
+        <StackedLineGraph url="percentage,electricity_percentage/India,false"/>
+      </div>
+      <div class="innerTextContainer">
+        <h3>Electricity Production</h3>
+        <p>Electricity production is a key factor in the world's greenhouse gas emissions. The top 3 countries in
+          electricity production are <span style="font-weight: 900; color: #FFA737">China</span>,
+          <span style="font-weight: 900; color: #BA7BA1">United States</span> and
+          <span style="font-weight: 900; color: #5BC0EB">India</span>. The chart above shows the percentage of
+          electricity production in each country. The data is based on the latest available data from the World Bank.
+        </p>
+      </div>
+    </div>
     <div class="map-container" id="globe-container">
       <Globe/>
     </div>
@@ -463,6 +477,16 @@ p {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  align-content: center;
+}
+
+.multipleContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: center;
+  max-width: 70%;
+  width: 100%;
+  height: 700px;
 }
 
 .mapHeader {
@@ -680,6 +704,11 @@ input[type="radio"] + label:hover {
 }
 
 @media screen and (max-width: 1400px) {
+  .multipleContainer {
+    margin-top: 20px;
+    max-width: 100%;
+    height: 500px;
+  }
   .map-container {
     flex-direction: column-reverse;
     padding: 0 50px;
@@ -688,8 +717,8 @@ input[type="radio"] + label:hover {
 
   .innerTextContainer {
     max-width: 100%;
-    width: 100%;
-    margin: 80px 0 0 0;
+    width: 95%;
+    margin: 80px auto 0 auto;
     gap: 20px;
   }
 
