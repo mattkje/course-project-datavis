@@ -167,6 +167,7 @@ h3 {
   gap: 20px;
   padding: 30px;
   height: 100%;
+  min-height: 700px;
 }
 
 .text-box {
@@ -180,7 +181,6 @@ h3 {
   font-weight: 400;
   border: 2px dotted #FFA737;
   min-height: 100%;
-
 }
 
 .image-gallery {
@@ -189,6 +189,7 @@ h3 {
   grid-template-rows: 1fr 1fr;
   gap: 10px;
   flex: 3;
+  min-height: 100%;
 }
 
 .main-image {
