@@ -504,7 +504,7 @@ p {
   color: white;
   font-weight: 100;
   font-family: "Corbel Light", serif;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .map-container {
