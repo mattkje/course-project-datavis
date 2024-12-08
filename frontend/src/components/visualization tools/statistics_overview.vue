@@ -1,6 +1,6 @@
 <template>
   <div id="chartdiv" ref="chartdiv">
-<div class="measurement-label">Measured in <span class="bold">{{ measurement }}</span></div>
+<div class="measurement-label" v-if="!isContinent">Measured in <span class="bold">{{ measurement }}</span></div>
   </div>
 </template>
 
@@ -8,6 +8,8 @@
 import { prettyNames } from "@/components/dictionaries/prettyNames.js";
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy.js";
+import {color} from "@amcharts/amcharts5";
+import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 const api = "http://127.0.0.1:5000/";
 
 export default {
@@ -17,6 +19,11 @@ export default {
       type: String,
       required: true
     },
+  isContinent: {
+    type: Boolean,
+    required: false,
+    default: false,
+  }
   },
   data() {
     return {
@@ -52,8 +59,8 @@ export default {
 
       const xAxis = chart.xAxes.push(am5xy.DateAxis.new(root, {
         maxDeviation: 0.2,
-        baseInterval: { timeUnit: "year", count: 1 },
-        renderer: am5xy.AxisRendererX.new(root, { minorGridEnabled: true }),
+        baseInterval: {timeUnit: "year", count: 1},
+        renderer: am5xy.AxisRendererX.new(root, {minorGridEnabled: true}),
         tooltip: am5.Tooltip.new(root, {})
       }));
 
@@ -61,11 +68,21 @@ export default {
         renderer: am5xy.AxisRendererY.new(root, {})
       }));
 
+      if (this.isContinent) {
+        xAxis.get("renderer").labels.template.setAll({fill: am5.color(0xFFFFFF)}); // Red color for x-axis labels
+        yAxis.get("renderer").labels.template.setAll({fill: am5.color(0xFFFFFF)}); // Blue color for y-axis labels
+      }
+
       const fields = Object.keys(data[0]).filter(key => key !== "year" && key !== "country");
       const measurement = this.url.split(',')[0];
       fields.forEach(field => {
-        const series = chart.series.push(am5xy.LineSeries.new(root, {
-          name: prettyNames[field],
+        // Split the data into two parts
+        const dataBefore2022 = data.filter(item => new Date(item.year).getFullYear() <= 2022);
+        const dataAfter2022 = data.filter(item => new Date(item.year).getFullYear() >= 2022);
+
+        // Create the first series (before 2022)
+        const seriesBefore2022 = chart.series.push(am5xy.LineSeries.new(root, {
+          name: `${prettyNames[field]}`,
           xAxis: xAxis,
           yAxis: yAxis,
           valueYField: field,
@@ -77,31 +94,39 @@ export default {
           })
         }));
 
-        series.data.setAll(data);
+        seriesBefore2022.data.setAll(dataBefore2022);
+        seriesBefore2022.strokes.template.setAll({
+          strokeWidth: 3,
+        });
 
-        //THIS CODE DOESN'T WORK FOR SOME REASON X_X
-        series.strokes.template.adapters.add("strokeDasharray", (dashArray, target) => {
-          if (!target.dataItem) {
-            // Handle cases where dataItem is undefined
-            return dashArray;  // Return default or fallback dashArray value
-          }
+        // Create the second series (after 2022)
+        const seriesAfter2022 = chart.series.push(am5xy.LineSeries.new(root, {
+          name: `${prettyNames[field]} (After 2022)`,
+          xAxis: xAxis,
+          yAxis: yAxis,
+          valueYField: field,
+          valueXField: "year",
+          legendValueText: `{${field}}`,
+          tooltip: am5.Tooltip.new(root, {
+            pointerOrientation: "horizontal",
+            labelText: `${prettyNames[field]} (After 2022): {${field}} ${measurement}`,
+          })
+        }));
 
-          const valueX = target.dataItem.get("valueX");
-          if (valueX) {
-            const year = new Date(valueX).getFullYear();
-            return (year >= 2023 && year <= 2027) ? [6, 4] : null;
-          }
-          return null;  // Return null if valueX is not defined
+        seriesAfter2022.data.setAll(dataAfter2022);
+        seriesAfter2022.strokes.template.setAll({
+          strokeWidth: 3,
+          strokeDasharray: [5, 5], // Example dashed line style
         });
       });
 
-      const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "none" }));
+      const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {behavior: "none"}));
       cursor.lineY.set("visible", false);
 
       var scrollbarX = am5.Scrollbar.new(root, {
         orientation: "horizontal"
       });
-      chart.set("scrollbarY", am5.Scrollbar.new(root, { orientation: "vertical" }));
+      chart.set("scrollbarY", am5.Scrollbar.new(root, {orientation: "vertical"}));
 
       chart.set("scrollbarX", scrollbarX);
       chart.bottomAxesContainer.children.push(scrollbarX);
@@ -109,41 +134,45 @@ export default {
       const legend = chart.rightAxesContainer.children.push(am5.Legend.new(root, {
         width: 300,
         paddingLeft: 15,
-        height: am5.percent(100)
+        height: am5.percent(100),
       }));
 
-      legend.itemContainers.template.events.on("pointerover", function(e) {
+      legend.itemContainers.template.events.on("pointerover", function (e) {
         const itemContainer = e.target;
         const series = itemContainer.dataItem.dataContext;
-        chart.series.each(function(chartSeries) {
+        chart.series.each(function (chartSeries) {
           if (chartSeries !== series) {
             chartSeries.strokes.template.setAll({
               strokeOpacity: 0.15,
-              stroke: am5.color(0x000000)
+              stroke: am5.color(0x000000),
             });
           } else {
-            chartSeries.strokes.template.setAll({ strokeWidth: 3 });
+            chartSeries.strokes.template.setAll({strokeWidth: 3});
           }
         });
       });
 
-      legend.itemContainers.template.events.on("pointerout", function(e) {
+      legend.itemContainers.template.events.on("pointerout", function (e) {
         const itemContainer = e.target;
         const series = itemContainer.dataItem.dataContext;
-        chart.series.each(function(chartSeries) {
+        chart.series.each(function (chartSeries) {
           chartSeries.strokes.template.setAll({
             strokeOpacity: 1,
-            strokeWidth: 1,
-            stroke: chartSeries.get("fill")
+            strokeWidth: 3,
+            stroke: chartSeries.get("fill"),
           });
         });
       });
 
-      legend.labels.template.setAll({
-        fill: am5.color("#000000")
-      });
+      if (this.isContinent) {
+        legend.labels.template.setAll({fill: am5.color(0xFFFFFF)});
+        legend.valueLabels.template.setAll({fill: am5.color(0xFFFFFF)});
+      } else {
+        legend.labels.template.setAll({fill: am5.color(0x000000)});
+        legend.valueLabels.template.setAll({fill: am5.color(0x000000)});
+      }
+
       legend.valueLabels.template.setAll({
-        fill: am5.color("#000000"),
         width: am5.p200,
         textAlign: "right"
       });

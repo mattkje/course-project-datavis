@@ -32,4 +32,10 @@ export const prettyNames = {
     "nitrous_oxide_per_capita": "Nitrous Oxide",
     "oil_co2_per_capita": "Oil CO\u2082",
     "other_co2_per_capita": "Other CO\u2082",
+    "Africa": "Africa",
+    "Asia": "Asia",
+    "Europe": "Europe",
+    "North America": "North America",
+    "Oceania": "Oceania",
+    "South America": "South America",
 };

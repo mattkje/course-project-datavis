@@ -1,11 +1,12 @@
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
 def better_predict_arima(country, prediction_data):
     # Load the dataset
     df = pd.read_csv("datasets/globalwarmingdata.csv")
     # Filter for the selected country
-    country_df = df[df["country"] == country]
+    country_df = df[(df["country"] == country) & (df["year"] >= 2000)]
     # Drop rows where the 'year' column is NaN
     filter_df = country_df.dropna(subset=["year"])
 
@@ -22,7 +23,7 @@ def better_predict_arima(country, prediction_data):
     # Loop over columns in case there are multiple columns to forecast (though you're focusing on one)
     for column in result_df.columns:
         # Fit an ARIMA model
-        model = ARIMA(result_df[column], order=(1, 1, 1))
+        model = ARIMA(result_df[column], order=(1, 1, 2))
         model_fit = model.fit()
         # Forecast 5 years into the future
         forecast = model_fit.forecast(steps=5)
@@ -32,6 +33,44 @@ def better_predict_arima(country, prediction_data):
         for i in range(5):
             year = last_year + i + 1
             value = round(float(forecast_values[i]), 3)
+            # Append the forecast for each year in a structured dictionary
+            predictions.append({
+                country: value,
+                "year": year
+            })
+
+    return predictions
+
+def better_predict_holt_winters(country, prediction_data):
+    # Load the dataset
+    df = pd.read_csv("datasets/globalwarmingdata.csv")
+    # Filter for the selected country
+    country_df = df[(df["country"] == country) & (df["year"] >= 2000)]
+    # Drop rows where the 'year' column is NaN
+    filter_df = country_df.dropna(subset=["year"])
+
+    # Extract only the 'year' and the specified prediction data column
+    result_df = filter_df[["year", prediction_data]].copy()
+    # Convert 'year' to datetime and set it as index
+    result_df["year"] = pd.to_datetime(filter_df["year"], format='%Y')
+    result_df.set_index("year", inplace=True)
+
+    # Prepare for predictions
+    predictions = []
+    last_year = result_df.index.max().year  # The last year in the existing data
+
+    # Loop over columns in case there are multiple columns to forecast (though you're focusing on one)
+    for column in result_df.columns:
+        # Fit an Exponential Smoothing model without seasonality
+        model = ExponentialSmoothing(result_df[column], trend='add', seasonal=None)
+        model_fit = model.fit()
+        # Forecast 5 years into the future
+        forecast = model_fit.forecast(steps=5)
+
+        # Build the output in the desired format
+        for i in range(5):
+            year = last_year + i + 1
+            value = round(float(forecast.iloc[i]), 3)
             # Append the forecast for each year in a structured dictionary
             predictions.append({
                 country: value,

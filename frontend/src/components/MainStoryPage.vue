@@ -12,6 +12,8 @@ import Slider from "@vueform/slider";
 import Globe from "@/components/Globe.vue";
 import ContinentPredictionLineChart from "@/components/visualization tools/ContinentPredictionLineChart.vue";
 import StackedLineGraph from "@/components/visualization tools/StackedLineGraph.vue";
+import BarChartComponent from "@/components/visualization tools/bar_chart.vue";
+import AmChartComponent from "@/components/visualization tools/statistics_overview.vue";
 
 const TextWidth = ref('65%');
 const TextMaxWidth = ref('1000px');
@@ -70,9 +72,25 @@ const barchartCompButtons = [
   {label: "Cement Comp", url: "Total Cement Emissions,cumulative_cement_co2", selected: false, name: "Cement"}
 ]
 
+const linechartContinentButtons = [
+  {label: "Total Line", url: "million tonnes,predictContinents/co2", selected: true, name: "Total"},
+  {
+    label: "Land Usage Line",
+    url: "million tonnes,predictContinents/co2_including_luc",
+    selected: false,
+    name: "Land Usage"
+  },
+  {label: "Coal Line", url: "million tonnes,predictContinents/coal_co2", selected: false, name: "Coal"},
+  {label: "Oil Line", url: "million tonnes,predictContinents/oil_co2", selected: false, name: "Oil"},
+  {label: "Flaring Line", url: "million tonnes,predictContinents/flaring_co2", selected: false, name: "Flaring"},
+  {label: "Gas Line", url: "million tonnes,predictContinents/gas_co2", selected: false, name: "Gas"},
+  {label: "Cement Line", url: "million tonnes,predictContinents/cement_co2", selected: false, name: "Cement"}
+]
+
 const selectedUrl = ref(buttons[0].url);
 const selectedBarUrl = ref(buttons[0].url);
 const selectedCompUrl = ref(barchartButtons[0].url);
+const selectedContinentUrl = ref(linechartContinentButtons[0].url);
 const countries = ref([]);
 const selectedCountryFilter = ref('');
 const fetchError = ref(null);
@@ -156,6 +174,11 @@ function updateBarUrl(url) {
 function updateCompData(url) {
   selectedCompUrl.value = url;
   barchartCompButtons.forEach(button => button.selected = (button.url === url));
+}
+
+function updateContinentData(url) {
+  selectedContinentUrl.value = url;
+  linechartContinentButtons.forEach(button => button.selected = (button.url === url));
 }
 
 function sliderChange() {
@@ -329,15 +352,6 @@ function scrollToGlobe() {
         </div>
       </div>
     </div>
-    <div class="bar-container">
-      <div class="mapHeader">
-        <h2>Co2 Emissions Per Continent as Percentage</h2>
-      </div>
-      <ContinentPredictionLineChart/>
-      <div>
-
-      </div>
-    </div>
     <div class="sectionHeader">
       How Will the Future Look?
     </div>
@@ -361,6 +375,26 @@ function scrollToGlobe() {
             <input type="checkbox" v-model="detailed">
             <span class="toggle-slider"></span>
           </label>
+        </div>
+      </div>
+    </div>
+    <div class="bar-container">
+      <div class="mapHeader">
+        <h2>Co<sub>2</sub> Emission Predictions the Next 5 Years</h2>
+      </div>
+      <AmChartComponent :url="selectedContinentUrl" :key="selectedContinentUrl" :isContinent="true"/>
+      <div class="innerTextContainer">
+        <p>
+          Predictions for the next 5 years are based on the current data and trends. The chart shows the
+          predicted CO<sub>2</sub> emissions for the next 5 years for each continent. Choose a category underneath to
+          see the predictions for that specific category!
+        </p>
+        <div class="button-group">
+          <div v-for="(button, index) in linechartContinentButtons" :key="index" class="button-container">
+            <input type="radio" :id="button.label" :value="button.url" v-model="selectedContinentUrl"
+                   @change="updateContinentData(button.url)">
+            <label :for="button.label">{{ button.name }}</label>
+          </div>
         </div>
       </div>
     </div>

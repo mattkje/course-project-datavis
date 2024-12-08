@@ -4,7 +4,8 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import pandas as pd
 
-from calculations import predict_arima, calculate_democracy_rank, calculate_correlation, better_predict_arima
+from calculations import predict_arima, calculate_democracy_rank, calculate_correlation, better_predict_arima, \
+    better_predict_holt_winters
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -459,15 +460,26 @@ def comparison(countries, comparisonData):
 @app.route("/predictContinents/<prediction_data>")
 def predicts(prediction_data):
     continents = ["Africa", "Asia", "Europe", "North America", "Oceania", "South America"]
-    predictions = []
+    predictions_by_year = {}
 
     for continent in continents:
-        old_data = comparison(continent, prediction_data).get_json()
-        prediction = better_predict_arima(continent, prediction_data)
-        merged = old_data + prediction
-        predictions.append(merged)
+        # Fetch historical data and predictions
+        old_data = comparison(continent, prediction_data).get_json()  # Historical data
+        prediction = better_predict_holt_winters(continent, prediction_data)  # Future predictions
+        merged_data = old_data + prediction
 
-    return predictions
+        # Combine data by year, only including years after 2009
+        for entry in merged_data:
+            year = entry["year"]
+            if year > 2009:
+                if year not in predictions_by_year:
+                    predictions_by_year[year] = {"year": year}
+                predictions_by_year[year][continent] = entry[continent]
+
+    # Convert the aggregated data into a list of dictionaries
+    final_predictions = list(predictions_by_year.values())
+
+    return jsonify(final_predictions)
 
 
 @app.route("/electricity/<country>")
