@@ -221,7 +221,7 @@ function scrollToGlobe() {
           style="font-weight: 900; color: #e16350; font-family: Inter,sans-serif">IGNORE</span> the
         consequences of our actions. From rising sea levels to extreme weather events, it’s getting increasingly obvious
         that something needs to <span
-          style="font-weight: 900; color: #5af351; font-family: Inter,sans-serif">CHANGE</span>. The team behind Globe
+          style="font-weight: 900; color: #67c563; font-family: Inter,sans-serif">CHANGE</span>. The team behind Globe
         World Stats strongly believes that knowledge of our
         climate history as well as where they are headed, is key to fully supporting the measures necessary to <span
           style="font-weight: 900; color: #f6d0a0; font-family: Inter,sans-serif">REVERT</span>
@@ -235,7 +235,7 @@ function scrollToGlobe() {
 
     <div class="map-container">
       <div class="mapHeader">
-        <h2>Co2 Emissions Per Continent as Percentage</h2>
+        <h2>Our Climate History, Summarized</h2>
       </div>
       <MotionChartComponent url="Total Co2 emissions,cumulative_co2"/>
       <div class="innerTextContainer">
