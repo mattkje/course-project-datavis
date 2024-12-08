@@ -78,6 +78,7 @@ const selectedCountryFilter = ref('');
 const fetchError = ref(null);
 const showDropdown = ref(false);
 let preventHide = false;
+const detailed = ref(false);
 
 const filteredCountries = computed(() => {
   if (!input.value) return [];
@@ -166,6 +167,10 @@ function selectFirstOption() {
   if (filteredCountries.value.length > 0) {
     addCountryToFilter(filteredCountries.value[0]);
   }
+}
+
+function toggleDetailed() {
+  detailed.value = !detailed.value;
 }
 </script>
 
@@ -330,11 +335,11 @@ function selectFirstOption() {
     <div class="sectionHeader">
       How Will the Future Look?
     </div>
-    <div class="bar-container" >
+    <div class="bar-container">
       <div class="multipleContainer">
-        <StackedLineGraph :url="'percentage,electricity_percentage/China,false'"/>
-        <StackedLineGraph url="percentage,electricity_percentage/United States,false"/>
-        <StackedLineGraph url="percentage,electricity_percentage/Russia,false"/>
+        <StackedLineGraph :url="'percentage,electricity_percentage/China,false'" :detailed="detailed"/>
+        <StackedLineGraph url="percentage,electricity_percentage/United States,false" :detailed="detailed"/>
+        <StackedLineGraph url="percentage,electricity_percentage/India,false" :detailed="detailed"/>
       </div>
       <div class="innerTextContainer">
         <h3>Electricity Production</h3>
@@ -344,6 +349,13 @@ function selectFirstOption() {
           <span style="font-weight: 900; color: #5BC0EB">Russia</span>. The chart above shows the percentage of
           electricity production in each country. The data is based on the latest available data from the World Bank.
         </p>
+        <div class="toggle-container">
+          <label class="toggle-label">
+            Detailed View
+            <input type="checkbox" v-model="detailed">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
       </div>
     </div>
     <div class="map-container" id="globe-container">
@@ -354,6 +366,54 @@ function selectFirstOption() {
 </template>
 
 <style scoped>
+
+.toggle-container {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  gap:10px
+}
+
+.toggle-label input {
+  display: none;
+}
+
+.toggle-slider {
+  width: 40px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 20px;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background-color: white;
+  border-radius: 50%;
+  top: 1px;
+  left: 1px;
+  transition: transform 0.2s;
+}
+
+.toggle-label input:checked + .toggle-slider {
+  background-color: #FFA737;
+}
+
+.toggle-label input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+}
+
 .main-container {
   display: flex;
   flex-direction: column;
