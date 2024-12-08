@@ -334,14 +334,14 @@ function selectFirstOption() {
       <div class="multipleContainer">
         <StackedLineGraph :url="'percentage,electricity_percentage/China,false'"/>
         <StackedLineGraph url="percentage,electricity_percentage/United States,false"/>
-        <StackedLineGraph url="percentage,electricity_percentage/India,false"/>
+        <StackedLineGraph url="percentage,electricity_percentage/Russia,false"/>
       </div>
       <div class="innerTextContainer">
         <h3>Electricity Production</h3>
         <p>Electricity production is a key factor in the world's greenhouse gas emissions. The top 3 countries in
           electricity production are <span style="font-weight: 900; color: #FFA737">China</span>,
           <span style="font-weight: 900; color: #BA7BA1">United States</span> and
-          <span style="font-weight: 900; color: #5BC0EB">India</span>. The chart above shows the percentage of
+          <span style="font-weight: 900; color: #5BC0EB">Russia</span>. The chart above shows the percentage of
           electricity production in each country. The data is based on the latest available data from the World Bank.
         </p>
       </div>

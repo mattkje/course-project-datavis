@@ -1,5 +1,6 @@
 <template>
   <div class="chardivContainerStackedLine" :ref="chartRef">
+    <h2>{{ title }}</h2>
     <div :id="chartId" class="chartdivStackedLine"></div>
   </div>
 </template>
@@ -21,6 +22,7 @@ export default {
     return {
       measurement: this.url.split(',')[0],
       interactable: this.url.split(',')[2] === 'true',
+      title: this.url.split(',')[1].split('/')[1],
       chartId: `chartdivStackedLine-${Math.random().toString(36).substr(2, 9)}`,
       chartRef: ref(null)
     };
@@ -181,9 +183,16 @@ export default {
 .chardivContainerStackedLine {
   position: relative;
   display: flex;
+  align-items: center;
+  flex-direction: column;
   justify-content: center;
   width: 100%;
   height: 100%;
   padding: 0 0 20px 0;
+}
+
+h2 {
+  color: white;
+  font-size: 1.5rem;
 }
 </style>
