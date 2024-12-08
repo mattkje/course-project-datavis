@@ -172,12 +172,17 @@ function selectFirstOption() {
 function toggleDetailed() {
   detailed.value = !detailed.value;
 }
+
+function scrollToGlobe() {
+  const globeElement = document.getElementById('globe-container');
+  globeElement.scrollIntoView({behavior: 'smooth', block: 'center'});
+}
 </script>
 
 <template>
   <ToolBar/>
   <div class="main-container">
-    <div class="logoContainer" >
+    <div class="logoContainer">
       <img src="../assets/logo.png" alt="Globe World Stats Logo" class="logo">
       <h1 :style="{ width: TextWidth, maxWidth: TextMaxWidth }">Let's dive into the story of our greenhouse gas
         emissions</h1>
@@ -295,22 +300,23 @@ function toggleDetailed() {
                    @click="addCountryToFilter(country)">
                 <p>{{ country }}</p>
               </div>
-                </div>
-              <div class="item error" v-if="input && !filteredCountries.length">
-                <p>No results found!</p>
-              </div>
             </div>
-            <div class="selected-filters">
-              <h3>Selected Countries</h3>
-              <ul>
-                <p id="comparison-error" v-if="comparisonCountries.length === 0">Search for a country to view their data!</p>
-                <li v-for="country in comparisonCountries" :key="country">
-                  {{ country }}
-                  <button @click="removeCountryFromFilter(country)">x</button>
-                </li>
-              </ul>
+            <div class="item error" v-if="input && !filteredCountries.length">
+              <p>No results found!</p>
             </div>
           </div>
+          <div class="selected-filters">
+            <h3>Selected Countries</h3>
+            <ul>
+              <p id="comparison-error" v-if="comparisonCountries.length === 0">Search for a country to view their
+                data!</p>
+              <li v-for="country in comparisonCountries" :key="country">
+                {{ country }}
+                <button @click="removeCountryFromFilter(country)">x</button>
+              </li>
+            </ul>
+          </div>
+        </div>
         <div class="year-slider">
           <Slider v-model="sliderValue" :min="2000" :max="2022" :step="1" range/>
         </div>
@@ -358,15 +364,37 @@ function toggleDetailed() {
         </div>
       </div>
     </div>
+    <div class="sectionHeader">
+      What can be done?
+    </div>
     <div class="map-container" id="globe-container">
       <Globe/>
     </div>
 
+    <!-- Fixed Icon Button -->
+    <button class="scroll-button" @click="scrollToGlobe">
+      <font-awesome-icon icon="fa-solid fa-globe" style="color: #FFFFFF; height: 22px" />
+    </button>
   </div>
 </template>
 
 <style scoped>
 
+.scroll-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #1E555F;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 .toggle-container {
   position: absolute;
   bottom: 10px;
@@ -378,7 +406,7 @@ function toggleDetailed() {
   align-items: center;
   cursor: pointer;
   font-size: 14px;
-  gap:10px
+  gap: 10px
 }
 
 .toggle-label input {
@@ -769,6 +797,7 @@ input[type="radio"] + label:hover {
     max-width: 100%;
     height: 500px;
   }
+
   .map-container {
     flex-direction: column-reverse;
     padding: 0 50px;

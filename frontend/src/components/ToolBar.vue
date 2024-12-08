@@ -98,7 +98,7 @@ const scrollToTop = () => {
 
 .back-to-top {
   position: fixed;
-  bottom: 20px;
+  bottom: 80px;
   right: 20px;
   background-color: #1E555F;
   color: white;
