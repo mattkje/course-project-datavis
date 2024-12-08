@@ -495,7 +495,7 @@ h5 {
   bottom: 20px;
   right: 20px;
   background-color: #1E555F;
-  border: none;
+  border: 2px solid #FFFFFF;
   border-radius: 50%;
   width: 50px;
   height: 50px;

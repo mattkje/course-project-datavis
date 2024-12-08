@@ -104,6 +104,7 @@ const scrollToTop = () => {
   color: white;
   border: none;
   border-radius: 50%;
+  border: 2px solid #FFFFFF;
   padding: 15px;
   cursor: pointer;
   font-size: 1.5rem;
@@ -112,6 +113,8 @@ const scrollToTop = () => {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  width: 50px;
+  height: 50px;
 }
 
 .back-to-top:hover {
