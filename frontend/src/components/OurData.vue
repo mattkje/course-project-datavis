@@ -38,7 +38,7 @@
   position: relative;
   font-size: 1.4rem;
   font-weight: 400;
-  margin: auto;
+  margin: 200px auto;
 }
 
 .ourdata-box::before {

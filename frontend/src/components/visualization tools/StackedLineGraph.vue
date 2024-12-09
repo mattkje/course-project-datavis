@@ -35,7 +35,15 @@ export default {
     this.initializeLineGraph();
   },
   watch: {
-    detailed: 'initializeLineGraph'
+    detailed() {
+      this.initializeLineGraph();
+    },
+    url() {
+      this.measurement = this.url.split(',')[0];
+      this.interactable = this.url.split(',')[2] === 'true';
+      this.title = this.url.split(',')[1].split('/')[1];
+      this.initializeLineGraph();
+    }
   },
   methods: {
   async initializeLineGraph() {
