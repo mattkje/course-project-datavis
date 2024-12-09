@@ -8,80 +8,91 @@
             <img :src="flagId" alt="flag" class="flag"/>
 
             <h2>{{ countryName }}</h2>
-            </div>
+          </div>
           <div class="top-bar">
             <div id="left-top-bar">
               <p>Displaying Greenhouse Gas Data For {{ countryName }}</p>
+              <p>Emissions Ranking: <span
+                  style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">{{ rankingWithSuffix }}</span></p>
+              <p>Population: <span
+                  style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">{{ population }}</span></p>
+              <p>Area: <span
+                  style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">{{ area }} km²</span> </p>
+              <p>Capital: <span
+                  style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">{{ capital }}</span></p>
+              <p class="compare-title">Compare Cumulative Data With Other Countries</p>
             </div>
-          <div class="user-interactive-items">
-            <div class="future-checkbox">
-              <label for="futureCheckbox">Show Future Predictions:</label>
-              <input type="checkbox" id="futureCheckbox" v-model="isFuture">
-            </div>
-            <div class="dropdown-container">
-              <span>Measure By:</span>
-              <select class="dropdown" v-model="selectedMeasure">
-                <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
-                <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
-                <option :value="`line:Per/Capita,per_capita/${countryName}`">Per Capita</option>
-                <option :value="`bar:%,co2_growth_prct/${countryName}`">Growth %</option>
-              </select>
-            </div>
+            <div class="user-interactive-items">
+              <div class="future-checkbox">
+                <label for="futureCheckbox">Show Future Predictions:</label>
+                <input type="checkbox" id="futureCheckbox" v-model="isFuture">
+              </div>
+              <div class="dropdown-container">
+                <span>Measure By:</span>
+                <select class="dropdown" v-model="selectedMeasure">
+                  <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
+                  <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
+                  <option :value="`line:Per/Capita,per_capita/${countryName}`">Per Capita</option>
+                  <option :value="`bar:%,co2_growth_prct/${countryName}`">Growth %</option>
+                </select>
+              </div>
             </div>
           </div>
           <div class="graphs">
-          <component class="line-chart-stats"
-              v-if="selectedMeasureUrl"
-              :is="selectedChartComponent"
-              :url="selectedMeasureUrl"
-              :key="chartKey"/>
+            <component class="line-chart-stats"
+                       v-if="selectedMeasureUrl"
+                       :is="selectedChartComponent"
+                       :url="selectedMeasureUrl"
+                       :key="chartKey"/>
             <p class="compare-title">Compare Cumulative Data With Other Countries</p>
-          <div class="comparison">
-            <CountryComparisonChart
-                :countries="comparisonCountries.join(',')"
-                :comparisonData="selectedComparisonUrl.split(',')[1]"
-                :start-year="comparisonStartYear"
-                :end-year="comparisonEndYear"/>
-            <div class="innerTextContainer">
-              <div class="country-search">
-                <input type="text" v-model="input" placeholder="Search for a country" @click="showDropdown = true"
-                       @focus="showDropdown = true" @blur="hideDropdownWithDelay" @keydown.enter="selectFirstOption">
-                <div class="country-list" v-if="showDropdown && filteredCountries.length" @mouseenter="preventHideDropdown"
-                     @mouseleave="allowHideDropdown">
-                  <div class="country-items">
-                    <div class="country-item" v-for="country in filteredCountries" :key="country"
-                         @click="addCountryToFilter(country)">
-                      <p>{{ country }}</p>
+            <div class="comparison">
+              <CountryComparisonChart
+                  :countries="comparisonCountries.join(',')"
+                  :comparisonData="selectedComparisonUrl.split(',')[1]"
+                  :start-year="comparisonStartYear"
+                  :end-year="comparisonEndYear"/>
+              <div class="innerTextContainer">
+                <div class="country-search">
+                  <input type="text" v-model="input" placeholder="Search for a country" @click="showDropdown = true"
+                         @focus="showDropdown = true" @blur="hideDropdownWithDelay" @keydown.enter="selectFirstOption">
+                  <div class="country-list" v-if="showDropdown && filteredCountries.length"
+                       @mouseenter="preventHideDropdown"
+                       @mouseleave="allowHideDropdown">
+                    <div class="country-items">
+                      <div class="country-item" v-for="country in filteredCountries" :key="country"
+                           @click="addCountryToFilter(country)">
+                        <p>{{ country }}</p>
+                      </div>
+                    </div>
+                    <div class="item error" v-if="input && !filteredCountries.length">
+                      <p>No results found!</p>
                     </div>
                   </div>
-                  <div class="item error" v-if="input && !filteredCountries.length">
-                    <p>No results found!</p>
+                  <div class="selected-filters">
+                    <h3>Selected Countries</h3>
+                    <ul>
+                      <p id="comparison-error" v-if="comparisonCountries.length === 0">Search for a country to view
+                        their
+                        data!</p>
+                      <li v-for="country in comparisonCountries" :key="country">
+                        {{ country }}
+                        <button @click="removeCountryFromFilter(country)">x</button>
+                      </li>
+                    </ul>
                   </div>
                 </div>
-                <div class="selected-filters">
-                  <h3>Selected Countries</h3>
-                  <ul>
-                    <p id="comparison-error" v-if="comparisonCountries.length === 0">Search for a country to view their
-                      data!</p>
-                    <li v-for="country in comparisonCountries" :key="country">
-                      {{ country }}
-                      <button @click="removeCountryFromFilter(country)">x</button>
-                    </li>
-                  </ul>
+                <div class="year-slider">
+                  <Slider v-model="sliderValue" :min="2000" :max="2022" :step="1" range/>
                 </div>
-              </div>
-              <div class="year-slider">
-                <Slider v-model="sliderValue" :min="2000" :max="2022" :step="1" range/>
-              </div>
-              <div class="button-group">
-                <div v-for="(button, index) in barchartCompButtons" :key="index" class="button-container">
-                  <input type="radio" :id="button.label" :value="button.url" v-model="selectedComparisonUrl"
-                         @change="updateCompData(button.url)">
-                  <label :for="button.label">{{ button.name }}</label>
+                <div class="button-group">
+                  <div v-for="(button, index) in barchartCompButtons" :key="index" class="button-container">
+                    <input type="radio" :id="button.label" :value="button.url" v-model="selectedComparisonUrl"
+                           @change="updateCompData(button.url)">
+                    <label :for="button.label">{{ button.name }}</label>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
         <div class="spacings"></div>
@@ -126,7 +137,12 @@ const barchartCompButtons = [
   },
   {label: "Coal Comparison", url: "Total Coal Emissions,cumulative_coal_co2", selected: false, name: "Coal"},
   {label: "Oil Comparison", url: "Total Oil Emissions,cumulative_oil_co2", selected: false, name: "Oil"},
-  {label: "Flaring Comparison", url: "Total Flaring Emissions,cumulative_flaring_co2", selected: false, name: "Flaring"},
+  {
+    label: "Flaring Comparison",
+    url: "Total Flaring Emissions,cumulative_flaring_co2",
+    selected: false,
+    name: "Flaring"
+  },
   {label: "Gas Comparison", url: "Total Gas Emissions,cumulative_gas_co2", selected: false, name: "Gas"},
   {label: "Cement Comparison", url: "Total Cement Emissions,cumulative_cement_co2", selected: false, name: "Cement"}
 ];
@@ -149,7 +165,15 @@ const fetchError = ref(null);
 const showDropdown = ref(false);
 const countries = ref([]);
 const ringModuleUrl = ref(`ringmodule/${countryName.value}`);
+const ranking = ref('');
 let preventHide = false;
+
+const rankingWithSuffix = computed(() => {
+  const suffixes = ["th", "st", "nd", "rd"];
+  const value = ranking.value;
+  const v = value % 100;
+  return value + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
+});
 
 const filteredCountries = computed(() => {
   if (!input.value) return [];
@@ -162,6 +186,8 @@ const topValue = computed(() => {
 
 onMounted(async () => {
   countries.value = await fetchData('http://127.0.0.1:5000/countries'); // Assign fetched data
+
+
 });
 
 watch(selectedComparisonUrl, (newValue) => {
@@ -192,7 +218,7 @@ watch(sliderValue, (newValue) => {
 
 watch(countryName, (newCountryName) => {
   if (newCountryName) {
-    console.log(newCountryName);
+
     ringModuleUrl.value = `ringmodule/${newCountryName}`;
   }
 });
@@ -265,7 +291,7 @@ function updateCompData(url) {
   barchartCompButtons.forEach(button => button.selected = (button.url === url));
 }
 
-function updateCountryInfo(name, pop, areaSize, cap, id) {
+async function updateCountryInfo(name, pop, areaSize, cap, id) {
   countryName.value = name;
   population.value = pop;
   area.value = areaSize;
@@ -275,6 +301,8 @@ function updateCountryInfo(name, pop, areaSize, cap, id) {
   flagId.value = `public/countryflags/${id}.svg`;
   comparisonCountries.value = [name];
   selectedComparisonUrl.value = `co2`;
+
+  ranking.value = (await fetchData('http://127.0.0.1:5000/rankings/' + countryName.value)).co2_including_luc_per_capita[0].rank;
 }
 
 function hideCountryInfo() {
@@ -283,12 +311,12 @@ function hideCountryInfo() {
 
 function toggleExpand() {
   isExpanded.value = !isExpanded.value;
-    setTimeout(() => {
-      window.scrollBy({
-        top: window.innerHeight * 1.1,
-        behavior: 'smooth'
-      });
-    }, 300);
+  setTimeout(() => {
+    window.scrollBy({
+      top: window.innerHeight * 1.1,
+      behavior: 'smooth'
+    });
+  }, 300);
 }
 
 defineExpose({
@@ -487,7 +515,8 @@ input[type="radio"] + label:hover {
 .user-interactive-items {
   display: flex;
   flex-flow: column;
-  align-items: center;
+  align-items: start;
+  justify-content: flex-end;
 }
 
 .dropdown-container {
@@ -703,6 +732,8 @@ h3 {
 
 .compare-title {
   padding-top: 50px;
+  font-size: 1.6rem;
+  margin-bottom: 30px;
 }
 
 span {
