@@ -97,7 +97,7 @@
               <p>Energy Production per Sector</p>
             </div>
             <div class="StackedLineGraph">
-              <StackedLineGraphComponent :url="`normal,electricity/${countryName},false`" :detailed="true"/>
+              <StackedLineGraphComponent :url="stackedLineGraphUrl" :detailed="true"/>
             </div>
           </div>
         </div>
@@ -173,6 +173,7 @@ const showDropdown = ref(false);
 const countries = ref([]);
 const ringModuleUrl = ref(`ringmodule/${countryName.value}`);
 const ranking = ref('');
+const stackedLineGraphUrl = ref(`normal,electricity/${countryName.value},false`);
 let preventHide = false;
 
 const rankingWithSuffix = computed(() => {
@@ -188,7 +189,7 @@ const filteredCountries = computed(() => {
 })
 
 const topValue = computed(() => {
-  return window.innerWidth <= 1400 ? (isExpanded.value ? '335vh' : '20vh') : (isExpanded.value ? '255vh' : '20vh');
+  return window.innerWidth <= 1400 ? (isExpanded.value ? '360vh' : '20vh') : (isExpanded.value ? '290vh' : '20vh');
 });
 
 onMounted(async () => {
@@ -225,12 +226,10 @@ watch(sliderValue, (newValue) => {
 
 watch(countryName, (newCountryName) => {
   if (newCountryName) {
-
+    stackedLineGraphUrl.value = `normal,electricity/${newCountryName},false`;
     ringModuleUrl.value = `ringmodule/${newCountryName}`;
   }
 });
-
-console.log(selectedComparisonUrl.value);
 
 const handleSelectedItems = (items) => {
   selectedItems.value = items;
@@ -582,7 +581,7 @@ h2 {
   width: 100%;
   height: auto;
   right: 0;
-  top: 215vh;
+  top: 245vh;
   padding: 20px;
   margin: 0;
 }
@@ -808,7 +807,7 @@ label {
   }
 
   .info-box.expanded {
-    top: 255vh;
+    top: 280vh;
   }
 }
 </style>

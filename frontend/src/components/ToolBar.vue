@@ -17,7 +17,7 @@ const scrollToBottom = () => {
   <div class="toolbar">
     <div class="title-box">
       <img src="../assets/logo.png" alt="Logo" class="logo" />
-      <h1 class="title">Globe World Stats</h1>
+      <h1 class="title">EcoConsequence</h1>
     </div>
     <div class="rightside">
       <h2 @click="scrollToBottom">Our Data</h2>

@@ -444,7 +444,6 @@ export default {
     handleContinentClick(e) {
       let target = e.target;
       if (target.dataItem === selectedContinent) {
-        console.log("if");
         selectedContinent = undefined;
 
         am5.array.each(this.polygonSeries.dataItems, (dataItem) => {
