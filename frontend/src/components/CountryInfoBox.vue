@@ -130,7 +130,6 @@ import Slider from "@vueform/slider";
 import RingModule from "@/components/visualization tools/RingModule.vue";
 import OurData from "@/components/OurData.vue";
 import StackedLineGraphComponent from "@/components/visualization tools/StackedLineGraph.vue";
-import StackedLineGraph from "@/components/visualization tools/StackedLineGraph.vue";
 
 const selectedItems = ref([]);
 const isFuture = ref(false);
@@ -397,6 +396,11 @@ defineExpose({
   padding: 10px 15px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.StackedLineGraph {
+  width: 100%;
+  height: 500px;
 }
 
 .country-item:hover {
