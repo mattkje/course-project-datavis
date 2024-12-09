@@ -188,7 +188,7 @@ const filteredCountries = computed(() => {
 })
 
 const topValue = computed(() => {
-  return window.innerWidth <= 1400 ? (isExpanded.value ? '275vh' : '20vh') : (isExpanded.value ? '210vh' : '20vh');
+  return window.innerWidth <= 1400 ? (isExpanded.value ? '335vh' : '20vh') : (isExpanded.value ? '255vh' : '20vh');
 });
 
 onMounted(async () => {
@@ -582,7 +582,7 @@ h2 {
   width: 100%;
   height: auto;
   right: 0;
-  top: 190vh;
+  top: 215vh;
   padding: 20px;
   margin: 0;
 }
@@ -808,7 +808,7 @@ label {
   }
 
   .info-box.expanded {
-    top: 225vh;
+    top: 255vh;
   }
 }
 </style>
