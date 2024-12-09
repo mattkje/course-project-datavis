@@ -60,6 +60,10 @@ export default {
             item.solar_generation__twh_chart_electricity_prod_source_stacked +
             item.wind_generation__twh_chart_electricity_prod_source_stacked;
       });
+    } else {
+      data.forEach(item => {
+        item.year = item.year.toString();
+      });
     }
     am5.ready(async () => {
       // Create root element
@@ -126,7 +130,7 @@ export default {
           fill: am5.color(0xFFFFFF)
         },
         min: 0,
-        max: prefix === "twh" ? 30000 : 100
+        max: prefix === "twh" ? "none" : 100
       }));
 
       yAxis.get("renderer").labels.template.setAll({

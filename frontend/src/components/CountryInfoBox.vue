@@ -11,7 +11,7 @@
           </div>
           <div class="top-bar">
             <div id="left-top-bar">
-              <p>Displaying Greenhouse Gas Data For {{ countryName }}</p>
+              <p>Displaying Greenhouse Emissions Data For {{ countryName }}</p>
               <p>Emissions Ranking: <span
                   style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">{{ rankingWithSuffix }}</span></p>
               <p>Population: <span
@@ -20,7 +20,7 @@
                   style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">{{ area }} km²</span> </p>
               <p>Capital: <span
                   style="font-weight: 900; color: #FFA737; font-family: Inter,sans-serif">{{ capital }}</span></p>
-              <p class="compare-title">Compare Cumulative Data With Other Countries</p>
+              <p class="compare-title">Co2 Emissions per Year</p>
             </div>
             <div class="user-interactive-items">
               <div class="future-checkbox">
@@ -93,6 +93,12 @@
                 </div>
               </div>
             </div>
+            <div class="compare-title">
+              <p>Energy Production per Sector</p>
+            </div>
+            <div class="StackedLineGraph">
+              <StackedLineGraphComponent :url="`normal,electricity/${countryName},false`" :detailed="true"/>
+            </div>
           </div>
         </div>
         <div class="spacings"></div>
@@ -123,6 +129,8 @@ import CountryComparisonChart from "@/components/visualization tools/CountryComp
 import Slider from "@vueform/slider";
 import RingModule from "@/components/visualization tools/RingModule.vue";
 import OurData from "@/components/OurData.vue";
+import StackedLineGraphComponent from "@/components/visualization tools/StackedLineGraph.vue";
+import StackedLineGraph from "@/components/visualization tools/StackedLineGraph.vue";
 
 const selectedItems = ref([]);
 const isFuture = ref(false);
