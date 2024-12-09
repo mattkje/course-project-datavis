@@ -125,7 +125,7 @@ def co2_growth_abs(country):
     result_dict = dict(zip(result_df["year"], result_df["co2_growth_abs"]))
     return jsonify(result_dict)
 
-
+@app.route("/co2_growth_prct/<country>", defaults={'start_year': 1980, 'end_year': 2022})
 @app.route("/co2_growth_prct/<country>/<int:start_year>/<int:end_year>")
 def co2_growth_percentage(country, start_year, end_year):
     country_list = country.split(",")

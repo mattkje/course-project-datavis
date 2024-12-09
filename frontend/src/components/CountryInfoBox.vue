@@ -181,7 +181,7 @@ const filteredCountries = computed(() => {
 })
 
 const topValue = computed(() => {
-  return window.innerWidth <= 1400 ? (isExpanded.value ? '275vh' : '20vh') : (isExpanded.value ? '250vh' : '25vh');
+  return window.innerWidth <= 1400 ? (isExpanded.value ? '275vh' : '20vh') : (isExpanded.value ? '210vh' : '20vh');
 });
 
 onMounted(async () => {
@@ -570,7 +570,7 @@ h2 {
   width: 100%;
   height: auto;
   right: 0;
-  top: 215vh;
+  top: 190vh;
   padding: 20px;
   margin: 0;
 }

@@ -55,13 +55,22 @@ export default {
         maxDeviation: 0,
         baseInterval: { timeUnit: "year", count: 1 },
         renderer: am5xy.AxisRendererX.new(root, { minorGridEnabled: true, minorLabelsEnabled: true }),
-        tooltip: am5.Tooltip.new(root, {})
+        tooltip: am5.Tooltip.new(root, {}),
       }));
+
+      xAxis.get("renderer").labels.template.setAll({
+        fill: am5.color(0xFFFFFF)
+      });
 
       // Create Y-axis
       const yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
         renderer: am5xy.AxisRendererY.new(root, {})
       }));
+
+      // Set y-axis label color to white
+      yAxis.get("renderer").labels.template.setAll({
+        fill: am5.color(0xFFFFFF)  // Set the y-axis label text color to white
+      });
 
       const measure = this.url.split(',')[0];
       const temp = this.url.split(',')[1];
@@ -82,9 +91,6 @@ export default {
       series.columns.template.setAll({ strokeOpacity: 0 });
       series.data.setAll(data);
 
-      // Add horizontal scrollbar
-      chart.set("scrollbarX", am5.Scrollbar.new(root, { orientation: "horizontal" }));
-
       // Add legend
       const legend = chart.rightAxesContainer.children.push(am5.Legend.new(root, {
         width: 200,
@@ -93,13 +99,14 @@ export default {
       }));
 
       legend.labels.template.setAll({
-        fill: am5.color("#000000")
+        fill: am5.color(0xFFFFFF)
       });
 
       legend.itemContainers.template.set("width", am5.p100);
       legend.valueLabels.template.setAll({
         width: am5.p100,
-        textAlign: "right"
+        textAlign: "right",
+        fill: am5.color(0xFFFFFF)
       });
 
       legend.data.setAll(chart.series.values);
@@ -130,9 +137,9 @@ export default {
 <style scoped>
 #chartdiv {
   margin-top: 6rem;
-  width: 70%;
+  width: 100%;
   height: 500px;
-  max-width: 70%;
+  max-width: 100%;
 }
 
 .measurement-label {
