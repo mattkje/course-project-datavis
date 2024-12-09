@@ -183,6 +183,5 @@ export default {
   justify-content: center;
   width: 100%;
   height: 400px;
-  padding: 90px 0 60px 0;
 }
 </style>

@@ -473,9 +473,6 @@ function scrollToGlobe() {
     <div class="map-container" id="globe-container">
       <Globe/>
     </div>
-
-    <OurData :style="{ width: TextWidth, maxWidth: TextMaxWidth }"/>
-
     <!-- Fixed Icon Button -->
     <button class="scroll-button" @click="scrollToGlobe">
       <font-awesome-icon icon="fa-solid fa-globe" style="color: #FFFFFF; height: 22px"/>

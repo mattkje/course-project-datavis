@@ -1,7 +1,7 @@
 <template>
   <div id="chartdivContainer_globe">
     <div id="chartdiv_globe"></div>
-    <CountryInfoBox ref="countryInfoBox"/>
+    <CountryInfoBox ref="countryInfoBox" @update:is-expanded=""/>
   </div>
 </template>
 
@@ -11,7 +11,7 @@ import * as am5map from "@amcharts/amcharts5/map";
 import am5geodata_worldLow from "@amcharts/amcharts5-geodata/worldLow";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import {ref, onMounted} from 'vue';
-import CountryInfoBox from './CountryInfoBox.vue'; // Import the CountryInfoBox component
+import CountryInfoBox from './CountryInfoBox.vue';
 
 let chart;
 
@@ -41,7 +41,7 @@ export function selectCountryByLongLat(longitude, latitude) {
 export default {
   name: "Globe",
   components: {
-    CountryInfoBox
+    CountryInfoBox,
   },
   setup() {
     const countryInfoBox = ref(null); // Create a ref for the CountryInfoBox component

@@ -6,25 +6,20 @@
         <div class="panel-1">
           <div class="header">
             <img :src="flagId" alt="flag" class="flag"/>
-            <h2>{{ countryName }}</h2>
-          </div>
-          <div class="ring-module">
-            <RingModule :url="ringModuleUrl"/>
-          </div>
 
+            <h2>{{ countryName }}</h2>
+            </div>
           <div class="top-bar">
             <div id="left-top-bar">
-              <p>Displaying greenhouse gas data for {{ countryName }}</p>
-            </div>
-            <div id="right-top-bar">
+              <p>Displaying Greenhouse Gas Data For {{ countryName }}</p>
             </div>
           <div class="user-interactive-items">
             <div class="future-checkbox">
-              <label for="futureCheckbox">Show future predictions:</label>
+              <label for="futureCheckbox">Show Future Predictions:</label>
               <input type="checkbox" id="futureCheckbox" v-model="isFuture">
             </div>
             <div class="dropdown-container">
-              <span>Measure by:</span>
+              <span>Measure By:</span>
               <select class="dropdown" v-model="selectedMeasure">
                 <option :value="`line:million tons,co2/${countryName}`">Total Stats</option>
                 <option :value="`line:kg/dollar of GDP,gdp/${countryName}`">Per GDP</option>
@@ -40,7 +35,7 @@
               :is="selectedChartComponent"
               :url="selectedMeasureUrl"
               :key="chartKey"/>
-            <p class="compare-title">Compare Data With Other Countries</p>
+            <p class="compare-title">Compare Cumulative Data With Other Countries</p>
           <div class="comparison">
             <CountryComparisonChart
                 :countries="comparisonCountries.join(',')"
@@ -104,6 +99,9 @@
       </template>
     </div>
   </div>
+  <OurData v-if="isExpanded" :style="{top: topValue, width: '50%'}"></OurData>
+  <OurData v-if="!isExpanded" :style="{top: topValue, width: '50%', maxWidth: '50%'}"/>
+
 </template>
 
 <script setup>
@@ -113,6 +111,7 @@ import BarChartComponent from "@/components/visualization tools/bar_chart.vue";
 import CountryComparisonChart from "@/components/visualization tools/CountryComparison.vue";
 import Slider from "@vueform/slider";
 import RingModule from "@/components/visualization tools/RingModule.vue";
+import OurData from "@/components/OurData.vue";
 
 const selectedItems = ref([]);
 const isFuture = ref(false);
@@ -156,6 +155,10 @@ const filteredCountries = computed(() => {
   if (!input.value) return [];
   return countries.value.filter(country => country.toLowerCase().startsWith(input.value.toLowerCase()));
 })
+
+const topValue = computed(() => {
+  return window.innerWidth <= 1400 ? (isExpanded.value ? '275vh' : '20vh') : (isExpanded.value ? '250vh' : '25vh');
+});
 
 onMounted(async () => {
   countries.value = await fetchData('http://127.0.0.1:5000/countries'); // Assign fetched data
@@ -538,7 +541,7 @@ h2 {
   width: 100%;
   height: auto;
   right: 0;
-  top: 185vh;
+  top: 215vh;
   padding: 20px;
   margin: 0;
 }
@@ -654,7 +657,7 @@ p {
 
 .header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .flag {
@@ -711,7 +714,17 @@ label {
 }
 
 .ring-module {
+  width: 250px;
+  height: 100%;
+}
 
+.top-top {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 10px;
 }
 
 .innerTextContainer {
@@ -752,7 +765,7 @@ label {
   }
 
   .info-box.expanded {
-    top: 220vh;
+    top: 225vh;
   }
 }
 </style>
